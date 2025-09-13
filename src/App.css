@@ -1037,6 +1037,25 @@ body::before {
   color: var(--text-primary);
 }
 
+/* New Hamburger Menu Animations */
+@keyframes edgeShimmer {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes logoShimmer {
+  0%, 100% {
+    background-position: -200% 0;
+  }
+  50% {
+    background-position: 200% 0;
+  }
+}
+
 .footer-bottom {
   border-top: 1px solid var(--border);
   padding-top: 40px;

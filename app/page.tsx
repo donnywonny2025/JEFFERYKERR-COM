@@ -506,7 +506,7 @@ export default function Home() {
                   onClick={toggleMenu}
                 />
 
-                {/* Enhanced Purple Menu Container with Edge Glow */}
+                {/* Premium Menu Container with Edge Shimmer */}
               <div
                 style={{
                   position: 'absolute',
@@ -514,44 +514,30 @@ export default function Home() {
                   right: '0',
                   marginTop: '8px',
                   zIndex: 1000,
-                  borderRadius: '16px',
+                  borderRadius: '20px',
                   padding: '3px',
-                  background: 'linear-gradient(135deg, #5227FF, #FF9FFC, #00d4ff, #5227FF)',
-                  backgroundSize: '300% 300%',
-                  animation: 'edgeGlow 4s ease-in-out infinite',
+                  background: 'linear-gradient(45deg, rgba(82, 39, 255, 0.3), rgba(0, 212, 255, 0.2), rgba(139, 92, 246, 0.3))',
+                  backgroundSize: '200% 200%',
+                  animation: 'edgeShimmer 3s ease-in-out infinite',
                   boxShadow: '0 0 30px rgba(82, 39, 255, 0.3)'
                 }}
               >
-                {/* Enhanced Purple Frosted Glass Menu */}
+                {/* Premium Frosted Glass Menu with Inner Glow */}
                 <div
                   style={{
-                    background: 'rgba(82, 39, 255, 0.08)',
-                    backdropFilter: 'blur(25px) saturate(180%) brightness(1.1)',
+                    background: 'rgba(15, 15, 25, 0.85)',
+                    backdropFilter: 'blur(20px) saturate(150%)',
                     border: '1px solid rgba(255, 255, 255, 0.15)',
-                    borderRadius: '13px',
+                    borderRadius: '20px',
                     padding: '24px',
                     minWidth: '240px',
-                    boxShadow: '0 20px 40px rgba(82, 39, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
-                    animation: 'menuFadeIn 0.3s ease-out',
+                    boxShadow: '0 20px 40px rgba(82, 39, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.05)',
                     position: 'relative',
                     overflow: 'hidden'
                   }}
                 >
-                    {/* Subtle purple inner glow */}
-                    <div
-                      style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        background: 'linear-gradient(135deg, rgba(82, 39, 255, 0.05), rgba(255, 159, 252, 0.03))',
-                        borderRadius: '13px',
-                        pointerEvents: 'none'
-                      }}
-                    />
 
-                    {/* Logo/Name */}
+                    {/* Logo/Name with Shimmer Effect */}
                     <div style={{
                       textAlign: 'center',
                       marginBottom: '20px',
@@ -564,7 +550,11 @@ export default function Home() {
                         fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif',
                         fontSize: '18px',
                         fontWeight: '500',
-                        color: 'var(--text-primary)',
+                        background: 'linear-gradient(90deg, #ffffff, #00d4ff, #ffffff)',
+                        backgroundSize: '200% 100%',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        animation: 'logoShimmer 2s ease-in-out infinite',
                         letterSpacing: '0.5px'
                       }}>
                         <span style={{
@@ -600,7 +590,7 @@ export default function Home() {
                           borderBottom: '1px solid transparent'
                         }}
                         onMouseEnter={(e) => {
-                          (e.target as HTMLElement).style.color = '#00d4ff';
+                          (e.target as HTMLElement).style.color = 'rgba(0, 212, 255, 0.8)';
                           (e.target as HTMLElement).style.borderBottomColor = 'rgba(0, 212, 255, 0.3)';
                         }}
                         onMouseLeave={(e) => {
@@ -627,7 +617,7 @@ export default function Home() {
                           borderBottom: '1px solid transparent'
                         }}
                         onMouseEnter={(e) => {
-                          (e.target as HTMLElement).style.color = '#00d4ff';
+                          (e.target as HTMLElement).style.color = 'rgba(0, 212, 255, 0.8)';
                           (e.target as HTMLElement).style.borderBottomColor = 'rgba(0, 212, 255, 0.3)';
                         }}
                         onMouseLeave={(e) => {
@@ -681,7 +671,7 @@ export default function Home() {
                           borderBottom: '1px solid transparent'
                         }}
                         onMouseEnter={(e) => {
-                          (e.target as HTMLElement).style.color = '#00d4ff';
+                          (e.target as HTMLElement).style.color = 'rgba(0, 212, 255, 0.8)';
                           (e.target as HTMLElement).style.borderBottomColor = 'rgba(0, 212, 255, 0.3)';
                         }}
                         onMouseLeave={(e) => {
@@ -713,7 +703,7 @@ export default function Home() {
                           transition: 'color 0.3s ease'
                         }}
                         onMouseEnter={(e) => {
-                          (e.target as HTMLElement).style.color = '#00d4ff';
+                          (e.target as HTMLElement).style.color = 'rgba(0, 212, 255, 0.8)';
                         }}
                         onMouseLeave={(e) => {
                           (e.target as HTMLElement).style.color = 'rgba(255, 255, 255, 0.7)';

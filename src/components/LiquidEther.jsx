@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import './LiquidEther.css';
 
 export default function LiquidEther({
-  colors = ['#5227FF', '#FF9FFC', '#B19EEF'],
+  colors = ['#4A1FA3', '#E640E6', '#7B2CBF', '#00A8CC', '#6B46C1'],
   style = {},
   className = '',
   // Refined star field configuration for smaller stars and proper rotation
@@ -64,6 +64,56 @@ export default function LiquidEther({
         console.log('LiquidEther: WebGL renderer created');
         container.appendChild(renderer.domElement);
         console.log('LiquidEther: Canvas element added to DOM:', renderer.domElement);
+
+        // Add WebGL context recovery event listeners
+        const canvas = renderer.domElement;
+        canvas.addEventListener('webglcontextlost', (event) => {
+          console.log('LiquidEther: WebGL context lost - preventing default');
+          event.preventDefault();
+          // Stop animation when context is lost
+          if (animationRef.current) {
+            cancelAnimationFrame(animationRef.current);
+            animationRef.current = null;
+          }
+        });
+
+        canvas.addEventListener('webglcontextrestored', (event) => {
+          console.log('LiquidEther: WebGL context restored - reinitializing');
+          // Reinitialize WebGL context and restart animation
+          try {
+            renderer.forceContextRestore();
+            // Restart the animation loop
+            const animate = (currentTime) => {
+              frameCount++;
+              if (currentTime - lastTime >= 1000) {
+                fps = frameCount;
+                frameCount = 0;
+                lastTime = currentTime;
+              }
+
+              timeRef.current += 0.016;
+              if (material) {
+                material.uniforms.uTime.value = timeRef.current;
+                material.uniforms.uMouse.value.set(0.5, 0.5);
+              }
+
+              // Performance monitoring: skip frames if FPS drops below 30
+              if (fps >= 30 || frameCount % 2 === 0) {
+                if (renderer && scene && camera) {
+                  renderer.render(scene, camera);
+                }
+              }
+
+              // Direct requestAnimationFrame for smoother timing
+              animationRef.current = requestAnimationFrame(animate);
+            };
+
+            animate();
+            console.log('LiquidEther: Animation restarted after context restoration');
+          } catch (error) {
+            console.error('LiquidEther: Failed to restore WebGL context:', error);
+          }
+        });
 
         // Performance optimization: detect device capabilities
         const isLowEndDevice = navigator.hardwareConcurrency <= 4 ||
@@ -290,21 +340,22 @@ export default function LiquidEther({
             float water5 = waterFlow(waterUv * 0.4, time * 1.8, 4.0);
             float water6 = waterFlow(waterUv * 2.8, time * 0.4, 5.0);
 
-            // Add organic mixing with turbulence
-            float turbulence = sin(uv.x * 5.0 + uv.y * 3.0 + time * 0.7) * 0.1 + 0.9;
+            // Add organic mixing with turbulence (stabilized at peak value)
+            float turbulence = sin(uv.x * 5.0 + uv.y * 3.0 + 1.57) * 0.1 + 0.9; // Remove time component, use peak phase
             float liquidField = mix(water1, water2, 0.6 * turbulence);
-            liquidField = mix(liquidField, water3, 0.4 * (1.0 + sin(uv.x * 7.0 + time * 0.5) * 0.2));
-            liquidField = mix(liquidField, water4, 0.25 * (1.0 + cos(uv.y * 4.0 + time * 0.6) * 0.15));
-            liquidField = mix(liquidField, water5, 0.15 * (1.0 + sin(uv.x * uv.y * 8.0 + time * 0.4) * 0.1));
-            liquidField = mix(liquidField, water6, 0.1 * (1.0 + cos(uv.x * 6.0 - uv.y * 5.0 + time * 0.8) * 0.12));
-            float colorFlow1 = sin(waterUv.y * 3.0 + time * 0.4) * 0.5 + 0.5;
-            float colorFlow2 = cos(waterUv.x * 2.5 + time * 0.5) * 0.5 + 0.5;
-            float colorFlow3 = sin((waterUv.x + waterUv.y) * 2.0 + time * 0.35) * 0.5 + 0.5;
-            float colorFlow4 = cos(waterUv.x * waterUv.y * 4.0 + time * 0.3) * 0.5 + 0.5;
-            // Add optimized organic color variation with reduced frequency for performance
-            float colorNoise1 = fbm(uv * 6.0 + time * 0.3) * 0.3;
-            float colorNoise2 = fbm(uv * 8.0 + time * 0.2) * 0.2;
-            float colorNoise3 = fbm(uv * 5.0 + time * 0.4) * 0.25;
+            liquidField = mix(liquidField, water3, 0.4 * (1.0 + sin(uv.x * 7.0 + 1.57) * 0.2)); // Stabilized at peak
+            liquidField = mix(liquidField, water4, 0.25 * (1.0 + cos(uv.y * 4.0 + 0.785) * 0.15)); // Stabilized at peak
+            liquidField = mix(liquidField, water5, 0.15 * (1.0 + sin(uv.x * uv.y * 8.0 + 2.356) * 0.1)); // Stabilized at peak
+            liquidField = mix(liquidField, water6, 0.1 * (1.0 + cos(uv.x * 6.0 - uv.y * 5.0 + 1.047) * 0.12)); // Stabilized at peak
+            // Lock color flows to rich values - maintain consistent colors over time
+            float colorFlow1 = sin(waterUv.y * 3.0 + 3.14159) * 0.4 + 0.6; // Remove time, keep rich phase
+            float colorFlow2 = cos(waterUv.x * 2.5 + 1.5708) * 0.4 + 0.4;  // Remove time, keep rich phase
+            float colorFlow3 = sin((waterUv.x + waterUv.y) * 2.0 + 4.71239) * 0.4 + 0.5; // Remove time, keep rich phase
+            float colorFlow4 = cos(waterUv.x * waterUv.y * 4.0 + 0.7854) * 0.4 + 0.6; // Remove time, keep rich phase
+            // Lock color noise to consistent rich values - no time-based variation
+            float colorNoise1 = fbm(uv * 6.0 + 2.1) * 0.3; // Remove time, keep rich seed
+            float colorNoise2 = fbm(uv * 8.0 + 1.5) * 0.2; // Remove time, keep rich seed
+            float colorNoise3 = fbm(uv * 5.0 + 2.8) * 0.25; // Remove time, keep rich seed
 
             // Higher precision color sampling with smooth interpolation
             vec2 colorUV1 = vec2(smootherstep(0.0, 1.0, colorFlow1 * 0.9 + colorNoise1 * 0.1), 0.5);
@@ -312,49 +363,57 @@ export default function LiquidEther({
             vec2 colorUV3 = vec2(smootherstep(0.0, 1.0, colorFlow3 * 0.5 + 0.3 + colorNoise3 * 0.06), 0.5);
             vec2 colorUV4 = vec2(smootherstep(0.0, 1.0, colorFlow4 * 0.3 + 0.5 + colorNoise1 * 0.04), 0.5);
 
-            vec3 color1 = texture2D(uPalette, colorUV1).rgb * 1.8;
-            vec3 color2 = texture2D(uPalette, colorUV2).rgb * 1.8;
-            vec3 color3 = texture2D(uPalette, colorUV3).rgb * 1.8;
-            vec3 color4 = texture2D(uPalette, colorUV4).rgb * 1.8;
+            vec3 color1 = texture2D(uPalette, colorUV1).rgb * vec3(2.2, 1.8, 2.8);
+            vec3 color2 = texture2D(uPalette, colorUV2).rgb * vec3(2.2, 1.8, 2.8);
+            vec3 color3 = texture2D(uPalette, colorUV3).rgb * vec3(2.2, 1.8, 2.8);
+            vec3 color4 = texture2D(uPalette, colorUV4).rgb * vec3(2.2, 1.8, 2.8);
 
             // Optimized 3-layer color mixing for performance while maintaining beauty
             vec3 liquidColor = mix(color1, color2, liquidField);
             liquidColor = mix(liquidColor, color3, water3 * 0.6 * (1.0 + colorNoise2 * 0.3));
             liquidColor = mix(liquidColor, color4, water4 * 0.4 * (1.0 + colorNoise3 * 0.2));
 
-            // Add fade-in/fade-out cycles
-            float fadeCycle = sin(time * 0.3) * 0.5 + 0.5;
-            float secondaryFade = cos(time * 0.2 + 1.57) * 0.3 + 0.7;
-            float atmosphericFade = fadeCycle * secondaryFade;
+            // Boost saturation to restore rich purples and aquas
+            vec3 luminance = vec3(0.299, 0.587, 0.114);
+            float lum = dot(liquidColor, luminance);
+            liquidColor = mix(vec3(lum), liquidColor, 1.6); // Increase saturation
+
+            // Prevent color degradation - maintain minimum saturation
+            float minSaturation = 0.7; // Minimum color saturation threshold
+            vec3 desaturated = vec3(lum);
+            liquidColor = mix(desaturated, liquidColor, minSaturation);
+
+            // Remove fading cycles for consistent brightness
+            float atmosphericFade = 1.0;
 
             // Much smoother masking with better precision
             float liquidMask = smootherstep(0.1, 0.7, liquidField);
             liquidMask *= smootherstep(-0.1, 0.5, water1 + water2 + water3 + water4 + water5 + water6);
             liquidMask *= atmosphericFade;
 
-            // Add optimized organic edge variation with reduced frequency for performance
-            float edgeNoise = fbm(uv * 8.0 + time * 0.2) * 0.3;
+            // Add optimized organic edge variation with reduced frequency for performance (stabilized)
+            float edgeNoise = fbm(uv * 8.0 + 1.0) * 0.3; // Remove time component, use fixed seed
             liquidMask *= (1.0 + edgeNoise);
-            liquidMask += dither(uv, time) * 0.5; // Reduced dithering intensity
+            liquidMask += dither(uv, 1.0) * 0.5; // Stabilized dithering with fixed seed
 
-            // Breathing effect with simplified organic variation
-            float breath = sin(time * 0.15 + noise(uv * 2.0) * 2.0) * 0.15 + 0.85;
+            // Lock breathing effect to consistent rich value - no time variation
+            float breath = sin(0.785 + noise(uv * 2.0) * 2.0) * 0.15 + 0.85; // Remove time, keep rich phase
             liquidMask *= breath;
 
-            liquidColor *= 0.9;
-            float shimmer = 0.7 + 0.3 * sin(liquidField * 4.0 + time * 0.8 + noise(uv * 6.0) * 0.5);
+            liquidColor *= 1.1;
+            float shimmer = 1.04 + 0.36 * sin(liquidField * 4.0 + 1.57 + noise(uv * 6.0) * 0.5); // Remove time, keep rich phase
             liquidColor *= shimmer;
 
-            // Optimized edge fade with reduced noise frequency
-            float edgeFade = 1.0 - smootherstep(0.0, 1.5, length(uv - vec2(0.5)));
-            edgeFade += fbm(uv * 4.0 + time * 0.1) * 0.2;
+            // Optimized edge fade with reduced noise frequency (stabilized)
+            float edgeFade = 1.0 - smootherstep(0.0, 0.8, length(uv - vec2(0.5)));
+            edgeFade += fbm(uv * 4.0 + 0.5) * 0.2; // Remove time component, use fixed seed
             edgeFade = clamp(edgeFade, 0.0, 1.0);
             liquidMask *= edgeFade;
 
             float waterGlow = liquidField * 0.15;
             liquidColor += waterGlow;
             vec3 finalColor = liquidColor + stars.rgb * 1.0;
-            float finalAlpha = liquidMask * 0.9 + stars.a * 0.4;
+            float finalAlpha = liquidMask * 1.0 + stars.a * 0.4;
             gl_FragColor = vec4(finalColor, finalAlpha);
           }
         `;
