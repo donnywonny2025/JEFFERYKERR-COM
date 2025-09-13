@@ -277,7 +277,7 @@ export default function LiquidEther({
 
           void main() {
             vec2 uv = vUv;
-            float time = uTime * 0.25;
+            float time = uTime * 0.2;
             vec4 stars = vec4(0.0);
             if(uEnableStars > 0.0) {
               stars = generateStars(uv, time, uStarLayers, uStarDensity, uStarDriftSpeed, uStarRotationSpeed, uStarBrightness, uStarTwinkleSpeed);
@@ -312,10 +312,10 @@ export default function LiquidEther({
             vec2 colorUV3 = vec2(smootherstep(0.0, 1.0, colorFlow3 * 0.5 + 0.3 + colorNoise3 * 0.06), 0.5);
             vec2 colorUV4 = vec2(smootherstep(0.0, 1.0, colorFlow4 * 0.3 + 0.5 + colorNoise1 * 0.04), 0.5);
 
-            vec3 color1 = texture2D(uPalette, colorUV1).rgb * 1.5;
-            vec3 color2 = texture2D(uPalette, colorUV2).rgb * 1.5;
-            vec3 color3 = texture2D(uPalette, colorUV3).rgb * 1.5;
-            vec3 color4 = texture2D(uPalette, colorUV4).rgb * 1.5;
+            vec3 color1 = texture2D(uPalette, colorUV1).rgb * 1.8;
+            vec3 color2 = texture2D(uPalette, colorUV2).rgb * 1.8;
+            vec3 color3 = texture2D(uPalette, colorUV3).rgb * 1.8;
+            vec3 color4 = texture2D(uPalette, colorUV4).rgb * 1.8;
 
             // Optimized 3-layer color mixing for performance while maintaining beauty
             vec3 liquidColor = mix(color1, color2, liquidField);
@@ -341,8 +341,8 @@ export default function LiquidEther({
             float breath = sin(time * 0.15 + noise(uv * 2.0) * 2.0) * 0.15 + 0.85;
             liquidMask *= breath;
 
-            liquidColor *= 0.8;
-            float shimmer = 0.6 + 0.2 * sin(liquidField * 4.0 + time * 0.8 + noise(uv * 6.0) * 0.5);
+            liquidColor *= 0.9;
+            float shimmer = 0.7 + 0.3 * sin(liquidField * 4.0 + time * 0.8 + noise(uv * 6.0) * 0.5);
             liquidColor *= shimmer;
 
             // Optimized edge fade with reduced noise frequency
@@ -354,7 +354,7 @@ export default function LiquidEther({
             float waterGlow = liquidField * 0.15;
             liquidColor += waterGlow;
             vec3 finalColor = liquidColor + stars.rgb * 1.0;
-            float finalAlpha = liquidMask * 0.8 + stars.a * 0.4;
+            float finalAlpha = liquidMask * 0.9 + stars.a * 0.4;
             gl_FragColor = vec4(finalColor, finalAlpha);
           }
         `;

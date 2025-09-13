@@ -5,19 +5,11 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import '../src/App.css';
 import { Tilt } from '../src/components/motion-primitives/tilt';
-import {
-  MorphingDialog,
-  MorphingDialogTrigger,
-  MorphingDialogContent,
-  MorphingDialogTitle,
-  MorphingDialogSubtitle,
-  MorphingDialogClose,
-  MorphingDialogContainer,
-} from '../src/components/motion-primitives/morphing-dialog';
 import { TextShimmer } from '../src/components/motion-primitives/text-shimmer';
 import { SafeWrapper } from '../src/components/SafeWrapper';
 import { DigitalClock } from '../src/components/motion-primitives/digital-clock';
 import LiquidEther from '../src/components/LiquidEther';
+console.log('[Home] LiquidEther imported:', LiquidEther);
 import StarField from '../src/components/StarField';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -376,6 +368,7 @@ export default function Home() {
             </div>
             <nav className="footer-nav">
               <a href="#" onClick={goHome}>HOME</a>
+              <a href="/backgrounds">BACKGROUNDS</a>
               <a href="#">WORK</a>
               <a href="#">CONTACT</a>
             </nav>
@@ -401,13 +394,16 @@ export default function Home() {
   }
 
   console.log('[Home] About to render JSX');
+  console.log('[Home] Rendering LiquidEther component');
+
   return (
     <div className="App">
       {/* Liquid Ether Background Effect */}
       <LiquidEther
         className="liquid-ether-fullscreen"
         colors={['#5227FF', '#FF9FFC', '#B19EEF', '#00d4ff', '#8b5cf6']}
-        style={{ opacity: 0.5 }}
+        style={{ opacity: 0.3 }}
+        enableStars={false}
       />
       
       {/* Header */}
@@ -434,16 +430,11 @@ export default function Home() {
               <DigitalClock />
             </SafeWrapper>
 
-            {/* Hamburger Menu - Far right */}
-            <MorphingDialog
-              transition={{
-                type: 'spring',
-                bounce: 0.05,
-                duration: 0.25,
-              }}
-            >
-              <MorphingDialogTrigger
+            {/* Premium Purple Hamburger Menu */}
+            <div style={{ position: 'relative' }}>
+              <button
                 className={`hamburger ${menuOpen ? 'open' : ''}`}
+                onClick={toggleMenu}
                 style={{
                   background: 'none',
                   border: 'none',
@@ -455,6 +446,9 @@ export default function Home() {
                   width: '40px',
                   height: '40px',
                   transition: 'all 0.3s ease',
+                  borderRadius: '8px',
+                  position: 'relative',
+                  zIndex: 1001
                 }}
                 onMouseEnter={(e) => {
                   const spans = e.currentTarget.querySelectorAll('span');
@@ -474,81 +468,269 @@ export default function Home() {
                 height: '2px',
                 background: '#a1a1aa',
                 width: '100%',
-                transition: 'background-color 0.3s ease'
+                transition: 'all 0.3s ease',
+                transformOrigin: 'center'
               }}></span>
               <span style={{
                 display: 'block',
                 height: '2px',
                 background: '#a1a1aa',
                 width: '100%',
-                transition: 'background-color 0.3s ease'
+                transition: 'all 0.3s ease',
+                transformOrigin: 'center'
               }}></span>
               <span style={{
                 display: 'block',
                 height: '2px',
                 background: '#a1a1aa',
                 width: '100%',
-                transition: 'background-color 0.3s ease'
+                transition: 'all 0.3s ease',
+                transformOrigin: 'center'
               }}></span>
-            </MorphingDialogTrigger>
-            <MorphingDialogContainer>
-              <MorphingDialogContent
+            </button>
+
+            {/* Premium Purple Dropdown Menu */}
+            {menuOpen && (
+              <>
+                {/* Click Outside Overlay - Invisible but captures clicks */}
+                <div
+                  style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: '100vw',
+                    height: '100vh',
+                    zIndex: 999,
+                    cursor: 'pointer'
+                  }}
+                  onClick={toggleMenu}
+                />
+
+                {/* Enhanced Purple Menu Container with Edge Glow */}
+              <div
                 style={{
-                  borderRadius: '12px',
-                  maxWidth: '320px',
-                  width: '320px',
+                  position: 'absolute',
+                  top: '100%',
+                  right: '0',
+                  marginTop: '8px',
+                  zIndex: 1000,
+                  borderRadius: '16px',
+                  padding: '3px',
+                  background: 'linear-gradient(135deg, #5227FF, #FF9FFC, #00d4ff, #5227FF)',
+                  backgroundSize: '300% 300%',
+                  animation: 'edgeGlow 4s ease-in-out infinite',
+                  boxShadow: '0 0 30px rgba(82, 39, 255, 0.3)'
                 }}
-                className='pointer-events-auto relative flex h-auto flex-col overflow-hidden border border-zinc-950/10 bg-black'
               >
-                <div className="dialog-video-container" style={{ height: '160px', width: '100%', overflow: 'hidden', borderRadius: '12px 12px 0 0' }}>
-                  <iframe
-                    src={`${videos[0].embedUrl}?autoplay=1&muted=1&loop=1&background=1`}
-                    className="rounded-xl"
-                    frameBorder="0"
-                    allow="autoplay; fullscreen; picture-in-picture"
-                    allowFullScreen
-                    title={videos[0].title}
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      transform: 'scale(1.8)',
-                      transformOrigin: 'center center'
-                    }}
-                  ></iframe>
+                {/* Enhanced Purple Frosted Glass Menu */}
+                <div
+                  style={{
+                    background: 'rgba(82, 39, 255, 0.08)',
+                    backdropFilter: 'blur(25px) saturate(180%) brightness(1.1)',
+                    border: '1px solid rgba(255, 255, 255, 0.15)',
+                    borderRadius: '13px',
+                    padding: '24px',
+                    minWidth: '240px',
+                    boxShadow: '0 20px 40px rgba(82, 39, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+                    animation: 'menuFadeIn 0.3s ease-out',
+                    position: 'relative',
+                    overflow: 'hidden'
+                  }}
+                >
+                    {/* Subtle purple inner glow */}
+                    <div
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        background: 'linear-gradient(135deg, rgba(82, 39, 255, 0.05), rgba(255, 159, 252, 0.03))',
+                        borderRadius: '13px',
+                        pointerEvents: 'none'
+                      }}
+                    />
+
+                    {/* Logo/Name */}
+                    <div style={{
+                      textAlign: 'center',
+                      marginBottom: '20px',
+                      paddingBottom: '16px',
+                      borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+                      position: 'relative',
+                      zIndex: 1
+                    }}>
+                      <div style={{
+                        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif',
+                        fontSize: '18px',
+                        fontWeight: '500',
+                        color: 'var(--text-primary)',
+                        letterSpacing: '0.5px'
+                      }}>
+                        <span style={{
+                          fontSize: '22px',
+                          fontWeight: '600',
+                          verticalAlign: 'baseline',
+                          lineHeight: '1'
+                        }}>k</span>err
+                      </div>
+                    </div>
+
+                    {/* Navigation Links */}
+                    <nav style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '16px',
+                      position: 'relative',
+                      zIndex: 1
+                    }}>
+                      <a
+                        href="#"
+                        onClick={(e) => { e.preventDefault(); goHome(); toggleMenu(); }}
+                        style={{
+                          color: 'var(--text-primary)',
+                          textDecoration: 'none',
+                          fontFamily: "'Space Mono', monospace",
+                          fontSize: '14px',
+                          fontWeight: '400',
+                          letterSpacing: '1px',
+                          textTransform: 'uppercase',
+                          padding: '8px 0',
+                          transition: 'all 0.3s ease',
+                          borderBottom: '1px solid transparent'
+                        }}
+                        onMouseEnter={(e) => {
+                          (e.target as HTMLElement).style.color = '#00d4ff';
+                          (e.target as HTMLElement).style.borderBottomColor = 'rgba(0, 212, 255, 0.3)';
+                        }}
+                        onMouseLeave={(e) => {
+                          (e.target as HTMLElement).style.color = 'var(--text-primary)';
+                          (e.target as HTMLElement).style.borderBottomColor = 'transparent';
+                        }}
+                      >
+                        HOME
+                      </a>
+
+                      <a
+                        href="#"
+                        onClick={(e) => { e.preventDefault(); toggleMenu(); }}
+                        style={{
+                          color: 'var(--text-primary)',
+                          textDecoration: 'none',
+                          fontFamily: "'Space Mono', monospace",
+                          fontSize: '14px',
+                          fontWeight: '400',
+                          letterSpacing: '1px',
+                          textTransform: 'uppercase',
+                          padding: '8px 0',
+                          transition: 'all 0.3s ease',
+                          borderBottom: '1px solid transparent'
+                        }}
+                        onMouseEnter={(e) => {
+                          (e.target as HTMLElement).style.color = '#00d4ff';
+                          (e.target as HTMLElement).style.borderBottomColor = 'rgba(0, 212, 255, 0.3)';
+                        }}
+                        onMouseLeave={(e) => {
+                          (e.target as HTMLElement).style.color = 'var(--text-primary)';
+                          (e.target as HTMLElement).style.borderBottomColor = 'transparent';
+                        }}
+                      >
+                        WORK
+                      </a>
+
+                      <a
+                        href="/backgrounds"
+                        onClick={toggleMenu}
+                        style={{
+                          color: '#00d4ff',
+                          textDecoration: 'none',
+                          fontFamily: "'Space Mono', monospace",
+                          fontSize: '14px',
+                          fontWeight: '500',
+                          letterSpacing: '1px',
+                          textTransform: 'uppercase',
+                          padding: '8px 0',
+                          transition: 'all 0.3s ease',
+                          borderBottom: '1px solid rgba(0, 212, 255, 0.3)'
+                        }}
+                        onMouseEnter={(e) => {
+                          (e.target as HTMLElement).style.color = '#00d4ff';
+                          (e.target as HTMLElement).style.borderBottomColor = 'rgba(0, 212, 255, 0.5)';
+                        }}
+                        onMouseLeave={(e) => {
+                          (e.target as HTMLElement).style.color = '#00d4ff';
+                          (e.target as HTMLElement).style.borderBottomColor = 'rgba(0, 212, 255, 0.3)';
+                        }}
+                      >
+                        🎨 BACKGROUNDS
+                      </a>
+
+                      <a
+                        href="#"
+                        onClick={(e) => { e.preventDefault(); toggleMenu(); }}
+                        style={{
+                          color: 'var(--text-primary)',
+                          textDecoration: 'none',
+                          fontFamily: "'Space Mono', monospace",
+                          fontSize: '14px',
+                          fontWeight: '400',
+                          letterSpacing: '1px',
+                          textTransform: 'uppercase',
+                          padding: '8px 0',
+                          transition: 'all 0.3s ease',
+                          borderBottom: '1px solid transparent'
+                        }}
+                        onMouseEnter={(e) => {
+                          (e.target as HTMLElement).style.color = '#00d4ff';
+                          (e.target as HTMLElement).style.borderBottomColor = 'rgba(0, 212, 255, 0.3)';
+                        }}
+                        onMouseLeave={(e) => {
+                          (e.target as HTMLElement).style.color = 'var(--text-primary)';
+                          (e.target as HTMLElement).style.borderBottomColor = 'transparent';
+                        }}
+                      >
+                        CONTACT
+                      </a>
+                    </nav>
+
+                    {/* Email */}
+                    <div style={{
+                      marginTop: '20px',
+                      paddingTop: '16px',
+                      borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+                      textAlign: 'center',
+                      position: 'relative',
+                      zIndex: 1
+                    }}>
+                      <a
+                        href="mailto:colour8k@mac.com"
+                        style={{
+                          color: 'rgba(255, 255, 255, 0.7)',
+                          textDecoration: 'none',
+                          fontFamily: "'Space Mono', monospace",
+                          fontSize: '12px',
+                          letterSpacing: '0.5px',
+                          transition: 'color 0.3s ease'
+                        }}
+                        onMouseEnter={(e) => {
+                          (e.target as HTMLElement).style.color = '#00d4ff';
+                        }}
+                        onMouseLeave={(e) => {
+                          (e.target as HTMLElement).style.color = 'rgba(255, 255, 255, 0.7)';
+                        }}
+                      >
+                        colour8k@mac.com
+                      </a>
+                    </div>
+                  </div>
                 </div>
-                <div className='py-8 px-6'>
-                  <nav className='space-y-6 text-center'>
-                    <a href="#" onClick={goHome} className='block text-lg font-light text-gray-200 hover:text-gray-400 transition-all duration-300 tracking-widest uppercase border-b border-transparent hover:border-gray-500 pb-2' style={{fontFamily: "'Space Mono', monospace"}}>
-                      HOME
-                    </a>
-                    <a href="#" className='block text-lg font-light text-gray-200 hover:text-gray-400 transition-all duration-300 tracking-widest uppercase border-b border-transparent hover:border-gray-500 pb-2' style={{fontFamily: "'Space Mono', monospace"}}>
-                      WORK
-                    </a>
-                    <a href="#" className='block text-lg font-light text-gray-200 hover:text-gray-400 transition-all duration-300 tracking-widest uppercase border-b border-transparent hover:border-gray-500 pb-2' style={{fontFamily: "'Space Mono', monospace"}}>
-                      CONTACT
-                    </a>
-                  </nav>
-                </div>
-                <MorphingDialogClose className='text-zinc-50' />
-              </MorphingDialogContent>
-            </MorphingDialogContainer>
-          </MorphingDialog>
+              </>
+            )}
+          </div>
           </div>
         </div>
       </header>
 
-      {/* Menu Overlay */}
-      <div className={`menu-overlay ${menuOpen ? 'open' : ''}`}>
-        <nav className="mobile-nav">
-          <a href="#" onClick={toggleMenu}>Home</a>
-          <a href="#" onClick={toggleMenu}>Work</a>
-          <a href="#" onClick={toggleMenu}>About</a>
-          <a href="#" onClick={toggleMenu}>Contact</a>
-          <div className="mobile-email">
-            <a href="mailto:colour8k@mac.com">colour8k@mac.com</a>
-          </div>
-        </nav>
-      </div>
 
       {/* Showreel Modal */}
       {showModal && currentVideo && (
@@ -758,6 +940,7 @@ export default function Home() {
           </div>
           <nav className="footer-nav">
             <a href="#" onClick={goHome}>HOME</a>
+            <a href="/backgrounds" style={{color: '#00d4ff', fontWeight: '500'}}>🎨 BACKGROUNDS</a>
             <a href="#">WORK</a>
             <a href="#">CONTACT</a>
           </nav>

@@ -59,6 +59,41 @@ body::before {
   90% { transform: translate(8%, 0%); }
 }
 
+/* Premium Hamburger Menu Animations */
+@keyframes edgeGlow {
+  0% {
+    background-position: 0% 50%;
+    box-shadow: 0 0 15px rgba(82, 39, 255, 0.15), 0 0 30px rgba(82, 39, 255, 0.1);
+  }
+  25% {
+    background-position: 100% 0%;
+    box-shadow: 0 0 20px rgba(255, 159, 252, 0.2), 0 0 40px rgba(255, 159, 252, 0.15);
+  }
+  50% {
+    background-position: 100% 100%;
+    box-shadow: 0 0 18px rgba(0, 212, 255, 0.18), 0 0 35px rgba(0, 212, 255, 0.12);
+  }
+  75% {
+    background-position: 0% 100%;
+    box-shadow: 0 0 22px rgba(82, 39, 255, 0.22), 0 0 45px rgba(82, 39, 255, 0.18);
+  }
+  100% {
+    background-position: 0% 50%;
+    box-shadow: 0 0 15px rgba(82, 39, 255, 0.15), 0 0 30px rgba(82, 39, 255, 0.1);
+  }
+}
+
+@keyframes menuFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 .app {
   min-height: 100vh;
   position: relative;
