@@ -5,10 +5,14 @@ import Link from 'next/link';
 import { TextShimmer } from '../../src/components/motion-primitives/text-shimmer';
 import { SafeWrapper } from '../../src/components/SafeWrapper';
 import { DigitalClock } from '../../src/components/motion-primitives/digital-clock';
+import LiquidEther from '../../src/components/LiquidEther';
+import StarField from '../../src/components/StarField';
+import { Meteors } from '../../src/components/ui/meteors';
 import '../../src/App.css';
 
 export default function BackgroundsShowcase() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [currentBackground, setCurrentBackground] = useState('liquid');
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
@@ -18,39 +22,38 @@ export default function BackgroundsShowcase() {
     window.location.href = '/';
   };
 
+  const switchBackground = (backgroundId: string) => {
+    setCurrentBackground(backgroundId);
+  };
+
   const backgroundOptions = [
     {
       id: 'liquid',
-      title: 'Liquid Ether',
+      title: 'LiquidEther',
       description: 'Flowing liquid background with organic animations',
-      thumbnail: '/backgrounds/liquid-preview.jpg',
-      route: '/backgrounds/liquid'
-    },
-    {
-      id: 'liquid-stars',
-      title: 'Liquid Ether with Stars',
-      description: 'Flowing liquid background with animated star field',
-      thumbnail: '/backgrounds/liquid-stars-preview.jpg',
-      route: '/backgrounds/liquid-stars'
-    },
-    {
-      id: 'prismatic',
-      title: 'Prismatic Burst',
-      description: 'Colorful geometric patterns with dynamic effects',
-      thumbnail: '/backgrounds/prismatic-preview.jpg',
-      route: '/backgrounds/prismatic'
+      colors: ['#5227FF', '#FF9FFC', '#B19EEF', '#00d4ff', '#8b5cf6']
     },
     {
       id: 'starfield',
       title: 'Star Field',
-      description: 'Animated star field with twinkling effects',
-      thumbnail: '/backgrounds/starfield-preview.jpg',
-      route: '/backgrounds/starfield'
+      description: 'Animated star field with twinkling effects'
     }
   ];
 
   return (
     <div className="App">
+      {/* Dynamic Background Effects */}
+      {currentBackground === 'liquid' && (
+        <LiquidEther
+          colors={['#5227FF', '#FF9FFC', '#B19EEF', '#00d4ff', '#8b5cf6']}
+          style={{ opacity: 0.3 }}
+        />
+      )}
+
+      {currentBackground === 'starfield' && (
+        <StarField />
+      )}
+
       {/* Header */}
       <header className="header">
         <div className="header-content" style={{
@@ -336,65 +339,123 @@ export default function BackgroundsShowcase() {
         </div>
       </section>
 
-      {/* Background Options Grid */}
-      <section className="background-grid-section" style={{ padding: '80px 60px', maxWidth: '1400px', margin: '0 auto' }}>
-        <div className="background-grid" style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
-          gap: '40px',
-          marginTop: '40px'
+      {/* Background Selection Controls */}
+      <section className="background-controls" style={{
+        padding: '80px 60px',
+        maxWidth: '1400px',
+        margin: '0 auto',
+        position: 'relative',
+        zIndex: 20
+      }}>
+        <div className="controls-content" style={{
+          background: 'rgba(0, 0, 0, 0.7)',
+          backdropFilter: 'blur(20px)',
+          borderRadius: '12px',
+          padding: '40px',
+          border: '1px solid rgba(255, 255, 255, 0.1)'
         }}>
-          {backgroundOptions.map((bg) => (
-            <Link key={bg.id} href={bg.route} className="background-card" style={{
-              display: 'block',
-              textDecoration: 'none',
-              color: 'inherit',
-              transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-              borderRadius: '12px',
-              overflow: 'hidden',
-              background: 'rgba(255, 255, 255, 0.02)',
-              backdropFilter: 'blur(10px)',
-              border: '1px solid rgba(255, 255, 255, 0.08)'
-            }}>
-              <div className="background-preview" style={{
-                height: '250px',
-                background: 'linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                position: 'relative'
-              }}>
-                <div style={{
-                  fontSize: '48px',
-                  opacity: 0.3,
-                  fontFamily: "'Space Mono', monospace"
-                }}>
-                  {bg.title}
-                </div>
-              </div>
-              <div className="background-info" style={{
-                padding: '30px'
-              }}>
-                <h3 style={{
-                  fontSize: '1.5rem',
-                  fontWeight: '400',
+          <h2 style={{
+            fontSize: '2rem',
+            fontWeight: '300',
+            color: 'var(--text-primary)',
+            marginBottom: '30px',
+            textAlign: 'center'
+          }}>
+            Background Effects
+          </h2>
+
+          {/* Background Selection Buttons */}
+          <div className="background-selection" style={{
+            display: 'flex',
+            justifyContent: 'center',
+            gap: '20px',
+            marginBottom: '40px',
+            flexWrap: 'wrap'
+          }}>
+            {backgroundOptions.map((bg) => (
+              <button
+                key={bg.id}
+                onClick={() => switchBackground(bg.id)}
+                style={{
+                  padding: '16px 32px',
+                  background: currentBackground === bg.id ? 'rgba(0, 212, 255, 0.2)' : 'rgba(255, 255, 255, 0.1)',
+                  border: `2px solid ${currentBackground === bg.id ? '#00d4ff' : 'rgba(255, 255, 255, 0.2)'}`,
+                  borderRadius: '8px',
                   color: 'var(--text-primary)',
-                  marginBottom: '15px',
-                  letterSpacing: '-0.01em'
-                }}>
-                  {bg.title}
-                </h3>
-                <p style={{
-                  color: 'var(--text-secondary)',
+                  fontFamily: "'Space Mono', monospace",
                   fontSize: '1rem',
-                  lineHeight: '1.6',
-                  margin: '0'
-                }}>
-                  {bg.description}
-                </p>
-              </div>
+                  fontWeight: currentBackground === bg.id ? '600' : '400',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  textTransform: 'uppercase',
+                  letterSpacing: '1px'
+                }}
+                onMouseEnter={(e) => {
+                  if (currentBackground !== bg.id) {
+                    (e.target as HTMLElement).style.background = 'rgba(255, 255, 255, 0.15)';
+                    (e.target as HTMLElement).style.borderColor = 'rgba(0, 212, 255, 0.5)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (currentBackground !== bg.id) {
+                    (e.target as HTMLElement).style.background = 'rgba(255, 255, 255, 0.1)';
+                    (e.target as HTMLElement).style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                  }
+                }}
+              >
+                {bg.title}
+              </button>
+            ))}
+          </div>
+
+          {/* Current Background Info */}
+          <div className="current-background-info" style={{
+            textAlign: 'center',
+            padding: '30px',
+            background: 'rgba(255, 255, 255, 0.05)',
+            borderRadius: '8px',
+            border: '1px solid rgba(255, 255, 255, 0.1)'
+          }}>
+            <h3 style={{
+              fontSize: '1.5rem',
+              fontWeight: '400',
+              color: 'var(--text-primary)',
+              marginBottom: '15px'
+            }}>
+              {backgroundOptions.find(bg => bg.id === currentBackground)?.title}
+            </h3>
+            <p style={{
+              color: 'var(--text-secondary)',
+              fontSize: '1rem',
+              lineHeight: '1.6',
+              margin: '0'
+            }}>
+              {backgroundOptions.find(bg => bg.id === currentBackground)?.description}
+            </p>
+          </div>
+
+          {/* Navigation Links */}
+          <div className="navigation-links" style={{
+            display: 'flex',
+            justifyContent: 'center',
+            gap: '20px',
+            marginTop: '40px',
+            flexWrap: 'wrap'
+          }}>
+            <Link href="/" style={{
+              padding: '12px 24px',
+              background: 'rgba(255, 255, 255, 0.1)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              borderRadius: '8px',
+              color: 'var(--text-primary)',
+              textDecoration: 'none',
+              fontFamily: "'Space Mono', monospace",
+              fontSize: '0.9rem',
+              transition: 'all 0.3s ease'
+            }}>
+              ← Back to Home
             </Link>
-          ))}
+          </div>
         </div>
       </section>
 
@@ -411,8 +472,8 @@ export default function BackgroundsShowcase() {
             <a href="mailto:colour8k@mac.com">colour8k@mac.com</a>
           </div>
           <nav className="footer-nav">
-            <Link href="/">HOME</Link>
-            <Link href="/backgrounds">BACKGROUNDS</Link>
+            <a href="#" onClick={goHome}>HOME</a>
+            <a href="/backgrounds" style={{color: '#00d4ff', fontWeight: '500'}}>🎨 BACKGROUNDS</a>
             <a href="#">WORK</a>
             <a href="#">CONTACT</a>
           </nav>
@@ -432,6 +493,9 @@ export default function BackgroundsShowcase() {
             2025 Jeff Kerr. Crafting visual stories that move the world forward.
           </div>
         </div>
+
+        {/* Meteor Effect Overlay */}
+        <Meteors number={20} />
       </footer>
     </div>
   );

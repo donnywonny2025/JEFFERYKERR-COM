@@ -173,8 +173,8 @@ body::before {
   left: 0;
   width: 100%;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(12px);
   z-index: 999;
   display: flex;
   align-items: flex-start;
@@ -190,15 +190,16 @@ body::before {
   visibility: visible;
 }
 
-.mobile-nav {
-  text-align: right;
-  position: relative;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 40px 30px;
-  backdrop-filter: blur(10px);
-  min-width: 200px;
+.simple-menu-content {
+  text-align: right !important;
+  position: relative !important;
+  background: rgba(0, 0, 0, 0.3) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: 12px !important;
+  padding: 24px 20px !important;
+  backdrop-filter: blur(15px) !important;
+  min-width: 200px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2) !important;
 }
 
 .mobile-nav::before {
@@ -376,28 +377,168 @@ body::before {
 
 .hero-content {
   position: relative;
-  margin: 15vh 0 0 60px; /* align to header left padding */
-  width: calc(100% - 60px);
+  margin: 15vh auto 0;
+  width: 100%;
   max-width: 750px;
-  text-align: left;
+  text-align: center;
   z-index: 20;
 }
 
 /* Heading override */
 .hero-content h1 {
   font-family: 'Space Mono', monospace;
-  font-size: 2.1rem;
-  font-weight: 150;
-  line-height: 1.15;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 400;
+  line-height: 1.3;
   letter-spacing: -0.02em;
-  color: var(--text-primary);
+  color: rgba(255, 255, 255, 0.95);
   text-transform: none;
   margin: 0 auto;
   opacity: 0.9;
-  background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.8) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+}
+
+/* Staggered text reveal animations */
+@keyframes textReveal {
+  0% {
+    opacity: 0;
+    filter: blur(10px);
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0px);
+    transform: translateY(0);
+  }
+}
+
+@keyframes locationSlide {
+  0% {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fallbackShow {
+  0% {
+    opacity: 0.1;
+    filter: blur(5px);
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0px);
+    transform: translateY(0);
+  }
+}
+
+/* Hero Text Animation Styles */
+.hero-text h1 {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  font-weight: 400;
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.hero-main-text {
+  font-family: 'Space Mono', monospace;
+  font-weight: 400;
+  font-size: 2rem;
+  line-height: 1.3;
+  color: rgba(255, 255, 255, 0.95);
+  margin: 0 0 1.5rem 0;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 1s ease-out;
+}
+
+.hero-main-text.text-animate-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hero-meta {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.8s ease-out 0.3s;
+}
+
+.hero-meta.meta-animate-in {
+  opacity: 0.8;
+  transform: translateY(0);
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.meta-item a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.hero-word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(20px);
+  filter: blur(8px);
+}
+
+.hero-word.animate {
+  animation: wordReveal 0.6s cubic-bezier(0.25,0.46,0.45,0.94) forwards;
+  animation-delay: var(--d, 0s);
+}
+
+@keyframes wordReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+    filter: blur(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+/* Meta information animation */
+.hero-meta {
+  opacity: 0;
+  transform: translateY(15px);
+  transition: all 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform, opacity;
+}
+
+.hero-meta-visible {
+  opacity: 1;
+  transform: translateY(0);
+  animation-delay: 1.9s;
+  animation-fill-mode: both;
+}
+
+.hero-meta p {
+  font-size: 11px;
+  margin-bottom: 10px;
+  color: var(--text-secondary);
+  font-weight: 400;
+  opacity: 0.6;
+  font-family: 'Space Mono', monospace;
+  display: inline;
+}
+
+.hero-meta p:last-child {
+  margin-left: 20px;
 }
 
 /* Force hero heading to left-align with the hero/video container */
@@ -413,14 +554,14 @@ body::before {
 }
 
 .hero-meta {
-  /* Align hero meta to the left edge of the hero content (no extra left offset) */
+  /* Center hero meta under the h1 */
   position: relative;
-  margin: 40px 0 0 0; /* sit directly under the h1 within .hero-content */
+  margin: 40px auto 0; /* center the meta section */
   max-width: 750px; /* keep width matching the hero content */
   padding: 0; /* ensure no side padding shifts the left edge */
   display: flex;
   gap: 20px;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
 }
 
@@ -458,9 +599,7 @@ body::before {
   justify-content: center;
 }
 
-.circular-showreel:hover {
-  transform: translate(-50%, -50%) scale(1.05);
-}
+/* Removed hover scale effect to prevent animation interruption */
 
 .circular-showreel-inner {
   position: relative;
@@ -481,16 +620,13 @@ body::before {
   filter: blur(0.5px);
 }
 
-.circular-showreel:hover .rotating-text {
-  fill: rgba(255, 255, 255, 0.9);
-}
+/* Removed hover effects to prevent animation interruption */
 
 @keyframes rotateOrganic {
-  0%, 10% { transform: rotate(0deg) scaleX(1.2) scaleY(0.8); }
-  25% { transform: rotate(90deg) scaleX(1.2) scaleY(0.8); }
-  50% { transform: rotate(180deg) scaleX(1.2) scaleY(0.8); }
-  75% { transform: rotate(270deg) scaleX(1.2) scaleY(0.8); }
-  90%, 100% { transform: rotate(360deg) scaleX(1.2) scaleY(0.8); }
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(90deg); }
+  50% { transform: rotate(180deg); }
+  75% { transform: rotate(270deg); }
 }
 
 /* Hero Video Play Button */
@@ -583,15 +719,17 @@ body::before {
   border-left-color: rgba(255, 255, 255, 1);
 }
 
-/* Hero Video */
-.hero-video {
-  /* Center the hero video within the site's content width instead of full-bleed */
-  position: relative;
-  padding: 40px 60px 60px;
-  margin: 0 auto;
+/* Hero video specific styling */
+.hero-video.featured-video-section {
+  padding: 0 60px 60px !important;
+  margin: 60px auto 0 !important;
+  max-width: 1050px !important;
+}
+
+.hero-video .featured-video-container {
+  width: 100%;
   max-width: 1400px;
-  background: transparent;
-  overflow: visible;
+  margin: 0 auto;
 }
 
 .hero-video-card {
@@ -621,7 +759,6 @@ body::before {
   left: 0;
   width: 100%;
   height: 100%;
-  min-height: 400px;
   border: none;
   border-radius: 12px;
   transform: scale(1);
@@ -699,9 +836,9 @@ body::before {
 
 /* Featured Video Section - Reel 2024 directly under hero */
 .featured-video-section {
-  padding: 0 80px 60px;
-  margin: 60px auto 0;
-  max-width: 1400px;
+  padding: 0 60px 60px !important;
+  margin: 60px auto 0 !important;
+  max-width: 1050px !important;
 }
 
 .featured-video-container {
@@ -816,9 +953,9 @@ body::before {
 
 /* Video Grid - Much larger videos like Sam Kolder's */
 .video-grid-section {
-  padding: 0 80px 60px;
-  margin-top: 60px;
-  max-width: 1400px;
+  padding: 0 60px 60px !important;
+  margin-top: 60px !important;
+  max-width: 1050px !important;
 }
 
 .video-grid {
@@ -865,6 +1002,8 @@ body::before {
   transform: scale(1);
   transform-origin: center center;
 }
+
+/* Video scaling removed - using consistent structure instead */
 
 /* .video-card:hover .video-thumbnail img - removed scaling */
 
@@ -1035,6 +1174,64 @@ body::before {
 
 .social-link:hover {
   color: var(--text-primary);
+}
+
+/* Meteor Effect Animation */
+@keyframes meteor {
+  0% {
+    transform: rotate(215deg) translateX(0);
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(215deg) translateX(-500px);
+    opacity: 0;
+  }
+}
+
+.animate-meteor-effect {
+  animation: meteor 5s linear infinite;
+}
+
+/* Contained Meteor Effect - stays within footer bounds */
+@keyframes meteor-contained {
+  0% {
+    transform: rotate(215deg) translateX(0);
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(215deg) translateX(-350px);
+    opacity: 0;
+  }
+}
+
+@keyframes meteor-long {
+  0% {
+    transform: rotate(215deg) translateX(0);
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(215deg) translateX(-500px);
+    opacity: 0;
+  }
+}
+
+.animate-meteor-contained {
+  animation: meteor-contained 4s linear infinite;
+  animation-fill-mode: both; /* Ensure animation starts immediately */
+}
+
+.animate-meteor-long {
+  animation: meteor-long 6s linear infinite;
+  animation-fill-mode: both; /* Ensure animation starts immediately */
 }
 
 /* New Hamburger Menu Animations */
@@ -1428,6 +1625,92 @@ body::before {
   
   .video-grid {
     gap: 40px;
+  }
+}
+
+/* Hero Section with TextRoll Animation */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  padding: 0 2rem;
+}
+
+.hero-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Meta text animation */
+.hero-meta {
+  margin-top: 2rem;
+  font-size: 1.125rem;
+  color: rgb(55 65 81); /* gray-700 */
+  animation: fadeInUp 0.8s ease forwards;
+  opacity: 0;
+  animation-delay: 1.2s; /* after TextRoll finishes */
+}
+
+.hero-meta p {
+  margin-bottom: 0.5rem;
+}
+
+.hero-meta a {
+  color: rgb(55 65 81); /* gray-700 */
+  text-decoration: underline;
+  transition: color 0.3s ease;
+}
+
+.hero-meta a:hover {
+  color: rgb(0 0 0); /* black */
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .hero-meta {
+    color: rgb(209 213 219); /* gray-300 */
+  }
+
+  .hero-meta a {
+    color: rgb(209 213 219); /* gray-300 */
+  }
+
+  .hero-meta a:hover {
+    color: rgb(255 255 255); /* white */
+  }
+}
+
+/* Fade in up animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive text sizes */
+@media (max-width: 640px) {
+  .hero-content h1 {
+    font-size: 3rem;
+  }
+}
+
+@media (min-width: 640px) {
+  .hero-content h1 {
+    font-size: 3.75rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .hero-content h1 {
+    font-size: 4.5rem;
   }
 }
 

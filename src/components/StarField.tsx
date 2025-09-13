@@ -13,7 +13,7 @@ import { useRef, useEffect, useState } from 'react';
  * - requestAnimationFrame for smooth 60fps animations
  *
  * Features:
- * - 1200 realistic twinkling stars
+ * - 1200 realistic twinkling stars (BRIGHTER VERSION)
  * - Slow rotation around bottom-right anchor point
  * - Dynamic shooting stars with gradient trails
  * - Responsive canvas that adapts to window resize
@@ -24,10 +24,11 @@ import { useRef, useEffect, useState } from 'react';
 interface Star {
   x: number;              // Position coordinates
   y: number;
-  size: number;           // 0.1 to 0.5 pixels (very small for realism)
-  opacity: number;        // 0.2 to 0.8 (bright enough to see)
+  size: number;           // 0.5 to 2.0 pixels (bigger for visibility)
+  opacity: number;        // 0.4 to 1.0 (BRIGHTER - increased from 0.2-0.8)
   twinkleSpeed: number;   // Individual animation speed
   twinklePhase: number;   // Offset for natural variation
+  flickerIntensity: number; // 0-1: How much this star flickers (0 = no flicker)
 }
 
 interface ShootingStar {
@@ -42,8 +43,6 @@ interface ShootingStar {
 }
 
 export default function StarField() {
-  console.log('[StarField] Component mounted');
-
   // Canvas and animation references
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const starsRef = useRef<Star[]>([]);
@@ -54,22 +53,14 @@ export default function StarField() {
 
   // Configuration
   const [starCount] = useState(1200);
-  const [shootingStarFrequency] = useState(0.0003);
+  const [shootingStarFrequency] = useState(0.001); // MORE FREQUENT: increased from 0.0003
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) {
-      console.error('[StarField] Canvas ref not found');
-      return;
-    }
+    if (!canvas) return;
 
     const ctx = canvas.getContext('2d');
-    if (!ctx) {
-      console.error('[StarField] Could not get 2D context');
-      return;
-    }
-
-    console.log('[StarField] Canvas and context initialized');
+    if (!ctx) return;
 
     // Set canvas size and initialize stars
     const resizeCanvas = () => {
@@ -90,10 +81,11 @@ export default function StarField() {
         stars.push({
           x: Math.random() * (canvas.width + margin * 2) - margin,
           y: Math.random() * (canvas.height + margin * 2) - margin,
-          size: Math.random() * 0.4 + 0.1,        // Very small: 0.1-0.5px
-          opacity: Math.random() * 0.6 + 0.2,     // Visible: 0.2-0.8
+          size: Math.random() * 1.5 + 0.5,        // BIGGER: 0.5-2.0px (was 0.1-0.5px)
+          opacity: Math.random() * 0.6 + 0.4,     // BRIGHTER: 0.4-1.0 (was 0.2-0.8)
           twinkleSpeed: Math.random() * 0.008 + 0.002,  // Gentle twinkling
-          twinklePhase: Math.random() * Math.PI * 2      // Random start phase
+          twinklePhase: Math.random() * Math.PI * 2,     // Random start phase
+          flickerIntensity: Math.random() < 0.15 ? Math.random() * 0.7 + 0.3 : 0  // 15% of stars flicker dramatically
         });
       }
 
@@ -134,7 +126,7 @@ export default function StarField() {
       shootingStarsRef.current.push({
         x,
         y,
-        length: Math.random() * 60 + 30,         // Trail length
+        length: Math.random() * 120 + 80,        // LONGER TRAILS: 80-200px (was 30-90px)
         speed: Math.random() * 4 + 3,            // Movement speed
         angle,
         opacity: 1,
@@ -176,9 +168,18 @@ export default function StarField() {
         // Update twinkling animation
         star.twinklePhase += star.twinkleSpeed;
         const twinkle = Math.sin(star.twinklePhase) * 0.3 + 0.7;  // Gentle pulse
-        const currentOpacity = star.opacity * twinkle;
 
-        // Draw star as tiny point of light
+        // Add flickering effect for some stars
+        let flickerEffect = 1.0;
+        if (star.flickerIntensity > 0) {
+          // Dramatic flicker: occasional dimming
+          const flickerPhase = Math.sin(star.twinklePhase * 3) * star.flickerIntensity;
+          flickerEffect = Math.max(0.1, 1.0 - Math.abs(flickerPhase)); // Can dim to 10% brightness
+        }
+
+        const currentOpacity = star.opacity * twinkle * flickerEffect;
+
+        // Draw star as point of light
         ctx.fillStyle = `rgba(255, 255, 255, ${currentOpacity})`;
         ctx.beginPath();
         ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
@@ -209,10 +210,12 @@ export default function StarField() {
           shootingStar.y - Math.sin(shootingStar.angle) * shootingStar.length
         );
 
-        // Gradient from bright white to transparent blue
-        gradient.addColorStop(0, `rgba(255, 255, 255, ${shootingStar.opacity * 0.8})`);
-        gradient.addColorStop(0.6, `rgba(200, 220, 255, ${shootingStar.opacity * 0.3})`);
-        gradient.addColorStop(1, 'rgba(200, 220, 255, 0)');
+        // WHITE TO BLUE: More visible transition
+        gradient.addColorStop(0, `rgba(255, 255, 255, ${shootingStar.opacity})`);      // Bright white at start
+        gradient.addColorStop(0.2, `rgba(255, 255, 255, ${shootingStar.opacity * 0.9})`); // White fading
+        gradient.addColorStop(0.5, `rgba(200, 230, 255, ${shootingStar.opacity * 0.7})`); // Light blue transition
+        gradient.addColorStop(0.8, `rgba(100, 180, 255, ${shootingStar.opacity * 0.3})`); // More blue
+        gradient.addColorStop(1, `rgba(50, 120, 255, ${shootingStar.opacity * 0.1})`);   // Deep blue at end
 
         // Draw the trail
         ctx.strokeStyle = gradient;

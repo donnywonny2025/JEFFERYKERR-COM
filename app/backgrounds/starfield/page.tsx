@@ -5,10 +5,10 @@ import Link from 'next/link';
 import { TextShimmer } from '../../../src/components/motion-primitives/text-shimmer';
 import { SafeWrapper } from '../../../src/components/SafeWrapper';
 import { DigitalClock } from '../../../src/components/motion-primitives/digital-clock';
-import LiquidEther from '../../../src/components/LiquidEther';
+import StarField from '../../../src/components/StarField';
 import '../../../src/App.css';
 
-export default function LiquidBackgroundPage() {
+export default function StarFieldBackgroundPage() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -21,11 +21,8 @@ export default function LiquidBackgroundPage() {
 
   return (
     <div className="App">
-      {/* Liquid Ether Background Effect */}
-      <LiquidEther
-        colors={['#5227FF', '#FF9FFC', '#B19EEF', '#00d4ff', '#8b5cf6']}
-        style={{ opacity: 0.3 }}
-      />
+      {/* Star Field Background Effect */}
+      <StarField />
 
       {/* Header */}
       <header className="header">
@@ -298,11 +295,11 @@ export default function LiquidBackgroundPage() {
       {/* Hero Section */}
       <section className="hero" style={{ position: 'relative' }}>
         <div className="hero-content" style={{ position: 'relative', zIndex: 30 }}>
-          <h1>Liquid Ether Background</h1>
+          <h1>Star Field Background</h1>
           <div className="hero-meta">
             <div className="meta-item">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-              <span>Flowing Liquid Animation</span>
+              <span>Animated Star Field with Twinkling Effects</span>
             </div>
             <div className="meta-item">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
@@ -334,7 +331,7 @@ export default function LiquidBackgroundPage() {
             marginBottom: '30px',
             textAlign: 'center'
           }}>
-            Background Controls
+            Star Field Background
           </h2>
 
           <div className="control-grid" style={{
@@ -344,23 +341,23 @@ export default function LiquidBackgroundPage() {
             marginBottom: '40px'
           }}>
             <div className="control-item">
-              <h3 style={{ color: 'var(--text-primary)', marginBottom: '10px' }}>Colors</h3>
+              <h3 style={{ color: 'var(--text-primary)', marginBottom: '10px' }}>Star Animation</h3>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-                Dynamic color palette with 5 gradient colors flowing organically
+                1200 individual stars with unique twinkling patterns and orbital motion
               </p>
             </div>
 
             <div className="control-item">
-              <h3 style={{ color: 'var(--text-primary)', marginBottom: '10px' }}>Animation</h3>
+              <h3 style={{ color: 'var(--text-primary)', marginBottom: '10px' }}>Shooting Stars</h3>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-                WebGL-powered fluid simulation with real-time rendering
+                Random shooting stars with gradient trails and realistic physics
               </p>
             </div>
 
             <div className="control-item">
               <h3 style={{ color: 'var(--text-primary)', marginBottom: '10px' }}>Performance</h3>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-                Optimized for 60fps with adaptive quality based on device capabilities
+                Canvas-based rendering optimized for smooth 60fps animation
               </p>
             </div>
           </div>
@@ -383,6 +380,20 @@ export default function LiquidBackgroundPage() {
               transition: 'all 0.3s ease'
             }}>
               ← Back to Backgrounds
+            </Link>
+
+            <Link href="/backgrounds/liquid" style={{
+              padding: '12px 24px',
+              background: 'rgba(255, 255, 255, 0.1)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              borderRadius: '8px',
+              color: 'var(--text-primary)',
+              textDecoration: 'none',
+              fontFamily: "'Space Mono', monospace",
+              fontSize: '0.9rem',
+              transition: 'all 0.3s ease'
+            }}>
+              LiquidEther
             </Link>
 
             <Link href="/" style={{
@@ -415,8 +426,8 @@ export default function LiquidBackgroundPage() {
             <a href="mailto:colour8k@mac.com">colour8k@mac.com</a>
           </div>
           <nav className="footer-nav">
-            <Link href="/">HOME</Link>
-            <Link href="/backgrounds">BACKGROUNDS</Link>
+            <a href="#" onClick={goHome}>HOME</a>
+            <a href="/backgrounds" style={{color: '#00d4ff', fontWeight: '500'}}>🎨 BACKGROUNDS</a>
             <a href="#">WORK</a>
             <a href="#">CONTACT</a>
           </nav>

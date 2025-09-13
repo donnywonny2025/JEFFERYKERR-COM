@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useLayoutEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import '../src/App.css';
@@ -12,7 +12,6 @@ import LiquidEther from '../src/components/LiquidEther';
 import StarField from '../src/components/StarField';
 import Menu from '../src/components/Menu/Menu';
 import '../src/components/Menu/Menu.css';
-import HeroHeading from '../src/components/HeroHeading';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -53,18 +52,6 @@ const Home = React.memo(function Home() {
     const timeoutId = setTimeout(scrollToTop, 10);
 
     return () => clearTimeout(timeoutId);
-  }, []);
-
-  // Trigger hero animations after page load
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      const heroSection = document.querySelector('.hero');
-      if (heroSection) {
-        heroSection.classList.add('hero-loaded');
-      }
-    }, 100);
-
-    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
@@ -495,53 +482,59 @@ const Home = React.memo(function Home() {
       {/* Hero Section */}
       <section className="hero" style={{ position: 'relative' }}>
         <div className="hero-content" style={{ position: 'relative', zIndex: 30 }}>
-          <HeroHeading />
-        </div>
-
-        {/* Hero Video - Using exact same structure as showreel */}
-        <section className="hero-video featured-video-section">
-          <div className="featured-video-container">
-            <div className="featured-video-card">
-              <div className="featured-video-thumbnail">
-                <img
-                  src={videos[0].thumbnail}
-                  alt={videos[0].title}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover'
-                  }}
-                />
-
-                {/* Circular Showreel Element - positioned within featured video container */}
-                <div
-                  className="circular-showreel"
-                  role="button"
-                  tabIndex={0}
-                  aria-label={`Open showreel: ${videos[0].title}`}
-                  onClick={() => handleVideoClick(videos[0])}
-                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleVideoClick(videos[0]); } }}
-                >
-                  <div className="circular-showreel-inner">
-                    <svg className="rotating-text" viewBox="0 0 200 200">
-                      <defs>
-                        <path id="circle" d="M 100, 100 m -75, 0 a 75,75 0 1,1 150,0 a 75,75 0 1,1 -150,0" />
-                      </defs>
-                      <text fontSize="14" fontWeight="700" letterSpacing="2px" fontFamily="'Space Mono', monospace">
-                        <textPath href="#circle">
-                          SHOWREEL • SHOWREEL • SHOWREEL • SHOWREEL •
-                        </textPath>
-                      </text>
-                    </svg>
-                    <div className="play-button-circular">
-                      <div className="play-icon-circular"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+          <h1>I produce compelling visual content while building AI-enhanced workflows that change how creative work gets done.</h1>
+          <div className="hero-meta">
+            <div className="meta-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+              <span>Grand Rapids, Michigan / World</span>
+            </div>
+            <div className="meta-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+              <a href="mailto:colour8k@mac.com">colour8k@mac.com</a>
             </div>
           </div>
-        </section>
+        </div>
+
+        {/* Hero Video */}
+        <div className="hero-video">
+          <div className="hero-video-card">
+            <div className="hero-video-container" style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
+              <iframe
+                src="https://player.vimeo.com/video/1116767679?autoplay=1&muted=1&loop=1&background=1"
+                className="rounded-xl"
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  width: '140%',
+                  height: '140%',
+                  transform: 'translate(-50%, -50%)',
+                  border: 'none'
+                }}
+                frameBorder="0"
+                allow="autoplay; fullscreen; picture-in-picture"
+                allowFullScreen
+                title="Hero Video"
+              ></iframe>
+
+            {/* Hero Video Play Button Overlay */}
+            <div
+              className="hero-play-button"
+              role="button"
+              tabIndex={0}
+              aria-label={`Play featured video: ${videos[0].title}`}
+              onClick={() => handleVideoClick(videos[0])}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleVideoClick(videos[0]); } }}
+            >
+              <div className="hero-play-content">
+                <div className="hero-play-icon" aria-hidden="true"></div>
+                <span className="hero-play-text">PLAY FEATURED VIDEO</span>
+              </div>
+            </div>
+
+          </div>
+          </div>
+        </div>
       </section>
 
       {/* Brand Logos Section - After Hero Video */}
