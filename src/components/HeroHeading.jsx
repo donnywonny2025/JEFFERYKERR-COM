@@ -3,7 +3,7 @@ import { gsap } from 'gsap';
 
 const HeroHeading = () => {
   const headingRef = useRef(null);
-  const text = "Jeff Kerr produces compelling visual content while building AI-enhanced workflows that change how creative work gets done.";
+  const text = "I produce compelling visual content while building AI-enhanced workflows that change how creative work gets done.";
   const words = text.split(' ');
 
   useLayoutEffect(() => {

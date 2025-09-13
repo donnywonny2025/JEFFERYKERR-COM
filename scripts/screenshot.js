@@ -8,7 +8,7 @@ async function takeScreenshot(url, path) {
   await browser.close();
 }
 
-const url = 'http://localhost:3000';
+const url = 'http://localhost:3002';
 const screenshotPath = 'screenshots/portfolio.png';
 
 takeScreenshot(url, screenshotPath).then(() => {

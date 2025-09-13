@@ -1,0 +1,72 @@
+.prismatic-burst-container {
+  /* When rendered inside the hero, make this absolutely positioned to the hero box */
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none; /* background shouldn't intercept pointer events */
+  /* sit well behind page content (hero-content uses z-index:30) */
+  z-index: 0;
+  opacity: 1; /* container visible, canvas controls alpha */
+}
+
+/* NEW: Full-screen background variant */
+.prismatic-burst-fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -1; /* Behind everything, including grain */
+  opacity: 1;
+}
+
+/* Ensure fullscreen canvas is visible and truly behind content */
+.prismatic-burst-fullscreen canvas {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+  z-index: -1; /* Deep background */
+  opacity: 1 !important; /* Force visibility */
+  filter: none; /* Remove blur for crisp visuals */
+  transition: opacity 300ms ease-in-out;
+  mix-blend-mode: lighten; /* Won't darken content */
+}
+
+/* subtle fallback background for when WebGL isn't available */
+.prismatic-burst-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  /* subtle center-darkening vignette to keep the effect focused and not wash out text */
+  background: radial-gradient(closest-side at 50% 45%, rgba(0,0,0,0.0) 0%, rgba(0,0,0,0.25) 65%, rgba(0,0,0,0.7) 100%);
+  z-index: 0;
+}
+
+/* ensure canvas sits behind content */
+.prismatic-burst-container canvas {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+  z-index: 0; /* keep canvas behind content */
+  opacity: 0; /* default hidden until JS fades to desired alpha */
+  filter: saturate(105%); /* Clean saturation without artifacts */
+  transition: opacity 600ms ease-in-out; /* Smooth, quick transitions */
+  /* Clean rendering hints */
+  will-change: opacity;
+  transform: translateZ(0); /* Force GPU layer */
+  image-rendering: -webkit-optimize-contrast; /* Sharp, clean rendering */
+  image-rendering: crisp-edges; /* Clean edges on Firefox */
+}
+
+.prismatic-burst-container.is-muted::before {
+  /* when mutated we can make the fallback even subtler */
+  background: radial-gradient(closest-side at 50% 45%, rgba(0,0,0,0.0) 0%, rgba(0,0,0,0.3) 75%, rgba(0,0,0,0.85) 100%);
+}

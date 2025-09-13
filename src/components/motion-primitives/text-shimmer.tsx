@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { cn } from '../../lib/utils';
 
 export type TextShimmerProps = {
-  children: string;
+  children: React.ReactNode;
   as?: React.ElementType;
   className?: string;
   duration?: number;

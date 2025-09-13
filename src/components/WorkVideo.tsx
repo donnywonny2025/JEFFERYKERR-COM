@@ -84,7 +84,7 @@ export default function WorkVideo({ videoId, thumbnail, title }: WorkVideoProps)
         <div className="video-player video-reveal" style={{ opacity: 0.3, filter: 'blur(8px)' }}>
           <iframe
             src={vimeoSrc}
-            className="work-iframe"
+            className="work-iframe rounded-xl"
             frameBorder="0"
             allow="autoplay; fullscreen; picture-in-picture"
             allowFullScreen

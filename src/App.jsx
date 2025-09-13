@@ -553,7 +553,7 @@ function App() {
       {/* Hero Section */}
       <section className="hero" style={{ position: 'relative' }}>
         <div className="hero-content" style={{ position: 'relative', zIndex: 2 }}>
-          <h1>Jeff Kerr produces compelling visual content while building AI-enhanced workflows that change how creative work gets done.</h1>
+          <h1>I produce compelling visual content while building AI-enhanced workflows that change how creative work gets done.</h1>
           <div className="hero-meta">
             <div className="meta-item">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>

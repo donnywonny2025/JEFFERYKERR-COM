@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import '../src/App.css';
@@ -10,15 +10,15 @@ import {
   MorphingDialogTrigger,
   MorphingDialogContent,
   MorphingDialogTitle,
-  MorphingDialogImage,
   MorphingDialogSubtitle,
   MorphingDialogClose,
-  MorphingDialogDescription,
   MorphingDialogContainer,
 } from '../src/components/motion-primitives/morphing-dialog';
 import { TextShimmer } from '../src/components/motion-primitives/text-shimmer';
 import { SafeWrapper } from '../src/components/SafeWrapper';
 import { DigitalClock } from '../src/components/motion-primitives/digital-clock';
+import LiquidEther from '../src/components/LiquidEther';
+import StarField from '../src/components/StarField';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -34,58 +34,48 @@ interface Video {
 }
 
 export default function Home() {
+  console.log('[Home] Component starting');
   const [menuOpen, setMenuOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState('home');
   const [currentVideo, setCurrentVideo] = useState<Video | null>(null);
   const [showModal, setShowModal] = useState(false);
   const videoRefs = useRef<(HTMLDivElement | null)[]>([]);
+  console.log('[Home] State initialized');
 
-  // Aggressive scroll to top on page load/reload
+  // Optimized scroll to top on page load/reload
   useEffect(() => {
+    console.log('[Home] Scroll to top useEffect running');
     // Disable browser scroll restoration
     if ('scrollRestoration' in history) {
       history.scrollRestoration = 'manual';
     }
 
+    // Single efficient scroll operation
     const scrollToTop = () => {
-      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      window.scrollTo(0, 0);
       document.documentElement.scrollTop = 0;
       document.body.scrollTop = 0;
-      if (window.pageYOffset !== 0) {
-        window.pageYOffset = 0;
-      }
     };
 
-    // Immediate scroll
+    // Execute immediately and once more after a brief delay for safety
     scrollToTop();
+    const timeoutId = setTimeout(scrollToTop, 10);
 
-    // Multiple delayed attempts to ensure it works
-    setTimeout(scrollToTop, 0);
-    setTimeout(scrollToTop, 1);
-    setTimeout(scrollToTop, 10);
-    setTimeout(scrollToTop, 50);
-    setTimeout(scrollToTop, 100);
-    setTimeout(scrollToTop, 200);
-
-    // Also handle any potential async operations
-    requestAnimationFrame(scrollToTop);
-
-    // Handle window load event
-    const handleLoad = () => scrollToTop();
-    window.addEventListener('load', handleLoad);
-
-    return () => {
-      window.removeEventListener('load', handleLoad);
-    };
+    return () => clearTimeout(timeoutId);
   }, []);
 
   useEffect(() => {
-    // GSAP scroll animations for video cards
+    // Optimized GSAP scroll animations - only setup when on home page
     if (currentPage === 'home') {
-      videoRefs.current.forEach((video) => {
+      // Kill existing triggers first to prevent duplicates
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+
+      videoRefs.current.forEach((video, index) => {
         if (video) {
           // Hint the browser for smoother animation
           gsap.set(video, { willChange: "transform, filter, opacity" });
+
+          // Stagger animations slightly for better performance
           gsap.fromTo(
             video,
             {
@@ -97,6 +87,7 @@ export default function Home() {
               filter: "blur(0px)",
               duration: 0.9,
               ease: "power2.out",
+              delay: index * 0.1, // Stagger by 100ms
               scrollTrigger: {
                 trigger: video,
                 start: "top 85%",
@@ -109,15 +100,15 @@ export default function Home() {
         }
       });
 
-      // Refresh ScrollTrigger to ensure animations work
+      // Single refresh after all animations are set up
       ScrollTrigger.refresh();
     }
 
-    // Cleanup
+    // Cleanup function
     return () => {
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
     };
-  }, [currentPage]);
+  }, [currentPage]); // Only depend on currentPage changes
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
@@ -240,7 +231,8 @@ export default function Home() {
     }, 800);
   };
 
-  const videos = [
+  // Memoized videos array for performance
+  const videos = useMemo(() => [
     {
       id: 'reel-2024',
       title: 'Featured Showreel',
@@ -276,12 +268,12 @@ export default function Home() {
       title: 'Creative Showcase',
       client: 'Jeff Kerr',
       date: '2024',
-      thumbnail: '/api/placeholder/400/225',
+      thumbnail: 'https://picsum.photos/400/225?random=6',
       embedUrl: null,
       description: 'Innovative visual storytelling showcasing creative cinematography techniques and artistic vision.',
       credits: ['Jeff Kerr - Director, Cinematographer', 'Creative Team - Production']
     }
-  ];
+  ], []); // Empty dependency array since videos never change
 
   if (currentPage === 'video' && currentVideo) {
     return (
@@ -327,11 +319,15 @@ export default function Home() {
 
             <div className="video-player">
               <iframe
-                src={currentVideo.embedUrl}
+                src={currentVideo.embedUrl ?? undefined}
+                className="rounded-xl"
                 frameBorder="0"
+                loading="lazy"
                 allow="autoplay; fullscreen; picture-in-picture"
                 allowFullScreen
                 title={currentVideo.title}
+                width="100%"
+                height="100%"
               ></iframe>
             </div>
 
@@ -404,8 +400,16 @@ export default function Home() {
     );
   }
 
+  console.log('[Home] About to render JSX');
   return (
     <div className="App">
+      {/* Liquid Ether Background Effect */}
+      <LiquidEther
+        className="liquid-ether-fullscreen"
+        colors={['#5227FF', '#FF9FFC', '#B19EEF', '#00d4ff', '#8b5cf6']}
+        style={{ opacity: 0.5 }}
+      />
+      
       {/* Header */}
       <header className="header">
         <div className="header-content" style={{
@@ -499,6 +503,7 @@ export default function Home() {
                 <div className="dialog-video-container" style={{ height: '160px', width: '100%', overflow: 'hidden', borderRadius: '12px 12px 0 0' }}>
                   <iframe
                     src={`${videos[0].embedUrl}?autoplay=1&muted=1&loop=1&background=1`}
+                    className="rounded-xl"
                     frameBorder="0"
                     allow="autoplay; fullscreen; picture-in-picture"
                     allowFullScreen
@@ -552,7 +557,8 @@ export default function Home() {
             <button className="close-modal" onClick={closeModal}>&times;</button>
             <div className="video-embed">
               <iframe
-                src={currentVideo.embedUrl}
+                src={currentVideo.embedUrl ?? undefined}
+                className="rounded-xl"
                 title={currentVideo.title}
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -565,8 +571,8 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className="hero" style={{ position: 'relative' }}>
-        <div className="hero-content" style={{ position: 'relative', zIndex: 2 }}>
-          <h1>Jeff Kerr produces compelling visual content while building AI-enhanced workflows that change how creative work gets done.</h1>
+        <div className="hero-content" style={{ position: 'relative', zIndex: 30 }}>
+          <h1>I produce compelling visual content while building AI-enhanced workflows that change how creative work gets done.</h1>
           <div className="hero-meta">
             <div className="meta-item">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
@@ -582,24 +588,36 @@ export default function Home() {
         {/* Hero Video */}
         <div className="hero-video">
           <div className="hero-video-card">
-            <div className="hero-video-container">
-            <iframe
-              src="https://player.vimeo.com/video/1116767679?autoplay=1&muted=1&loop=1&background=1"
-              style={{
-                width: '100%',
-                height: '100%',
-                border: 'none'
-              }}
-              frameBorder="0"
-              allow="autoplay; fullscreen; picture-in-picture"
-              allowFullScreen
-              title="Hero Video"
-            ></iframe>
+            <div className="hero-video-container" style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
+              <iframe
+                src="https://player.vimeo.com/video/1116767679?autoplay=1&muted=1&loop=1&background=1"
+                className="rounded-xl"
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  width: '140%',
+                  height: '140%',
+                  transform: 'translate(-50%, -50%)',
+                  border: 'none'
+                }}
+                frameBorder="0"
+                allow="autoplay; fullscreen; picture-in-picture"
+                allowFullScreen
+                title="Hero Video"
+              ></iframe>
 
             {/* Hero Video Play Button Overlay */}
-            <div className="hero-play-button" onClick={() => handleVideoClick(videos[0])}>
+            <div
+              className="hero-play-button"
+              role="button"
+              tabIndex={0}
+              aria-label={`Play featured video: ${videos[0].title}`}
+              onClick={() => handleVideoClick(videos[0])}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleVideoClick(videos[0]); } }}
+            >
               <div className="hero-play-content">
-                <div className="hero-play-icon"></div>
+                <div className="hero-play-icon" aria-hidden="true"></div>
                 <span className="hero-play-text">PLAY FEATURED VIDEO</span>
               </div>
             </div>
@@ -612,11 +630,11 @@ export default function Home() {
       {/* Brand Logos Section - After Hero Video */}
       <section className="brand-showcase">
         <div className="brand-logos">
-          <img src="/api/placeholder/120/40" alt="Canon" className="brand-logo" />
-          <img src="/api/placeholder/120/40" alt="YouTube" className="brand-logo" />
-          <img src="/api/placeholder/120/40" alt="DJI" className="brand-logo" />
-          <img src="/api/placeholder/120/40" alt="Hyundai" className="brand-logo" />
-          <img src="/api/placeholder/120/40" alt="MusicBed" className="brand-logo" />
+          <img src="https://picsum.photos/120/40?random=1" alt="Canon" className="brand-logo" />
+          <img src="https://picsum.photos/120/40?random=2" alt="YouTube" className="brand-logo" />
+          <img src="https://picsum.photos/120/40?random=3" alt="DJI" className="brand-logo" />
+          <img src="https://picsum.photos/120/40?random=4" alt="Hyundai" className="brand-logo" />
+          <img src="https://picsum.photos/120/40?random=5" alt="MusicBed" className="brand-logo" />
         </div>
       </section>
 
@@ -625,9 +643,13 @@ export default function Home() {
         <div className="featured-video-container">
           <Tilt rotationFactor={8} isRevese>
             <div
-              className="featured-video-card"
+              className="featured-video-card video-border-ready"
+              role="button"
+              tabIndex={0}
+              aria-label={`Open video: ${videos[0].title}`}
               onClick={() => handleVideoClick(videos[0])}
-              ref={el => videoRefs.current[0] = el}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleVideoClick(videos[0]); } }}
+              ref={(el) => { videoRefs.current[0] = el; }}
             >
               <div className="featured-video-thumbnail">
                 <img
@@ -641,7 +663,14 @@ export default function Home() {
                 />
 
                 {/* Circular Showreel Element - positioned within featured video container */}
-                <div className="circular-showreel" onClick={() => handleVideoClick(videos[0])}>
+                <div
+                  className="circular-showreel"
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`Open showreel: ${videos[0].title}`}
+                  onClick={() => handleVideoClick(videos[0])}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleVideoClick(videos[0]); } }}
+                >
                   <div className="circular-showreel-inner">
                     <svg className="rotating-text" viewBox="0 0 200 200">
                       <defs>
@@ -682,9 +711,9 @@ export default function Home() {
           {videos.slice(1, 5).map((video, index) => (
             <React.Fragment key={video.id}>
               <div
-                className="video-card"
+                className="video-card video-border-ready"
                 onClick={() => handleVideoClick(video)}
-                ref={el => videoRefs.current[index + 1] = el}
+                ref={(el) => { videoRefs.current[index + 1] = el; }}
               >
                 <div className="video-thumbnail">
                   <img
