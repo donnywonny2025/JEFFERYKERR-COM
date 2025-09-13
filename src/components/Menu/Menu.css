@@ -4,7 +4,7 @@
   flex-direction: column;
   justify-content: space-around;
   width: 24px;
-  height: 18px;
+  height: 16px; /* Slightly tighter height */
   background: transparent;
   border: none;
   cursor: pointer;
@@ -14,10 +14,11 @@
 
 .hamburger span {
   width: 24px;
-  height: 1px;
+  height: 2px; /* Thicker lines */
   background: #a1a1aa;
   transition: all 0.3s ease;
   transform-origin: center;
+  border-radius: 1px; /* Slight rounding for crisp look */
 }
 
 .hamburger.open span:nth-child(1) {
@@ -32,30 +33,35 @@
   transform: rotate(-45deg) translate(7px, -6px);
 }
 
-/* Simple Menu Overlay */
+/* Simple Menu Overlay - Click to close functionality */
 .simple-menu-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
+  background: transparent;
   z-index: 999;
   display: flex;
   align-items: flex-start;
   justify-content: flex-end;
-  padding: 100px 80px 0 0;
+  padding-top: 70px;
+  padding-right: 60px; /* Perfect alignment with hamburger button */
   opacity: 1;
   visibility: visible;
+  cursor: pointer; /* Show pointer cursor for click-to-close */
 }
 
 .simple-menu-content {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  padding: 40px 30px;
-  min-width: 200px;
+  background: rgba(255, 255, 255, 0.12); /* More subtle frosted glass */
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px; /* Less rounded corners */
+  padding: 20px 16px; /* Tighter padding */
+  min-width: 140px; /* More compact */
   position: relative;
+  pointer-events: auto; /* Allow clicks on the menu content */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+  margin-left: auto; /* Force right alignment */
 }
 
 /* Simple Menu Navigation */
@@ -70,14 +76,16 @@
   color: #ffffff;
   text-decoration: none;
   font-family: 'Space Mono', monospace;
-  font-size: 1.1rem;
-  font-weight: 300;
-  margin: 15px 0;
-  letter-spacing: 0.5px;
+  font-size: 1rem; /* Slightly smaller for premium look */
+  font-weight: 400; /* Slightly bolder */
+  margin: 8px 0; /* Much tighter spacing */
+  letter-spacing: 0.8px; /* Better letter spacing */
   text-transform: uppercase;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease; /* Faster transition */
   position: relative;
   z-index: 1;
+  text-align: right;
+  line-height: 1.2; /* Better line height */
 }
 
 .simple-menu-item:hover {
@@ -86,25 +94,25 @@
 
 /* Simple Menu Email */
 .simple-menu-email {
-  margin-top: 30px;
-  padding-top: 20px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: 20px; /* Tighter spacing */
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   position: relative;
   z-index: 1;
 }
 
 .simple-menu-email a {
   font-family: 'Space Mono', monospace;
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.7);
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  padding: 10px 20px;
+  font-size: 0.85rem; /* Slightly smaller */
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px; /* Less rounded */
+  padding: 8px 16px; /* Tighter padding */
   display: inline-block;
-  letter-spacing: 0.5px;
-  font-weight: 300;
-  transition: all 0.3s ease;
+  letter-spacing: 0.6px;
+  font-weight: 400; /* Slightly bolder */
+  transition: all 0.2s ease; /* Faster transition */
 }
 
 .simple-menu-email a:hover {

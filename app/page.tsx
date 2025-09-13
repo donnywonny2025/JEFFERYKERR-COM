@@ -9,8 +9,9 @@ import { TextShimmer } from '../src/components/motion-primitives/text-shimmer';
 import { SafeWrapper } from '../src/components/SafeWrapper';
 import { DigitalClock } from '../src/components/motion-primitives/digital-clock';
 import LiquidEther from '../src/components/LiquidEther';
-console.log('[Home] LiquidEther imported:', LiquidEther);
 import StarField from '../src/components/StarField';
+import Menu from '../src/components/Menu/Menu';
+import '../src/components/Menu/Menu.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -25,18 +26,15 @@ interface Video {
   credits: string[];
 }
 
-export default function Home() {
-  console.log('[Home] Component starting');
+const Home = React.memo(function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState('home');
   const [currentVideo, setCurrentVideo] = useState<Video | null>(null);
   const [showModal, setShowModal] = useState(false);
   const videoRefs = useRef<(HTMLDivElement | null)[]>([]);
-  console.log('[Home] State initialized');
 
   // Optimized scroll to top on page load/reload
   useEffect(() => {
-    console.log('[Home] Scroll to top useEffect running');
     // Disable browser scroll restoration
     if ('scrollRestoration' in history) {
       history.scrollRestoration = 'manual';
@@ -62,38 +60,41 @@ export default function Home() {
       // Kill existing triggers first to prevent duplicates
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
 
-      videoRefs.current.forEach((video, index) => {
-        if (video) {
-          // Hint the browser for smoother animation
-          gsap.set(video, { willChange: "transform, filter, opacity" });
+      // Use requestAnimationFrame for better performance
+      requestAnimationFrame(() => {
+        videoRefs.current.forEach((video, index) => {
+          if (video) {
+            // Hint the browser for smoother animation
+            gsap.set(video, { willChange: "transform, filter, opacity" });
 
-          // Stagger animations slightly for better performance
-          gsap.fromTo(
-            video,
-            {
-              opacity: 0,
-              filter: "blur(10px)"
-            },
-            {
-              opacity: 1,
-              filter: "blur(0px)",
-              duration: 0.9,
-              ease: "power2.out",
-              delay: index * 0.1, // Stagger by 100ms
-              scrollTrigger: {
-                trigger: video,
-                start: "top 85%",
-                end: "top 30%",
-                toggleActions: "play none none reverse",
-                markers: false
+            // Stagger animations slightly for better performance
+            gsap.fromTo(
+              video,
+              {
+                opacity: 0,
+                filter: "blur(10px)"
+              },
+              {
+                opacity: 1,
+                filter: "blur(0px)",
+                duration: 0.9,
+                ease: "power2.out",
+                delay: index * 0.1, // Stagger by 100ms
+                scrollTrigger: {
+                  trigger: video,
+                  start: "top 85%",
+                  end: "top 30%",
+                  toggleActions: "play none none reverse",
+                  markers: false
+                }
               }
-            }
-          );
-        }
-      });
+            );
+          }
+        });
 
-      // Single refresh after all animations are set up
-      ScrollTrigger.refresh();
+        // Single refresh after all animations are set up
+        ScrollTrigger.refresh();
+      });
     }
 
     // Cleanup function
@@ -393,17 +394,22 @@ export default function Home() {
     );
   }
 
-  console.log('[Home] About to render JSX');
-  console.log('[Home] Rendering LiquidEther component');
+  // Render JSX
 
   return (
     <div className="App">
-      {/* Liquid Ether Background Effect */}
+      {/* Liquid Ether Background Effect - Optimized for performance */}
       <LiquidEther
         className="liquid-ether-fullscreen"
         colors={['#5227FF', '#FF9FFC', '#B19EEF', '#00d4ff', '#8b5cf6']}
         style={{ opacity: 0.3 }}
         enableStars={false}
+        starLayers={3}
+        starDensity={0.5}
+        starDriftSpeed={0.02}
+        starRotationSpeed={0.08}
+        starBrightness={2.0}
+        starTwinkleSpeed={2.0}
       />
       
       {/* Header */}
@@ -430,293 +436,25 @@ export default function Home() {
               <DigitalClock />
             </SafeWrapper>
 
-            {/* Premium Purple Hamburger Menu */}
-            <div style={{ position: 'relative' }}>
-              <button
-                className={`hamburger ${menuOpen ? 'open' : ''}`}
-                onClick={toggleMenu}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  padding: '12px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-around',
-                  width: '40px',
-                  height: '40px',
-                  transition: 'all 0.3s ease',
-                  borderRadius: '8px',
-                  position: 'relative',
-                  zIndex: 1001
-                }}
-                onMouseEnter={(e) => {
-                  const spans = e.currentTarget.querySelectorAll('span');
-                  spans.forEach(span => {
-                    span.style.background = 'white';
-                  });
-                }}
-                onMouseLeave={(e) => {
-                  const spans = e.currentTarget.querySelectorAll('span');
-                  spans.forEach(span => {
-                    span.style.background = '#a1a1aa';
-                  });
-                }}
-              >
-              <span style={{
-                display: 'block',
-                height: '2px',
-                background: '#a1a1aa',
-                width: '100%',
-                transition: 'all 0.3s ease',
-                transformOrigin: 'center'
-              }}></span>
-              <span style={{
-                display: 'block',
-                height: '2px',
-                background: '#a1a1aa',
-                width: '100%',
-                transition: 'all 0.3s ease',
-                transformOrigin: 'center'
-              }}></span>
-              <span style={{
-                display: 'block',
-                height: '2px',
-                background: '#a1a1aa',
-                width: '100%',
-                transition: 'all 0.3s ease',
-                transformOrigin: 'center'
-              }}></span>
-            </button>
-
-            {/* Premium Purple Dropdown Menu */}
-            {menuOpen && (
-              <>
-                {/* Click Outside Overlay - Invisible but captures clicks */}
-                <div
-                  style={{
-                    position: 'fixed',
-                    top: 0,
-                    left: 0,
-                    width: '100vw',
-                    height: '100vh',
-                    zIndex: 999,
-                    cursor: 'pointer'
-                  }}
-                  onClick={toggleMenu}
-                />
-
-                {/* Premium Menu Container with Edge Shimmer */}
-              <div
-                style={{
-                  position: 'absolute',
-                  top: '100%',
-                  right: '0',
-                  marginTop: '8px',
-                  zIndex: 1000,
-                  borderRadius: '20px',
-                  padding: '3px',
-                  background: 'linear-gradient(45deg, rgba(82, 39, 255, 0.3), rgba(0, 212, 255, 0.2), rgba(139, 92, 246, 0.3))',
-                  backgroundSize: '200% 200%',
-                  animation: 'edgeShimmer 3s ease-in-out infinite',
-                  boxShadow: '0 0 30px rgba(82, 39, 255, 0.3)'
-                }}
-              >
-                {/* Premium Frosted Glass Menu with Inner Glow */}
-                <div
-                  style={{
-                    background: 'rgba(15, 15, 25, 0.85)',
-                    backdropFilter: 'blur(20px) saturate(150%)',
-                    border: '1px solid rgba(255, 255, 255, 0.15)',
-                    borderRadius: '20px',
-                    padding: '24px',
-                    minWidth: '240px',
-                    boxShadow: '0 20px 40px rgba(82, 39, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.05)',
-                    position: 'relative',
-                    overflow: 'hidden'
-                  }}
-                >
-
-                    {/* Logo/Name with Shimmer Effect */}
-                    <div style={{
-                      textAlign: 'center',
-                      marginBottom: '20px',
-                      paddingBottom: '16px',
-                      borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-                      position: 'relative',
-                      zIndex: 1
-                    }}>
-                      <div style={{
-                        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif',
-                        fontSize: '18px',
-                        fontWeight: '500',
-                        background: 'linear-gradient(90deg, #ffffff, #00d4ff, #ffffff)',
-                        backgroundSize: '200% 100%',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                        animation: 'logoShimmer 2s ease-in-out infinite',
-                        letterSpacing: '0.5px'
-                      }}>
-                        <span style={{
-                          fontSize: '22px',
-                          fontWeight: '600',
-                          verticalAlign: 'baseline',
-                          lineHeight: '1'
-                        }}>k</span>err
-                      </div>
-                    </div>
-
-                    {/* Navigation Links */}
-                    <nav style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '16px',
-                      position: 'relative',
-                      zIndex: 1
-                    }}>
-                      <a
-                        href="#"
-                        onClick={(e) => { e.preventDefault(); goHome(); toggleMenu(); }}
-                        style={{
-                          color: 'var(--text-primary)',
-                          textDecoration: 'none',
-                          fontFamily: "'Space Mono', monospace",
-                          fontSize: '14px',
-                          fontWeight: '400',
-                          letterSpacing: '1px',
-                          textTransform: 'uppercase',
-                          padding: '8px 0',
-                          transition: 'all 0.3s ease',
-                          borderBottom: '1px solid transparent'
-                        }}
-                        onMouseEnter={(e) => {
-                          (e.target as HTMLElement).style.color = 'rgba(0, 212, 255, 0.8)';
-                          (e.target as HTMLElement).style.borderBottomColor = 'rgba(0, 212, 255, 0.3)';
-                        }}
-                        onMouseLeave={(e) => {
-                          (e.target as HTMLElement).style.color = 'var(--text-primary)';
-                          (e.target as HTMLElement).style.borderBottomColor = 'transparent';
-                        }}
-                      >
-                        HOME
-                      </a>
-
-                      <a
-                        href="#"
-                        onClick={(e) => { e.preventDefault(); toggleMenu(); }}
-                        style={{
-                          color: 'var(--text-primary)',
-                          textDecoration: 'none',
-                          fontFamily: "'Space Mono', monospace",
-                          fontSize: '14px',
-                          fontWeight: '400',
-                          letterSpacing: '1px',
-                          textTransform: 'uppercase',
-                          padding: '8px 0',
-                          transition: 'all 0.3s ease',
-                          borderBottom: '1px solid transparent'
-                        }}
-                        onMouseEnter={(e) => {
-                          (e.target as HTMLElement).style.color = 'rgba(0, 212, 255, 0.8)';
-                          (e.target as HTMLElement).style.borderBottomColor = 'rgba(0, 212, 255, 0.3)';
-                        }}
-                        onMouseLeave={(e) => {
-                          (e.target as HTMLElement).style.color = 'var(--text-primary)';
-                          (e.target as HTMLElement).style.borderBottomColor = 'transparent';
-                        }}
-                      >
-                        WORK
-                      </a>
-
-                      <a
-                        href="/backgrounds"
-                        onClick={toggleMenu}
-                        style={{
-                          color: '#00d4ff',
-                          textDecoration: 'none',
-                          fontFamily: "'Space Mono', monospace",
-                          fontSize: '14px',
-                          fontWeight: '500',
-                          letterSpacing: '1px',
-                          textTransform: 'uppercase',
-                          padding: '8px 0',
-                          transition: 'all 0.3s ease',
-                          borderBottom: '1px solid rgba(0, 212, 255, 0.3)'
-                        }}
-                        onMouseEnter={(e) => {
-                          (e.target as HTMLElement).style.color = '#00d4ff';
-                          (e.target as HTMLElement).style.borderBottomColor = 'rgba(0, 212, 255, 0.5)';
-                        }}
-                        onMouseLeave={(e) => {
-                          (e.target as HTMLElement).style.color = '#00d4ff';
-                          (e.target as HTMLElement).style.borderBottomColor = 'rgba(0, 212, 255, 0.3)';
-                        }}
-                      >
-                        🎨 BACKGROUNDS
-                      </a>
-
-                      <a
-                        href="#"
-                        onClick={(e) => { e.preventDefault(); toggleMenu(); }}
-                        style={{
-                          color: 'var(--text-primary)',
-                          textDecoration: 'none',
-                          fontFamily: "'Space Mono', monospace",
-                          fontSize: '14px',
-                          fontWeight: '400',
-                          letterSpacing: '1px',
-                          textTransform: 'uppercase',
-                          padding: '8px 0',
-                          transition: 'all 0.3s ease',
-                          borderBottom: '1px solid transparent'
-                        }}
-                        onMouseEnter={(e) => {
-                          (e.target as HTMLElement).style.color = 'rgba(0, 212, 255, 0.8)';
-                          (e.target as HTMLElement).style.borderBottomColor = 'rgba(0, 212, 255, 0.3)';
-                        }}
-                        onMouseLeave={(e) => {
-                          (e.target as HTMLElement).style.color = 'var(--text-primary)';
-                          (e.target as HTMLElement).style.borderBottomColor = 'transparent';
-                        }}
-                      >
-                        CONTACT
-                      </a>
-                    </nav>
-
-                    {/* Email */}
-                    <div style={{
-                      marginTop: '20px',
-                      paddingTop: '16px',
-                      borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-                      textAlign: 'center',
-                      position: 'relative',
-                      zIndex: 1
-                    }}>
-                      <a
-                        href="mailto:colour8k@mac.com"
-                        style={{
-                          color: 'rgba(255, 255, 255, 0.7)',
-                          textDecoration: 'none',
-                          fontFamily: "'Space Mono', monospace",
-                          fontSize: '12px',
-                          letterSpacing: '0.5px',
-                          transition: 'color 0.3s ease'
-                        }}
-                        onMouseEnter={(e) => {
-                          (e.target as HTMLElement).style.color = 'rgba(0, 212, 255, 0.8)';
-                        }}
-                        onMouseLeave={(e) => {
-                          (e.target as HTMLElement).style.color = 'rgba(255, 255, 255, 0.7)';
-                        }}
-                      >
-                        colour8k@mac.com
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </>
-            )}
-          </div>
+            {/* Simple Menu Component */}
+            <Menu
+              menuOpen={menuOpen}
+              setMenuOpen={setMenuOpen}
+              onNavigate={(action) => {
+                if (action === 'home') {
+                  goHome();
+                } else if (action === 'work') {
+                  // Handle work navigation
+                  setMenuOpen(false);
+                } else if (action === 'about') {
+                  // Handle about navigation
+                  setMenuOpen(false);
+                } else if (action === 'contact') {
+                  // Handle contact navigation
+                  setMenuOpen(false);
+                }
+              }}
+            />
           </div>
         </div>
       </header>
@@ -953,4 +691,6 @@ export default function Home() {
       </footer>
     </div>
   );
-}
+});
+
+export default Home;

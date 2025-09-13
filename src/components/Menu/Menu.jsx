@@ -1,18 +1,37 @@
-import React from 'react';
+import React, { useCallback, useRef } from 'react';
+import PropTypes from 'prop-types';
 import { COLORS, TYPOGRAPHY, MENU_CONFIG } from '../../styles/theme';
 import './Menu.css';
 
-const Menu = ({ menuOpen, setMenuOpen, onNavigate }) => {
-  const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
-  };
+const Menu = React.memo(({ menuOpen, setMenuOpen, onNavigate }) => {
+  const spansRef = useRef([]);
 
-  const handleMenuClick = (action) => {
-    toggleMenu();
+  const toggleMenu = useCallback(() => {
+    setMenuOpen(!menuOpen);
+  }, [menuOpen, setMenuOpen]);
+
+  const handleMenuClick = useCallback((action) => {
+    setMenuOpen(false);
     if (onNavigate) {
       onNavigate(action);
     }
-  };
+  }, [setMenuOpen, onNavigate]);
+
+  const handleMouseEnter = useCallback(() => {
+    spansRef.current.forEach(span => {
+      if (span) span.style.background = COLORS.TEXT_PRIMARY;
+    });
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    spansRef.current.forEach(span => {
+      if (span) span.style.background = '#a1a1aa';
+    });
+  }, []);
+
+  const setSpanRef = useCallback((index) => (el) => {
+    spansRef.current[index] = el;
+  }, []);
 
   return (
     <>
@@ -20,22 +39,12 @@ const Menu = ({ menuOpen, setMenuOpen, onNavigate }) => {
       <button
         className={`hamburger ${menuOpen ? 'open' : ''}`}
         onClick={toggleMenu}
-        onMouseEnter={(e) => {
-          const spans = e.currentTarget.querySelectorAll('span');
-          spans.forEach(span => {
-            span.style.background = COLORS.TEXT_PRIMARY;
-          });
-        }}
-        onMouseLeave={(e) => {
-          const spans = e.currentTarget.querySelectorAll('span');
-          spans.forEach(span => {
-            span.style.background = '#a1a1aa';
-          });
-        }}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       >
-        <span></span>
-        <span></span>
-        <span></span>
+        <span ref={setSpanRef(0)}></span>
+        <span ref={setSpanRef(1)}></span>
+        <span ref={setSpanRef(2)}></span>
       </button>
 
       {/* Simple Menu Overlay */}
@@ -62,6 +71,12 @@ const Menu = ({ menuOpen, setMenuOpen, onNavigate }) => {
       )}
     </>
   );
+});
+
+Menu.propTypes = {
+  menuOpen: PropTypes.bool.isRequired,
+  setMenuOpen: PropTypes.func.isRequired,
+  onNavigate: PropTypes.func
 };
 
 export default Menu;

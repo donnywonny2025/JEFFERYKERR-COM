@@ -1,8 +1,9 @@
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
 import * as THREE from 'three';
 import './LiquidEther.css';
 
-export default function LiquidEther({
+const LiquidEther = React.memo(function LiquidEther({
   colors = ['#4A1FA3', '#E640E6', '#7B2CBF', '#00A8CC', '#6B46C1'],
   style = {},
   className = '',
@@ -15,7 +16,6 @@ export default function LiquidEther({
   starTwinkleSpeed = 3.2,
   enableStars = false
 }) {
-  console.log('LiquidEther: Component function called with colors:', colors);
   const mountRef = useRef(null);
   const rendererRef = useRef(null);
   const sceneRef = useRef(null);
@@ -27,17 +27,13 @@ export default function LiquidEther({
   const cleanupRef = useRef(null);
 
   useEffect(() => {
-    console.log('LiquidEther: useEffect triggered');
-
     const checkContainer = () => {
       if (!mountRef.current) {
-        console.log('LiquidEther: No mountRef, waiting...');
         setTimeout(checkContainer, 100);
         return;
       }
 
       const container = mountRef.current;
-      console.log('LiquidEther: Container found:', container);
       initializeLiquidEther(container);
     };
 
@@ -45,30 +41,25 @@ export default function LiquidEther({
       let renderer, scene, camera, material, geometry, mesh;
 
       try {
-        console.log('LiquidEther: Starting WebGL initialization...');
-
         // Initialize Three.js
         scene = new THREE.Scene();
         camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
 
         renderer = new THREE.WebGLRenderer({
-          antialias: true,
+          antialias: false, // Disabled for performance
           alpha: true,
           preserveDrawingBuffer: false,
-          powerPreference: 'high-performance'
+          powerPreference: 'default' // Changed from high-performance for better compatibility
         });
         renderer.setSize(container.clientWidth, container.clientHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.0)); // Reduced from 1.5 to 1.0
         renderer.setClearColor(0x000000, 0);
 
-        console.log('LiquidEther: WebGL renderer created');
         container.appendChild(renderer.domElement);
-        console.log('LiquidEther: Canvas element added to DOM:', renderer.domElement);
 
         // Add WebGL context recovery event listeners
         const canvas = renderer.domElement;
         canvas.addEventListener('webglcontextlost', (event) => {
-          console.log('LiquidEther: WebGL context lost - preventing default');
           event.preventDefault();
           // Stop animation when context is lost
           if (animationRef.current) {
@@ -78,7 +69,6 @@ export default function LiquidEther({
         });
 
         canvas.addEventListener('webglcontextrestored', (event) => {
-          console.log('LiquidEther: WebGL context restored - reinitializing');
           // Reinitialize WebGL context and restart animation
           try {
             renderer.forceContextRestore();
@@ -109,21 +99,22 @@ export default function LiquidEther({
             };
 
             animate();
-            console.log('LiquidEther: Animation restarted after context restoration');
           } catch (error) {
-            console.error('LiquidEther: Failed to restore WebGL context:', error);
+            // Failed to restore WebGL context
           }
         });
 
-        // Performance optimization: detect device capabilities
+        // Performance optimization: detect device capabilities and apply conservative settings
         const isLowEndDevice = navigator.hardwareConcurrency <= 4 ||
-                              !renderer.capabilities.floatFragmentTextures ||
-                              window.devicePixelRatio < 1.5;
+                               !renderer.capabilities.floatFragmentTextures ||
+                               window.devicePixelRatio < 1.5;
 
         if (isLowEndDevice) {
-          console.log('LiquidEther: Low-end device detected, reducing quality for performance');
           renderer.setPixelRatio(1.0); // Reduce pixel ratio for better performance
         }
+
+        // Always use conservative settings for menu compatibility
+        renderer.setPixelRatio(1.0);
 
         // Create palette texture from colors
         const paletteCanvas = document.createElement('canvas');
@@ -142,8 +133,8 @@ export default function LiquidEther({
         paletteTexture.wrapS = THREE.ClampToEdgeWrapping;
         paletteTexture.wrapT = THREE.ClampToEdgeWrapping;
 
-        // Create velocity textures with balanced resolution for performance vs quality
-        const textureSize = 48;
+        // Create velocity textures with reduced resolution for better performance
+        const textureSize = 32; // Reduced from 48 to 32 for better performance
         const velocityData1 = new Float32Array(textureSize * textureSize * 4);
         const velocityData2 = new Float32Array(textureSize * textureSize * 4);
 
@@ -204,8 +195,8 @@ export default function LiquidEther({
             float amplitude = 0.5;
             float frequency = 1.0;
 
-            // Optimized to 3 octaves for performance while maintaining visual quality
-            for(int i = 0; i < 3; i++) {
+            // Reduced to 2 octaves for better performance
+            for(int i = 0; i < 2; i++) {
               value += amplitude * noise(p * frequency);
               amplitude *= 0.5;
               frequency *= 2.0;
@@ -337,16 +328,13 @@ export default function LiquidEther({
             float water2 = waterFlow(waterUv * 1.6, time * 0.8, 1.0);
             float water3 = waterFlow(waterUv * 0.7, time * 1.4, 2.0);
             float water4 = waterFlow(waterUv * 2.2, time * 0.6, 3.0);
-            float water5 = waterFlow(waterUv * 0.4, time * 1.8, 4.0);
-            float water6 = waterFlow(waterUv * 2.8, time * 0.4, 5.0);
+            // Reduced from 6 to 4 water layers for better performance
 
             // Add organic mixing with turbulence (stabilized at peak value)
             float turbulence = sin(uv.x * 5.0 + uv.y * 3.0 + 1.57) * 0.1 + 0.9; // Remove time component, use peak phase
             float liquidField = mix(water1, water2, 0.6 * turbulence);
             liquidField = mix(liquidField, water3, 0.4 * (1.0 + sin(uv.x * 7.0 + 1.57) * 0.2)); // Stabilized at peak
-            liquidField = mix(liquidField, water4, 0.25 * (1.0 + cos(uv.y * 4.0 + 0.785) * 0.15)); // Stabilized at peak
-            liquidField = mix(liquidField, water5, 0.15 * (1.0 + sin(uv.x * uv.y * 8.0 + 2.356) * 0.1)); // Stabilized at peak
-            liquidField = mix(liquidField, water6, 0.1 * (1.0 + cos(uv.x * 6.0 - uv.y * 5.0 + 1.047) * 0.12)); // Stabilized at peak
+            // Reduced mixing to 4 layers for better performance
             // Lock color flows to rich values - maintain consistent colors over time
             float colorFlow1 = sin(waterUv.y * 3.0 + 3.14159) * 0.4 + 0.6; // Remove time, keep rich phase
             float colorFlow2 = cos(waterUv.x * 2.5 + 1.5708) * 0.4 + 0.4;  // Remove time, keep rich phase
@@ -388,7 +376,7 @@ export default function LiquidEther({
 
             // Much smoother masking with better precision
             float liquidMask = smootherstep(0.1, 0.7, liquidField);
-            liquidMask *= smootherstep(-0.1, 0.5, water1 + water2 + water3 + water4 + water5 + water6);
+            liquidMask *= smootherstep(-0.1, 0.5, water1 + water2 + water3 + water4);
             liquidMask *= atmosphericFade;
 
             // Add optimized organic edge variation with reduced frequency for performance (stabilized)
@@ -418,7 +406,6 @@ export default function LiquidEther({
           }
         `;
 
-        console.log('LiquidEther: Creating shader material...');
         material = new THREE.ShaderMaterial({
           vertexShader,
           fragmentShader,
@@ -440,7 +427,7 @@ export default function LiquidEther({
           blending: THREE.NormalBlending,
           depthWrite: false
         });
-        console.log('LiquidEther: Shader material created successfully');
+        // Shader material created
 
         geometry = new THREE.PlaneGeometry(2, 2);
         mesh = new THREE.Mesh(geometry, material);
@@ -475,8 +462,8 @@ export default function LiquidEther({
             }
           }
 
-          // Adaptive frame rate limiting
-          const targetDelay = fps < 30 ? 32 : 16; // 30fps or 60fps
+          // Fixed 30fps frame rate limiting for consistent performance
+          const targetDelay = 32; // ~30fps (1000ms/30 = ~33.33ms, using 32 for slight overclock)
           setTimeout(() => {
             animationRef.current = requestAnimationFrame(animate);
           }, targetDelay);
@@ -513,7 +500,7 @@ export default function LiquidEther({
         };
 
       } catch (error) {
-        console.error('LiquidEther WebGL Error:', error);
+        // WebGL initialization failed, fallback will be used
         // Fallback to CSS
         container.style.background = `
           radial-gradient(circle at 30% 70%, ${colors[0]}88 0%, transparent 50%),
@@ -536,7 +523,6 @@ export default function LiquidEther({
     };
   }, [colors, starLayers, starDensity, starDriftSpeed, starRotationSpeed, starBrightness, starTwinkleSpeed, enableStars]);
 
-  console.log('LiquidEther: About to return JSX element');
   return (
     <div
       ref={mountRef}
@@ -554,4 +540,19 @@ export default function LiquidEther({
       }}
     />
   );
-}
+});
+
+LiquidEther.propTypes = {
+  colors: PropTypes.arrayOf(PropTypes.string),
+  style: PropTypes.object,
+  className: PropTypes.string,
+  starLayers: PropTypes.number,
+  starDensity: PropTypes.number,
+  starDriftSpeed: PropTypes.number,
+  starRotationSpeed: PropTypes.number,
+  starBrightness: PropTypes.number,
+  starTwinkleSpeed: PropTypes.number,
+  enableStars: PropTypes.bool
+};
+
+export default LiquidEther;
