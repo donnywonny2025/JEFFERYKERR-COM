@@ -1,0 +1,16 @@
+/* Background Container Styles */
+.background-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* Ensure background doesn't interfere with content */
+.background-container * {
+  pointer-events: none;
+}

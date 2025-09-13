@@ -3,20 +3,8 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './App.css';
 import { Tilt } from './components/motion-primitives/tilt';
-import {
-  MorphingDialog,
-  MorphingDialogTrigger,
-  MorphingDialogContent,
-  MorphingDialogTitle,
-  MorphingDialogImage,
-  MorphingDialogSubtitle,
-  MorphingDialogClose,
-  MorphingDialogDescription,
-  MorphingDialogContainer,
-} from './components/motion-primitives/morphing-dialog';
-import { TextShimmer } from './components/motion-primitives/text-shimmer';
-import { SafeWrapper } from './components/SafeWrapper';
-import { DigitalClock } from './components/motion-primitives/digital-clock';
+import Header from './components/Header/Header';
+import Background from './components/Background/Background';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -108,6 +96,15 @@ function App() {
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
+  };
+
+  const handleNavigation = (page) => {
+    if (page === 'home') {
+      goHome();
+    } else {
+      // Handle other navigation as needed
+      console.log('Navigate to:', page);
+    }
   };
 
   const handleVideoClick = (video) => {
@@ -273,35 +270,15 @@ function App() {
   if (currentPage === 'video' && currentVideo) {
     return (
       <div className="App">
-        {/* Header */}
-        <header className="header">
-          <div className="header-content">
-            <a href="#" onClick={goHome} className="logo">
-              <TextShimmer duration={3} spread={1.5} fontSize="36px">
-                <span className="logo-k">k</span>err
-              </TextShimmer>
-            </a>
-            <nav className="desktop-nav">
-              <a href="#" onClick={goHome}>Home</a>
-              <a href="#">Work</a>
-              <a href="#">About</a>
-              <a href="#" className="nav-contact">Contact</a>
-            </nav>
-          </div>
-        </header>
+        {/* Background */}
+        <Background />
 
-        {/* Menu Overlay */}
-        <div className={`menu-overlay ${menuOpen ? 'open' : ''}`}>
-          <nav className="mobile-nav">
-            <a href="#" onClick={() => { toggleMenu(); goHome(); }}>Home</a>
-            <a href="#" onClick={toggleMenu}>Work</a>
-            <a href="#" onClick={toggleMenu}>About</a>
-            <a href="#" onClick={toggleMenu} className="nav-contact">Contact</a>
-            <div className="mobile-email">
-              <a href="mailto:colour8k@mac.com">colour8k@mac.com</a>
-            </div>
-          </nav>
-        </div>
+        {/* Header */}
+        <Header
+          menuOpen={menuOpen}
+          setMenuOpen={setMenuOpen}
+          onNavigate={handleNavigation}
+        />
 
         {/* Video Page Content */}
         <main className="video-page">
@@ -393,144 +370,16 @@ function App() {
 
   return (
     <div className="App">
+      {/* Background */}
+      <Background />
+
       {/* Header */}
-      <header className="header">
-        <div className="header-content" style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          width: '100%'
-        }}>
-          <a href="#" className="logo">
-            <TextShimmer duration={3} spread={1.5}>
-              <span className="logo-k">k</span>err
-            </TextShimmer>
-          </a>
-          {/* Right side container */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '20px'
-          }}>
-            {/* Digital Clock - Left of hamburger */}
-            <SafeWrapper>
-              <DigitalClock />
-            </SafeWrapper>
+      <Header
+        menuOpen={menuOpen}
+        setMenuOpen={setMenuOpen}
+        onNavigate={handleNavigation}
+      />
 
-            {/* Hamburger Menu - Far right */}
-            <MorphingDialog
-              transition={{
-                type: 'spring',
-                bounce: 0.05,
-                duration: 0.25,
-              }}
-            >
-              <MorphingDialogTrigger
-                className={`hamburger ${menuOpen ? 'open' : ''}`}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  padding: '12px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-around',
-                  width: '40px',
-                  height: '40px',
-                  transition: 'all 0.3s ease',
-                }}
-                onMouseEnter={(e) => {
-                  const spans = e.currentTarget.querySelectorAll('span');
-                  spans.forEach(span => {
-                    span.style.background = 'white';
-                  });
-                }}
-                onMouseLeave={(e) => {
-                  const spans = e.currentTarget.querySelectorAll('span');
-                  spans.forEach(span => {
-                    span.style.background = '#a1a1aa';
-                  });
-                }}
-              >
-              <span style={{
-                display: 'block',
-                height: '2px',
-                background: '#a1a1aa',
-                width: '100%',
-                transition: 'background-color 0.3s ease'
-              }}></span>
-              <span style={{
-                display: 'block',
-                height: '2px',
-                background: '#a1a1aa',
-                width: '100%',
-                transition: 'background-color 0.3s ease'
-              }}></span>
-              <span style={{
-                display: 'block',
-                height: '2px',
-                background: '#a1a1aa',
-                width: '100%',
-                transition: 'background-color 0.3s ease'
-              }}></span>
-            </MorphingDialogTrigger>
-            <MorphingDialogContainer>
-              <MorphingDialogContent
-                style={{
-                  borderRadius: '12px',
-                  maxWidth: '320px',
-                  width: '320px',
-                }}
-                className='pointer-events-auto relative flex h-auto flex-col overflow-hidden border border-zinc-950/10 bg-black'
-              >
-                <div className="dialog-video-container" style={{ height: '160px', width: '100%', overflow: 'hidden', borderRadius: '12px 12px 0 0' }}>
-                  <iframe
-                    src={`${videos[0].embedUrl}?autoplay=1&muted=1&loop=1&background=1`}
-                    frameBorder="0"
-                    allow="autoplay; fullscreen; picture-in-picture"
-                    allowFullScreen
-                    title={videos[0].title}
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      transform: 'scale(1.8)',
-                      transformOrigin: 'center center'
-                    }}
-                  ></iframe>
-                </div>
-                <div className='py-8 px-6'>
-                  <nav className='space-y-6 text-center'>
-                    <a href="#" onClick={goHome} className='block text-lg font-light text-gray-200 hover:text-gray-400 transition-all duration-300 tracking-widest uppercase border-b border-transparent hover:border-gray-500 pb-2' style={{fontFamily: "'Space Mono', monospace"}}>
-                      HOME
-                    </a>
-                    <a href="#" className='block text-lg font-light text-gray-200 hover:text-gray-400 transition-all duration-300 tracking-widest uppercase border-b border-transparent hover:border-gray-500 pb-2' style={{fontFamily: "'Space Mono', monospace"}}>
-                      WORK
-                    </a>
-                    <a href="#" className='block text-lg font-light text-gray-200 hover:text-gray-400 transition-all duration-300 tracking-widest uppercase border-b border-transparent hover:border-gray-500 pb-2' style={{fontFamily: "'Space Mono', monospace"}}>
-                      CONTACT
-                    </a>
-                  </nav>
-                </div>
-                <MorphingDialogClose className='text-zinc-50' />
-              </MorphingDialogContent>
-            </MorphingDialogContainer>
-          </MorphingDialog>
-          </div>
-        </div>
-      </header>
-
-      {/* Menu Overlay */}
-      <div className={`menu-overlay ${menuOpen ? 'open' : ''}`}>
-        <nav className="mobile-nav">
-          <a href="#" onClick={toggleMenu}>Home</a>
-          <a href="#" onClick={toggleMenu}>Work</a>
-          <a href="#" onClick={toggleMenu}>About</a>
-          <a href="#" onClick={toggleMenu}>Contact</a>
-          <div className="mobile-email">
-            <a href="mailto:colour8k@mac.com">colour8k@mac.com</a>
-          </div>
-        </nav>
-      </div>
 
       {/* Showreel Modal */}
       {showModal && currentVideo && (
