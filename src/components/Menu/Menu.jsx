@@ -1,16 +1,5 @@
 import React from 'react';
-import {
-  MorphingDialog,
-  MorphingDialogTrigger,
-  MorphingDialogContent,
-  MorphingDialogTitle,
-  MorphingDialogImage,
-  MorphingDialogSubtitle,
-  MorphingDialogClose,
-  MorphingDialogDescription,
-  MorphingDialogContainer,
-} from '../../motion-primitives/morphing-dialog';
-import { COLORS, TYPOGRAPHY, ANIMATIONS, Z_INDEX, MENU_CONFIG } from '../../styles/theme';
+import { COLORS, TYPOGRAPHY, MENU_CONFIG } from '../../styles/theme';
 import './Menu.css';
 
 const Menu = ({ menuOpen, setMenuOpen, onNavigate }) => {
@@ -26,21 +15,11 @@ const Menu = ({ menuOpen, setMenuOpen, onNavigate }) => {
   };
 
   return (
-    <MorphingDialog>
-      <MorphingDialogTrigger
+    <>
+      {/* Hamburger Button */}
+      <button
         className={`hamburger ${menuOpen ? 'open' : ''}`}
-        style={{
-          background: 'none',
-          border: 'none',
-          cursor: 'pointer',
-          padding: '12px',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-around',
-          width: '40px',
-          height: '40px',
-          transition: `all ${ANIMATIONS.DURATION.FAST} ${ANIMATIONS.EASING.DEFAULT}`,
-        }}
+        onClick={toggleMenu}
         onMouseEnter={(e) => {
           const spans = e.currentTarget.querySelectorAll('span');
           spans.forEach(span => {
@@ -54,82 +33,34 @@ const Menu = ({ menuOpen, setMenuOpen, onNavigate }) => {
           });
         }}
       >
-        <span style={{
-          display: 'block',
-          height: '2px',
-          background: '#a1a1aa',
-          width: '100%',
-          transition: `background-color ${ANIMATIONS.DURATION.FAST} ${ANIMATIONS.EASING.DEFAULT}`
-        }}></span>
-        <span style={{
-          display: 'block',
-          height: '2px',
-          background: '#a1a1aa',
-          width: '100%',
-          transition: `background-color ${ANIMATIONS.DURATION.FAST} ${ANIMATIONS.EASING.DEFAULT}`
-        }}></span>
-        <span style={{
-          display: 'block',
-          height: '2px',
-          background: '#a1a1aa',
-          width: '100%',
-          transition: `background-color ${ANIMATIONS.DURATION.FAST} ${ANIMATIONS.EASING.DEFAULT}`
-        }}></span>
-      </MorphingDialogTrigger>
-      <MorphingDialogContainer>
-        <MorphingDialogContent
-          style={{
-            borderRadius: '12px',
-            maxWidth: '320px',
-            width: '320px',
-          }}
-          className='pointer-events-auto relative flex h-auto flex-col overflow-hidden border border-zinc-950/10 bg-black'
-        >
-          <div className="dialog-video-container" style={{
-            height: '160px',
-            width: '100%',
-            overflow: 'hidden',
-            borderRadius: '12px 12px 0 0'
-          }}>
-            <iframe
-              src={`${MENU_CONFIG.VIDEO_URL}?autoplay=1&muted=1&loop=1&background=1`}
-              frameBorder="0"
-              allow="autoplay; fullscreen; picture-in-picture"
-              allowFullScreen
-              title={MENU_CONFIG.VIDEO_TITLE}
-              style={{
-                width: '100%',
-                height: '100%',
-                transform: 'scale(1.8)',
-                transformOrigin: 'center center'
-              }}
-            ></iframe>
-          </div>
-          <div className='py-8 px-6'>
-            <nav className='menu-nav'>
-              {MENU_CONFIG.ITEMS.map((item, index) => (
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      {/* Simple Menu Overlay */}
+      {menuOpen && (
+        <div className="simple-menu-overlay" onClick={toggleMenu}>
+          <div className="simple-menu-content" onClick={(e) => e.stopPropagation()}>
+            <nav className="simple-menu-nav">
+              {MENU_CONFIG.ITEMS.map((item) => (
                 <a
                   key={item}
                   href="#"
                   onClick={() => handleMenuClick(item.toLowerCase())}
-                  className='menu-nav-item'
-                  style={{
-                    fontFamily: TYPOGRAPHY.FONT_FAMILY.PRIMARY,
-                    transitionDelay: `${index * 0.1}s`
-                  }}
+                  className="simple-menu-item"
                 >
                   {item}
                 </a>
               ))}
             </nav>
-            <div className="menu-email">
+            <div className="simple-menu-email">
               <a href={`mailto:${MENU_CONFIG.EMAIL}`}>{MENU_CONFIG.EMAIL}</a>
             </div>
           </div>
-          <MorphingDialogClose className='text-zinc-50' />
-        </MorphingDialogContent>
-      </MorphingDialogContainer>
-    </MorphingDialog>
+        </div>
+      )}
+    </>
   );
 };
 
