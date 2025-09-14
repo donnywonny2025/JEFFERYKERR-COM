@@ -126,23 +126,23 @@ export default function Home() {
         overflow: 'hidden'
       }}>
         <Liquid
-          colors={[ '#5227FF', '#FF9FFC', '#B19EEF', '#00d4ff', '#8b5cf6' ]}
+          colors={[ '#1a0b2e', '#5227FF', '#FF9FFC', '#B19EEF', '#00d4ff', '#8b5cf6' ]}
           style={{ 
-            opacity: 0.75,
+            opacity: 0.85,
             width: '100%',
-            height: '100%'
+            height: '100%',
+            filter: 'contrast(1.2) saturate(1.3)'
           }}
           enableStars={true}
-          starLayers={5}
-          starDensity={0.3}
-          starDriftSpeed={0.05}
-          starRotationSpeed={0.12}
-          starBrightness={1.5}
-          starTwinkleSpeed={1.8}
-          flowSpeed={0.8}
-          turbulence={0.6}
-          colorSaturation={1.2}
-          backgroundDarkness={0.15}
+          starLayers={3}
+          starDensity={0.2}
+          starDriftSpeed={0.03}
+          starRotationSpeed={0.08}
+          starBrightness={1.2}
+          starTwinkleSpeed={1.5}
+          minBrightness={0.1}
+          maxBrightness={0.8}
+          colorDecay={0.95}
         />
       </div>
 
@@ -281,7 +281,7 @@ export default function Home() {
             fontFamily: "'Space Mono', monospace",
             fontSize: 'clamp(1.5rem, 3vw, 2.2rem)',
             fontWeight: '400',
-            lineHeight: '1.3',
+            lineHeight: '1.1',
             color: 'rgba(255, 255, 255, 0.95)',
             marginBottom: '40px',
             maxWidth: '750px'
