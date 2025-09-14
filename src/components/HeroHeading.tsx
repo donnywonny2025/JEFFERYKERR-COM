@@ -15,9 +15,8 @@ export default function HeroHeading() {
     <div className="hero-text">
       <h1 className="hero-main-text">
         <TextRoll
-          duration={0.6}
-          getEnterDelay={(i) => i * 0.05}
-          className="hero-text-roll"
+          duration={0.8}
+          getEnterDelay={(i) => i * 0.08}
         >
           I produce compelling visual content while building AI-enhanced workflows that change how creative work gets done.
         </TextRoll>

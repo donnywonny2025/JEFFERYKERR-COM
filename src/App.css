@@ -604,9 +604,14 @@ body::before {
 }
 
 .hero-main-text {
-  white-space: normal;
-  word-wrap: break-word;
+  font-family: 'Space Mono', monospace;
+  font-weight: 400;
+  font-size: clamp(3rem, 6vw, 5rem);
   line-height: 1.4;
+  color: rgba(255, 255, 255, 0.95);
+  text-align: left;
+  perspective: 1000px;
+  transform-style: preserve-3d;
 }
 
 /* Circular Showreel Element */
