@@ -128,17 +128,21 @@ export default function Home() {
         <Liquid
           colors={[ '#5227FF', '#FF9FFC', '#B19EEF', '#00d4ff', '#8b5cf6' ]}
           style={{ 
-            opacity: 0.65,
+            opacity: 0.75,
             width: '100%',
             height: '100%'
           }}
-          enableStars={false}
-          starLayers={3}
-          starDensity={0.5}
-          starDriftSpeed={0.02}
-          starRotationSpeed={0.08}
-          starBrightness={2.0}
-          starTwinkleSpeed={2.0}
+          enableStars={true}
+          starLayers={5}
+          starDensity={0.3}
+          starDriftSpeed={0.05}
+          starRotationSpeed={0.12}
+          starBrightness={1.5}
+          starTwinkleSpeed={1.8}
+          flowSpeed={0.8}
+          turbulence={0.6}
+          colorSaturation={1.2}
+          backgroundDarkness={0.15}
         />
       </div>
 
@@ -180,9 +184,39 @@ export default function Home() {
       <style jsx>{`
         .gradient-text {
           background: linear-gradient(135deg, #00d4ff 0%, #8b5cf6 50%, #FF9FFC 100%);
+          background-size: 200% 200%;
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
+          animation: gradientFlow 3s ease-in-out 0s 1 normal forwards, 
+                     subtlePulse 12s ease-in-out 3s infinite;
+          position: relative;
+        }
+
+        @keyframes gradientFlow {
+          0% {
+            background-position: 0% 50%;
+            filter: brightness(1);
+          }
+          50% {
+            background-position: 100% 50%;
+            filter: brightness(1.3);
+          }
+          100% {
+            background-position: 200% 50%;
+            filter: brightness(1);
+          }
+        }
+
+        @keyframes subtlePulse {
+          0%, 100% {
+            background-position: 200% 50%;
+            filter: brightness(1);
+          }
+          50% {
+            background-position: 250% 50%;
+            filter: brightness(1.1);
+          }
         }
         
         .video-container {
