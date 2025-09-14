@@ -80,3 +80,85 @@ npm run dev
 - Primary owner: `app/page.tsx` (front page composition)
 - Styling system: `src/App.css`
 - Debug tooling: `src/components/SpacingDebugger.tsx`
+
+---
+
+## Liquid Ether Background (handoff)
+
+This section documents the moving background used across background demo pages. It is a self-contained React component powered by Three.js shaders with a graceful CSS fallback if WebGL initialization fails.
+
+### Files
+
+- `handoff/LiquidEther.jsx`
+- `handoff/LiquidEther.css`
+- `handoff/ExamplePage.jsx` (usage example without Next.js)
+
+The same implementation also exists in `src/components/LiquidEther.jsx` for production usage inside this repo.
+
+### Dependencies
+
+- `react` (18+)
+- `react-dom`
+- `three` (0.15x+)
+- `prop-types` (optional but included in this example)
+
+Install in any React/Next project:
+
+```
+npm install react react-dom three prop-types
+```
+
+### Usage
+
+```
+import LiquidEther from './LiquidEther';
+import './LiquidEther.css';
+
+export default function Page() {
+  return (
+    <div>
+      <LiquidEther
+        className="liquid-ether-fullscreen"
+        colors={["#5227FF", "#FF9FFC", "#B19EEF", "#00d4ff", "#8b5cf6"]}
+        enableStars={true}
+        starLayers={6}
+        starDensity={0.75}
+        starDriftSpeed={0.035}
+        starRotationSpeed={0.15}
+        starBrightness={3.5}
+        starTwinkleSpeed={3.2}
+        style={{ opacity: 0.5 }}
+      />
+      {/* Your page content here */}
+    </div>
+  );
+}
+```
+
+For a live example in this repo, see `app/backgrounds/liquid-stars/page.tsx`, which demonstrates the same props inside a Next.js route.
+
+### Props
+
+- `colors: string[]` — color palette used to generate the liquid shader.
+- `enableStars: boolean` — toggles starfield overlay on top of the liquid.
+- `starLayers: number` — number of parallax layers for stars (default 6).
+- `starDensity: number` — how dense the starfield is (0–1 typical range).
+- `starDriftSpeed: number` — slow drift movement factor for stars.
+- `starRotationSpeed: number` — orbital rotation speed around an anchor.
+- `starBrightness: number` — overall star brightness multiplier.
+- `starTwinkleSpeed: number` — twinkle frequency.
+- `className?: string` — append classes to the container (positioned fixed fullscreen by default).
+- `style?: React.CSSProperties` — inline styles merged into the container.
+
+### Notes and behavior
+
+- The component mounts a transparent WebGL canvas that fills the viewport, positioned behind content (`z-index: -1`) and non-interactive (`pointer-events: none`).
+- It includes a CSS fallback (animated gradients) when WebGL cannot initialize.
+- Performance optimizations include conservative pixel ratio, frame skipping under load, and pause on tab visibility change.
+
+### Troubleshooting
+
+- If nothing renders, confirm `three` is installed and your bundler isn’t tree-shaking shader strings.
+- If the canvas overlaps clickable UI, ensure your content has a higher `z-index` than the background (the component uses `z-index: -1`).
+- If you see stutters on low-power devices, reduce `starLayers` and/or `starDensity`, or set `enableStars={false}`.
+

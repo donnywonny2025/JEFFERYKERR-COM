@@ -1,0 +1,135 @@
+/* One-to-one copy from src/components/LiquidEther.css for handoff */
+.liquid-ether-container {
+  /* Standard container positioning */
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none; /* background shouldn't intercept pointer events */
+  z-index: 0;
+  opacity: 1; /* container visible, canvas controls alpha */
+}
+
+/* Full-screen background variant */
+.liquid-ether-fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -1; /* Behind everything, including grain */
+  opacity: 1;
+}
+
+/* Ensure fullscreen canvas is visible and truly behind content */
+.liquid-ether-fullscreen canvas {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+  z-index: -1; /* Deep background */
+  opacity: 1 !important; /* Force visibility */
+  filter: none; /* Remove blur for crisp visuals */
+  transition: opacity 600ms ease-in-out;
+  mix-blend-mode: lighten; /* Won't darken content */
+}
+
+/* Subtle fallback background for when WebGL isn't available */
+.liquid-ether-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  /* Subtle center-darkening vignette to keep the effect focused */
+  background: radial-gradient(closest-side at 50% 45%, rgba(0,0,0,0.0) 0%, rgba(0,0,0,0.15) 65%, rgba(0,0,0,0.5) 100%);
+  z-index: 0;
+}
+
+/* Ensure canvas sits behind content */
+.liquid-ether-container canvas {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+  z-index: 0; /* keep canvas behind content */
+  opacity: 0.7; /* Make visible by default for debugging */
+  filter: saturate(110%); /* Enhanced saturation for liquid colors */
+  transition: opacity 400ms ease-in-out; /* Faster fade in */
+  /* Clean rendering hints */
+  will-change: opacity, transform;
+  transform: translateZ(0); /* Force GPU layer */
+  image-rendering: -webkit-optimize-contrast; /* Sharp, clean rendering */
+  image-rendering: crisp-edges; /* Clean edges on Firefox */
+}
+
+/* Enhanced liquid ether specific styles */
+.liquid-ether-container canvas {
+  /* Slightly enhanced saturation for more vibrant liquid colors */
+  filter: saturate(115%) brightness(1.05);
+}
+
+.liquid-ether-fullscreen canvas {
+  /* Full screen version - make sure it's visible */
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+  z-index: -1;
+  opacity: 0.6 !important; /* Ensure visibility */
+  filter: saturate(120%) brightness(1.1);
+  transition: opacity 400ms ease-in-out;
+}
+
+/* Enhanced animations for liquid background */
+@keyframes liquidFlow {
+  0% {
+    background-position: 0% 50%, 100% 50%, 50% 0%, 0% 0%;
+    filter: saturate(120%) brightness(1.1) blur(0.5px);
+  }
+  25% {
+    background-position: 100% 30%, 0% 70%, 80% 20%, 0% 0%;
+  }
+  50% {
+    background-position: 50% 100%, 50% 0%, 20% 80%, 0% 0%;
+    filter: saturate(130%) brightness(1.15) blur(0.3px);
+  }
+  75% {
+    background-position: 0% 70%, 100% 30%, 70% 50%, 0% 0%;
+  }
+  100% {
+    background-position: 0% 50%, 100% 50%, 50% 0%, 0% 0%;
+    filter: saturate(120%) brightness(1.1) blur(0.5px);
+  }
+}
+
+@keyframes liquidShift {
+  0%, 100% {
+    transform: scale(1.02) rotate(0deg);
+    opacity: 0.4;
+  }
+  33% {
+    transform: scale(1.05) rotate(1deg);
+    opacity: 0.6;
+  }
+  66% {
+    transform: scale(1.03) rotate(-1deg);
+    opacity: 0.5;
+  }
+}
+
+/* Dynamic wave animation using CSS custom properties */
+.liquid-ether-container {
+  --wave1: 50%;
+  --wave2: 50%;
+  --wave3: 50%;
+}
+
+.liquid-ether-container.is-muted::before {
+  /* When muted, make the fallback even subtler */
+  background: radial-gradient(closest-side at 50% 45%, rgba(0,0,0,0.0) 0%, rgba(0,0,0,0.1) 75%, rgba(0,0,0,0.3) 100%);
+}
