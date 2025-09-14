@@ -397,43 +397,6 @@ body::before {
   opacity: 0.9;
 }
 
-/* Staggered text reveal animations */
-@keyframes textReveal {
-  0% {
-    opacity: 0;
-    filter: blur(10px);
-    transform: translateY(20px);
-  }
-  100% {
-    opacity: 1;
-    filter: blur(0px);
-    transform: translateY(0);
-  }
-}
-
-@keyframes locationSlide {
-  0% {
-    opacity: 0;
-    transform: translateX(-30px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes fallbackShow {
-  0% {
-    opacity: 0.1;
-    filter: blur(5px);
-    transform: translateY(10px);
-  }
-  100% {
-    opacity: 1;
-    filter: blur(0px);
-    transform: translateY(0);
-  }
-}
 
 /* Hero Text Animation Styles */
 .hero-text h1, .hero-main-text {
@@ -463,16 +426,9 @@ body::before {
   line-height: 1.3;
   color: rgba(255, 255, 255, 0.95);
   margin: 0 0 1.5rem 0;
-  opacity: 0;
-  transform: translateY(20px);
-  transition: all 1s ease-out;
   text-align: left;
 }
 
-.hero-main-text.text-animate-in {
-  opacity: 1;
-  transform: translateY(0);
-}
 
 .hero-meta {
   opacity: 0;
@@ -499,30 +455,6 @@ body::before {
   text-decoration: underline;
 }
 
-.hero-word {
-  display: inline-block;
-  opacity: 0;
-  transform: translateY(20px);
-  filter: blur(8px);
-}
-
-.hero-word.animate {
-  animation: wordReveal 0.6s cubic-bezier(0.25,0.46,0.45,0.94) forwards;
-  animation-delay: var(--d, 0s);
-}
-
-@keyframes wordReveal {
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
-    filter: blur(8px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-    filter: blur(0);
-  }
-}
 
 /* Meta information animation */
 .hero-meta {
