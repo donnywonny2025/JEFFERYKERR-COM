@@ -289,7 +289,7 @@ body::before {
 /* Section Dividers */
 .section-divider {
   padding: 160px 80px;
-  text-align: center;
+  text-align: left;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 50%, rgba(255, 255, 255, 0.02) 100%);
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
@@ -339,7 +339,7 @@ body::before {
 }
 
 .divider-text {
-  text-align: center;
+  text-align: left;
   min-width: 360px;
 }
 
@@ -377,17 +377,17 @@ body::before {
 
 .hero-content {
   position: relative;
-  margin: 15vh auto 0;
+  margin: 8vh auto 0;
   width: 100%;
   max-width: 750px;
-  text-align: center;
+  text-align: left;
   z-index: 20;
 }
 
 /* Heading override */
 .hero-content h1 {
   font-family: 'Space Mono', monospace;
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: clamp(3rem, 6vw, 5rem);
   font-weight: 400;
   line-height: 1.3;
   letter-spacing: -0.02em;
@@ -439,7 +439,7 @@ body::before {
 .hero-text h1 {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   font-weight: 400;
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: clamp(3rem, 6vw, 5rem);
   line-height: 1.3;
   letter-spacing: -0.02em;
   color: rgba(255, 255, 255, 0.95);
@@ -448,7 +448,7 @@ body::before {
 .hero-main-text {
   font-family: 'Space Mono', monospace;
   font-weight: 400;
-  font-size: 2rem;
+  font-size: clamp(3rem, 6vw, 5rem);
   line-height: 1.3;
   color: rgba(255, 255, 255, 0.95);
   margin: 0 0 1.5rem 0;
@@ -795,7 +795,7 @@ body::before {
   font-weight: 300;
   color: var(--text-primary);
   letter-spacing: 0.5px;
-  text-align: center;
+  text-align: left;
   opacity: 0.8;
 }
 
@@ -923,7 +923,7 @@ body::before {
 .brand-showcase {
   padding: 0 80px 60px;
   margin: 60px auto 0;
-  text-align: center;
+  text-align: left;
   background: transparent;
 }
 
@@ -1067,7 +1067,7 @@ body::before {
 /* Footer - Sam Kolder Style */
 .footer {
   padding: 80px 80px 40px;
-  text-align: center;
+  text-align: left;
   background: var(--bg-primary);
   position: relative;
 }
@@ -1085,7 +1085,7 @@ body::before {
 
 .footer-logo {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
-  font-size: 2rem;
+  font-size: clamp(3rem, 6vw, 5rem);
   font-weight: 500;
   letter-spacing: 0.5px;
 }
@@ -1310,7 +1310,7 @@ body::before {
 .video-description {
   max-width: 700px;
   margin: 0 auto 60px;
-  text-align: center;
+  text-align: left;
 }
 
 .video-description p {
@@ -1330,7 +1330,7 @@ body::before {
   font-weight: 300;
   color: var(--text-primary);
   margin-bottom: 20px;
-  text-align: center;
+  text-align: left;
 }
 
 .video-credits ul {
@@ -1342,7 +1342,7 @@ body::before {
   font-size: 16px;
   color: var(--text-secondary);
   margin-bottom: 8px;
-  text-align: center;
+  text-align: left;
   font-weight: 300;
 }
 
@@ -1356,7 +1356,7 @@ body::before {
   font-size: 24px;
   font-weight: 300;
   color: var(--text-primary);
-  text-align: center;
+  text-align: left;
   margin-bottom: 40px;
 }
 
@@ -1635,7 +1635,7 @@ body::before {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  text-align: center;
+  text-align: left;
   padding: 0 2rem;
 }
 
@@ -1718,7 +1718,7 @@ body::before {
 .about-content {
   max-width: 800px;
   margin: 0 auto;
-  text-align: center;
+  text-align: left;
 }
 
 .about-text {
@@ -1771,3 +1771,29 @@ body::before {
   color: var(--text-primary);
 }
 
+
+/* TextRoll wrapper to fix word wrapping */
+.hero-textroll-wrapper {
+  display: inline;
+  white-space: normal;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  hyphens: none;
+}
+
+/* Force TextRoll spans to respect word boundaries */
+.hero-textroll-wrapper > span {
+  display: inline !important;
+}
+
+/* Ensure individual character spans stay inline */
+.hero-textroll-wrapper [class*="perspective"] {
+  display: inline !important;
+  white-space: nowrap;
+}
+
+/* Override any width constraints on character spans */
+.hero-textroll-wrapper [class*="width:auto"] {
+  width: auto !important;
+  min-width: auto !important;
+}
