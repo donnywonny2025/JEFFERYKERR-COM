@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
 
 /* Custom CSS Variables for Jeffrey Kerr Portfolio */
 :root {
@@ -385,7 +386,7 @@ body::before {
 }
 
 /* Heading override */
-.hero-content h1 {
+.hero-content h1:not(.hero-main-text) {
   font-family: 'Space Mono', monospace;
   font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 400;
@@ -436,7 +437,7 @@ body::before {
 }
 
 /* Hero Text Animation Styles */
-.hero-text h1 {
+.hero-text h1:not(.hero-main-text) {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   font-weight: 400;
   font-size: clamp(2rem, 4vw, 3rem);
@@ -447,14 +448,15 @@ body::before {
 
 .hero-main-text {
   font-family: 'Space Mono', monospace;
-  font-weight: 400;
-  font-size: 2rem;
-  line-height: 1.3;
+  font-weight: 700;
+  font-size: clamp(2.25rem, 6.5vw, 5rem);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
   color: rgba(255, 255, 255, 0.95);
   margin: 0 0 1.5rem 0;
   opacity: 0;
   transform: translateY(20px);
-  transition: all 1s ease-out;
+  transition: transform 1s ease-out, opacity 1s ease-out;
 }
 
 .hero-main-text.text-animate-in {
@@ -554,14 +556,13 @@ body::before {
 }
 
 .hero-meta {
-  /* Center hero meta under the h1 */
   position: relative;
-  margin: 40px auto 0; /* center the meta section */
-  max-width: 750px; /* keep width matching the hero content */
-  padding: 0; /* ensure no side padding shifts the left edge */
+  margin: 24px 0 0 0;
+  max-width: 750px;
+  padding: 0;
   display: flex;
   gap: 20px;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
 }
 
@@ -1697,19 +1698,19 @@ body::before {
 
 /* Responsive text sizes */
 @media (max-width: 640px) {
-  .hero-content h1 {
+  .hero-content h1:not(.hero-main-text) {
     font-size: 3rem;
   }
 }
 
 @media (min-width: 640px) {
-  .hero-content h1 {
+  .hero-content h1:not(.hero-main-text) {
     font-size: 3.75rem;
   }
 }
 
 @media (min-width: 768px) {
-  .hero-content h1 {
+  .hero-content h1:not(.hero-main-text) {
     font-size: 4.5rem;
   }
 }

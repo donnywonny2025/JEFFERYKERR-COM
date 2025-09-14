@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 export default function HeroHeading() {
   const [isAnimated, setIsAnimated] = useState(false);
@@ -10,10 +10,27 @@ export default function HeroHeading() {
     return () => clearTimeout(timer);
   }, []);
 
+  const text = useMemo(
+    () =>
+      'I produce compelling visual content while building AI-enhanced workflows that change how creative work gets done.',
+    []
+  );
+
+  const words = useMemo(() => text.split(' '), [text]);
+
   return (
     <div className="hero-text">
       <h1 className={`hero-main-text ${isAnimated ? 'text-animate-in' : ''}`}>
-        I produce compelling visual content while building AI-enhanced workflows that change how creative work gets done.
+        {words.map((word, i) => (
+          <span
+            key={i}
+            className={`hero-word ${isAnimated ? 'animate' : ''}`}
+            style={{ animationDelay: `${i * 0.05}s` }}
+          >
+            {word}
+            {i < words.length - 1 ? ' ' : ''}
+          </span>
+        ))}
       </h1>
       <div className={`hero-meta ${isAnimated ? 'meta-animate-in' : ''}`}>
         <div className="meta-item location-item">
