@@ -1,21 +1,28 @@
 import React, { useEffect, useState } from 'react';
+import { TextRoll } from './motion-primitives/text-roll';
 
 export default function HeroHeading() {
-  const [isAnimated, setIsAnimated] = useState(false);
+  const [showMeta, setShowMeta] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setIsAnimated(true);
-    }, 200);
+      setShowMeta(true);
+    }, 2000);
     return () => clearTimeout(timer);
   }, []);
 
   return (
     <div className="hero-text">
-      <h1 className={`hero-main-text ${isAnimated ? 'text-animate-in' : ''}`}>
-        I produce compelling visual content while building AI-enhanced workflows that change how creative work gets done.
-      </h1>
-      <div className={`hero-meta ${isAnimated ? 'meta-animate-in' : ''}`}>
+      <div className="hero-text-container">
+        <TextRoll
+          className="hero-main-text"
+          duration={0.8}
+          getEnterDelay={(i) => i * 0.08}
+        >
+          I produce compelling visual content while building AI-enhanced workflows that change how creative work gets done.
+        </TextRoll>
+      </div>
+      <div className={`hero-meta ${showMeta ? 'meta-animate-in' : ''}`}>
         <div className="meta-item location-item">
           <span>Grand Rapids, Michigan / World</span>
         </div>

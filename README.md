@@ -85,34 +85,45 @@ npm run lint     # Run ESLint
 ## 📁 **Project Structure**
 
 ```
-/Volumes/AI/WORK 2025/JEFFERYKERR-COM/
-├── app/                          # Next.js App Router directory
-│   ├── globals.css              # Global Tailwind CSS imports
-│   ├── layout.tsx               # Root layout component
-│   └── page.tsx                 # Main portfolio page (client component)
-├── src/                         # Source files directory
-│   ├── components/              # React components
-│   │   ├── motion-primitives/   # Custom animation components
-│   │   │   ├── tilt.tsx         # 3D tilt effect component
-│   │   │   ├── text-shimmer.tsx # Text shimmer animation
-│   │   │   ├── digital-clock.tsx# Live updating clock
-│   │   │   ├── morphing-dialog.tsx # Animated modal dialogs
-│   │   │   └── sliding-number.tsx # Number sliding animation
-│   │   └── SafeWrapper.jsx      # Error boundary component
-│   ├── lib/                     # Utility functions
-│   │   └── utils.ts             # Tailwind CSS utility functions
-│   └── App.css                  # Main portfolio styles (1400+ lines)
-├── package.json                 # Project dependencies and scripts
-├── package-lock.json            # Dependency lock file
-├── next.config.ts               # Next.js configuration
-├── next-env.d.ts                # Next.js TypeScript declarations
-├── postcss.config.js            # PostCSS configuration for Tailwind
-├── tailwind.config.js           # Tailwind CSS configuration
-├── tsconfig.json                # TypeScript configuration
-├── components.json              # Component library configuration
-├── eslint.config.mjs            # ESLint configuration
-└── .gitignore                   # Git ignore rules
-```
+ /Volumes/AI/WORK 2025/JEFFERYKERR-COM/
+ ├── app/                          # Next.js App Router directory
+ │   ├── globals.css              # Global Tailwind CSS imports
+ │   ├── layout.tsx               # Root layout component
+ │   └── page.tsx                 # Main portfolio page (client component)
+ ├── src/                         # Source files directory
+ │   ├── components/              # React components
+ │   │   ├── motion-primitives/   # Custom animation components
+ │   │   │   ├── tilt.tsx         # 3D tilt effect component
+ │   │   │   ├── text-shimmer.tsx # Text shimmer animation
+ │   │   │   ├── text-roll.tsx    # LETTER-BY-LETTER TEXT ANIMATION (HERO TEXT)
+ │   │   │   ├── digital-clock.tsx# Live updating clock
+ │   │   │   ├── morphing-dialog.tsx # Animated modal dialogs
+ │   │   │   └── sliding-number.tsx # Number sliding animation
+ │   │   ├── HeroHeading.tsx      # HERO TEXT COMPONENT - TextRoll implementation
+ │   │   └── SafeWrapper.jsx      # Error boundary component
+ │   ├── lib/                     # Utility functions
+ │   │   └── utils.ts             # Tailwind CSS utility functions
+ │   └── App.css                  # Main portfolio styles (1400+ lines)
+ │       └── .hero-main-text      # HERO TEXT STYLING - font, size, positioning
+ ├── package.json                 # Project dependencies and scripts
+ ├── package-lock.json            # Dependency lock file
+ ├── next.config.ts               # Next.js configuration
+ ├── next-env.d.ts                # Next.js TypeScript declarations
+ ├── postcss.config.js            # PostCSS configuration for Tailwind
+ ├── tailwind.config.js           # Tailwind CSS configuration
+ ├── tsconfig.json                # TypeScript configuration
+ ├── components.json              # Component library configuration
+ ├── eslint.config.mjs            # ESLint configuration
+ └── .gitignore                   # Git ignore rules
+ ```
+
+### **Hero Text Implementation Details**
+- **Component:** `src/components/HeroHeading.tsx` - Main hero text logic
+- **Animation:** `src/components/motion-primitives/text-roll.tsx` - TextRoll component
+- **Styling:** `src/App.css` - `.hero-main-text`, `.hero-meta`, `.meta-item` classes
+- **Integration:** `app/page.tsx` - `<HeroHeading />` component usage
+- **Animation Flow:** TextRoll → letter-by-letter reveal → meta info fade-in after 2s
+ ```
 
 ## 🔧 **How It Works**
 
@@ -122,11 +133,47 @@ npm run lint     # Run ESLint
 3. **Server Components** - Layout and other pages can be server-rendered
 4. **Hybrid Approach** - Combines server and client rendering for optimal performance
 
+### **Hero Text Animation System**
+The hero text features a sophisticated letter-by-letter reveal animation using the **TextRoll** component from Motion Primitives:
+
+#### **TextRoll Component Implementation**
+- **Location:** `src/components/HeroHeading.tsx`
+- **Animation:** Letter-by-letter reveal with staggered timing
+- **Duration:** 0.8 seconds total animation time
+- **Delay:** Each letter delayed by 0.08 seconds (creates smooth cascading effect)
+- **Styling:** Applied via `className="hero-main-text"` prop
+
+#### **Hero Text Structure**
+```jsx
+<TextRoll
+  className="hero-main-text"
+  duration={0.8}
+  getEnterDelay={(i) => i * 0.08}
+>
+  I produce compelling visual content while building AI-enhanced workflows that change how creative work gets done.
+</TextRoll>
+```
+
+#### **Meta Information Animation**
+- **Location & Email:** Display below main text with fade-in animation
+- **Timing:** Appears 2 seconds after page load
+- **Styling:** Uses `.hero-meta` and `.meta-item` classes
+- **Content:** "Grand Rapids, Michigan / World" and "colour8k@mac.com"
+
+#### **CSS Styling Details**
+- **Font Family:** 'Space Mono', monospace (consistent with site theme)
+- **Font Size:** 2rem (responsive, not overwhelming)
+- **Font Weight:** 400 (clean, not bold)
+- **Text Alignment:** Left-aligned to match logo positioning
+- **Positioning:** `margin: 15vh 0 0 60px` (aligned with header)
+- **Animation:** Pure CSS transforms, no conflicting JavaScript animations
+
 ### **Animation System**
 1. **GSAP Core** - Handles complex scroll-triggered animations
 2. **ScrollTrigger** - Creates animations based on scroll position
 3. **Framer Motion** - Provides React-friendly animation primitives
 4. **Motion Primitives** - Custom reusable animation components
+5. **TextRoll** - Specialized letter-by-letter text animation component
 
 ### **Styling System**
 1. **Tailwind CSS** - Utility-first CSS framework
@@ -139,6 +186,128 @@ npm run lint     # Run ESLint
 - **Motion Primitives** (`src/components/motion-primitives/`) - Reusable animation components
 - **Layout** (`app/layout.tsx`) - Root layout with global styles
 - **Utilities** (`src/lib/utils.ts`) - Helper functions for styling
+
+### **Background System Architecture**
+The portfolio features multiple animated background options, each implemented as separate Next.js pages:
+
+#### **Background Pages Structure**
+```
+app/backgrounds/
+├── page.tsx              # Background selector/index page
+├── liquid/               # Liquid Ether background
+│   └── page.tsx         # Animated liquid particles effect
+├── liquid-stars/        # Liquid Ether + Stars
+│   └── page.tsx         # Combined liquid and starfield effect
+└── starfield/           # Pure Starfield background
+    └── page.tsx         # Animated starfield with twinkling
+```
+
+#### **Background Components**
+- **LiquidEther** (`src/components/LiquidEther.jsx`) - Canvas-based particle system
+  - Colors: Customizable color palette
+  - Stars: Optional star overlay
+  - Performance: Optimized with `will-change` and `requestAnimationFrame`
+- **StarField** (`src/components/StarField.tsx`) - WebGL-based starfield
+  - Layers: Multiple star layers for depth
+  - Animation: Smooth parallax movement
+  - Performance: GPU-accelerated rendering
+
+#### **Background Integration**
+- **Main Portfolio** uses LiquidEther with reduced opacity (0.3)
+- **Background Pages** showcase full-screen effects
+- **Navigation** via `/backgrounds` route
+- **Performance** optimized with conditional rendering
+
+### **Video Portfolio System**
+#### **Video Data Structure**
+```typescript
+interface Video {
+  id: string;           // Unique identifier
+  title: string;        // Video title
+  client: string;       // Client name
+  date: string;         // Production year
+  thumbnail: string;    // Vimeo thumbnail URL
+  embedUrl: string;     // Vimeo embed URL (optional)
+  description: string;  // Project description
+  credits: string[];    // Production credits
+}
+```
+
+#### **Video Components**
+- **Featured Video** - Large hero video with circular play button
+- **Video Grid** - Responsive grid of video thumbnails
+- **Video Modal** - Full-screen video player overlay
+- **Video Separators** - Text dividers between video sections
+
+#### **Video APIs Integration**
+- **Vimeo API** - Direct video embedding
+- **Vumbnail API** - Automatic thumbnail generation
+- **Responsive Design** - Mobile-optimized video players
+
+### **Menu & Navigation System**
+#### **Menu Components**
+- **Menu.jsx** (`src/components/Menu/Menu.jsx`) - Main menu logic
+- **Menu.css** (`src/components/Menu/Menu.css`) - Menu styling and animations
+- **Hamburger Animation** - Custom CSS keyframe animations
+
+#### **Menu States**
+- **Closed** - Hidden overlay
+- **Open** - Full-screen overlay with navigation
+- **Mobile Navigation** - Touch-optimized mobile menu
+- **Desktop Navigation** - Header-based navigation
+
+#### **Menu Features**
+- **Smooth Animations** - CSS transitions and transforms
+- **Accessibility** - Keyboard navigation support
+- **Responsive Design** - Adapts to screen size
+- **Route Navigation** - Integrates with Next.js routing
+
+### **Animation Stack Architecture**
+#### **Primary Animation Libraries**
+1. **GSAP (GreenSock Animation Platform)**
+   - **Purpose:** Complex, high-performance animations
+   - **Usage:** Scroll-triggered effects, timeline animations
+   - **Integration:** Registered in `app/page.tsx`
+
+2. **Framer Motion**
+   - **Purpose:** React-native animation components
+   - **Usage:** Component-level animations, gestures
+   - **Integration:** Imported in motion components
+
+3. **Motion Primitives**
+   - **Purpose:** Custom reusable animation components
+   - **Components:**
+     - `TextRoll` - Letter-by-letter text reveal
+     - `TextShimmer` - Text glow/shimmer effect
+     - `Tilt` - 3D tilt interactions
+     - `DigitalClock` - Live updating clock
+     - `MorphingDialog` - Animated modal dialogs
+     - `SlidingNumber` - Number transition animations
+
+#### **Animation Performance Optimizations**
+- **GPU Acceleration** - `transform3d`, `will-change` properties
+- **RequestAnimationFrame** - Smooth 60fps animations
+- **Lazy Loading** - Components load only when needed
+- **Code Splitting** - Animation libraries loaded separately
+
+### **Styling Architecture**
+#### **CSS Organization**
+- **Tailwind CSS** - Utility-first framework (v4.0)
+- **Custom CSS** - Portfolio-specific styles in `src/App.css`
+- **CSS Variables** - Dynamic theming and responsive values
+- **Component Styles** - Scoped styles for individual components
+
+#### **Design System**
+- **Color Palette:** Custom variables for consistent theming
+- **Typography:** Space Mono monospace font throughout
+- **Spacing:** Consistent margin/padding system
+- **Responsive Breakpoints:** Mobile-first approach
+
+#### **Visual Effects**
+- **Film Grain Overlay** - CSS-animated texture effect
+- **Backdrop Blur** - Modern glassmorphism effects
+- **Gradient Backgrounds** - Dynamic color transitions
+- **Box Shadows** - Depth and dimension effects
 
 ## ✨ Features
 
@@ -217,19 +386,85 @@ This is a clean copy of the Jeffrey Kerr portfolio website, containing only the 
 - **Video Integration:** Uses Vimeo API for video playback and thumbnails
 - **Responsive Design:** Mobile-first approach with custom breakpoints
 
-## 🎨 **Customization**
+## 🎨 **Customization Guide**
+
+### **Hero Text Customization**
+1. **Change the main text:**
+   - Edit `src/components/HeroHeading.tsx`
+   - Modify the text inside the `<TextRoll>` component
+
+2. **Adjust animation timing:**
+   - `duration={0.8}` - Total animation time
+   - `getEnterDelay={(i) => i * 0.08}` - Delay between each letter
+
+3. **Update location/email:**
+   - Edit the JSX in `HeroHeading.tsx`
+   - Modify `.meta-item` content
+
+4. **Styling changes:**
+   - Edit `.hero-main-text` in `src/App.css`
+   - Adjust font-size, font-weight, color, positioning
+
+### **Background System Customization**
+1. **Add new backgrounds:**
+   - Create new folder in `app/backgrounds/`
+   - Add `page.tsx` with your background component
+   - Update navigation in main `backgrounds/page.tsx`
+
+2. **Modify LiquidEther:**
+   - Edit `src/components/LiquidEther.jsx`
+   - Change colors, star density, animation speeds
+   - Adjust particle count and performance settings
+
+3. **Customize StarField:**
+   - Edit `src/components/StarField.tsx`
+   - Modify star layers, colors, movement speeds
+   - Adjust twinkle effects and brightness
+
+### **Video Portfolio Customization**
+1. **Add new videos:**
+   - Edit the `videos` array in `app/page.tsx`
+   - Add new Video objects with required properties
+   - Update Vimeo URLs and thumbnails
+
+2. **Modify video layout:**
+   - Edit video grid CSS in `src/App.css`
+   - Adjust `.video-card`, `.video-grid` styles
+   - Change responsive breakpoints
+
+### **Animation Customization**
+1. **GSAP Animations:**
+   - Edit `app/page.tsx` useEffect hooks
+   - Modify ScrollTrigger configurations
+   - Adjust animation timelines and easing
+
+2. **Motion Primitives:**
+   - Edit components in `src/components/motion-primitives/`
+   - Modify animation parameters and styles
+   - Add new primitive components
+
+### **Menu & Navigation**
+1. **Menu styling:**
+   - Edit `src/components/Menu/Menu.css`
+   - Modify colors, animations, positioning
+
+2. **Navigation logic:**
+   - Edit `src/components/Menu/Menu.jsx`
+   - Update menu items and routing logic
 
 ### **Colors & Theming**
-- Edit CSS variables in `src/App.css`
+- Edit CSS variables in `src/App.css` root section
 - Modify Tailwind config in `tailwind.config.js`
 - Update component styles in respective files
 
-### **Animations**
-- GSAP animations in `app/page.tsx`
-- Motion primitives in `src/components/motion-primitives/`
-- Scroll triggers configured for optimal performance
-
-### **Content**
-- Update portfolio data in `app/page.tsx`
+### **Content Management**
+- Update portfolio data in `app/page.tsx` videos array
 - Modify video URLs and project information
 - Change contact details and social links
+- Edit brand logos and client information
+
+### **Performance Optimization**
+- Monitor animation frame rates
+- Adjust particle counts in background effects
+- Optimize image loading and lazy loading
+- Configure code splitting for large components
