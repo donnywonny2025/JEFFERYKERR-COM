@@ -89,11 +89,55 @@ This section documents the moving background used across background demo pages. 
 
 ### Files
 
-- `handoff/LiquidEther.jsx`
+- `handoff/LiquidEther.jsx` (original complex version)
+- `handoff/LiquidEtherSimple.jsx` ⭐ **NEW OPTIMIZED VERSION**
 - `handoff/LiquidEther.css`
 - `handoff/ExamplePage.jsx` (usage example without Next.js)
 
-The same implementation also exists in `src/components/LiquidEther.jsx` for production usage inside this repo.
+The same implementation also exists in `src/components/LiquidEtherSimple.jsx` for production usage inside this repo.
+
+### ⭐ LiquidEtherSimple - Enhanced Performance Version
+
+**Location**: `handoff/LiquidEtherSimple.jsx`
+
+This is the new optimized version with enhanced organic visuals and better performance:
+
+**Key Features:**
+- **Wispy Organic Flow**: Enhanced fragment shader with smooth noise functions
+- **Multiple Liquid Layers**: Three different liquid layers with varying scales and speeds
+- **Organic Distortion**: UV coordinates distorted for natural flowing movement
+- **Performance Optimized**: 15fps animation, 0.5 pixel ratio, mobile CSS fallback
+- **Enhanced Visuals**: Flowing turbulence, shimmer effects, organic edge variation
+
+**Performance Improvements:**
+- Mobile detection with automatic CSS fallback
+- Reduced pixel ratio (0.5) for better performance
+- Frame rate limited to 15fps
+- Simple noise functions (not expensive fbm operations)
+- Graceful WebGL error handling
+
+**Usage:**
+```jsx
+import LiquidEtherSimple from './LiquidEtherSimple';
+
+<LiquidEtherSimple
+  colors={['#5227FF', '#FF9FFC', '#B19EEF', '#00d4ff', '#8b5cf6']}
+  style={{ opacity: 0.65 }}
+  className="custom-background"
+/>
+```
+
+### Complete Page Implementation
+
+**Location**: `handoff/page-with-LiquidEtherSimple.tsx`
+
+This file contains the complete main page implementation showing how LiquidEtherSimple is integrated into the full portfolio site. It demonstrates:
+
+- **Background Integration**: How to import and use LiquidEtherSimple as the page background
+- **Color Palette**: The exact color scheme used (`#5227FF`, `#FF9FFC`, `#B19EEF`, `#00d4ff`, `#8b5cf6`)
+- **Styling**: Opacity settings and positioning for optimal visual effect
+- **Page Structure**: Complete layout with header, hero section, video grid, and footer
+- **Component Props**: All the props and configuration used in production
 
 ### Dependencies
 
