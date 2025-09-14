@@ -95,6 +95,168 @@
             color: #ffffff;
         }
 
+        /* Hero Video */
+        .hero-video {
+            margin: 60px auto 0;
+            max-width: 1050px;
+            padding: 0 60px;
+        }
+
+        .hero-video-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            background: #000;
+        }
+
+        .hero-video-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 12px;
+        }
+
+        /* Play Button Overlay */
+        .hero-play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 16px 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+
+        .hero-play-button:hover {
+            background: rgba(0, 0, 0, 0.8);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translate(-50%, -50%) scale(1.05);
+        }
+
+        .hero-play-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .hero-play-icon {
+            width: 0;
+            height: 0;
+            border-left: 16px solid rgba(255, 255, 255, 0.9);
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+        }
+
+        .hero-play-text {
+            color: rgba(255, 255, 255, 0.9);
+            font-family: 'Space Mono', monospace;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        /* Brand Logos */
+        .brand-showcase {
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .brand-logos {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            opacity: 0.6;
+        }
+
+        .brand-logo {
+            height: 40px;
+            width: auto;
+            filter: grayscale(100%) brightness(0) invert(1);
+            opacity: 0.5;
+            transition: all 0.3s ease;
+        }
+
+        .brand-logo:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        /* Video Separator */
+        .video-separator {
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .separator-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .separator-text {
+            font-family: 'Space Mono', monospace;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .separator-line {
+            width: 40px;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Video Grid */
+        .video-grid-section {
+            padding: 40px 0;
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 60px;
+            max-width: 1050px;
+            margin: 0 auto;
+            padding: 0 60px;
+        }
+
+        .video-card {
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .video-card:hover {
+            transform: scale(1.02);
+        }
+
+        .video-thumbnail {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .video-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
         /* Content Section */
         .content {
             padding: 80px 0;
@@ -431,6 +593,89 @@
             </div>
         </section>
 
+        <!-- Hero Video -->
+        <div class="hero-video">
+            <div class="hero-video-container">
+                <iframe
+                    src="https://player.vimeo.com/video/1116767679?autoplay=1&muted=1&loop=1&background=1"
+                    frameborder="0"
+                    allow="autoplay; fullscreen; picture-in-picture"
+                    allowfullscreen
+                    title="Hero Video">
+                </iframe>
+                
+                <!-- Play Button Overlay -->
+                <div class="hero-play-button" onclick="playFeaturedVideo()">
+                    <div class="hero-play-content">
+                        <div class="hero-play-icon"></div>
+                        <span class="hero-play-text">PLAY FEATURED VIDEO</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Brand Logos Section -->
+        <section class="brand-showcase">
+            <div class="brand-logos">
+                <img src="https://picsum.photos/120/40?random=1" alt="Canon" class="brand-logo" />
+                <img src="https://picsum.photos/120/40?random=2" alt="YouTube" class="brand-logo" />
+                <img src="https://picsum.photos/120/40?random=3" alt="DJI" class="brand-logo" />
+                <img src="https://picsum.photos/120/40?random=4" alt="Hyundai" class="brand-logo" />
+                <img src="https://picsum.photos/120/40?random=5" alt="MusicBed" class="brand-logo" />
+            </div>
+        </section>
+
+        <!-- Video Separator -->
+        <section class="video-separator">
+            <div class="separator-content">
+                <div class="separator-text">A collection of clips from various projects over the years, blending traditional filmmaking with AI-generated content to create stunning visuals.</div>
+                <div class="separator-line"></div>
+                <div class="separator-text">Featured Showreel</div>
+                <div class="separator-line"></div>
+                <div class="separator-text">2025</div>
+                <div class="separator-line"></div>
+            </div>
+        </section>
+
+        <!-- Video Grid -->
+        <section class="video-grid-section">
+            <div class="video-grid">
+                <div class="video-card" onclick="playVideo('insta360')">
+                    <div class="video-thumbnail">
+                        <img src="https://vumbnail.com/641527142.jpg" alt="Insta360" />
+                    </div>
+                </div>
+                
+                <section class="video-separator">
+                    <div class="separator-content">
+                        <div class="separator-text">Capturing the world in 360 degrees with Insta360 technology, showcasing immersive filmmaking techniques.</div>
+                        <div class="separator-line"></div>
+                        <div class="separator-text">Insta360</div>
+                        <div class="separator-line"></div>
+                        <div class="separator-text">2023</div>
+                        <div class="separator-line"></div>
+                    </div>
+                </section>
+
+                <div class="video-card" onclick="playVideo('commercial')">
+                    <div class="video-thumbnail">
+                        <img src="https://vumbnail.com/641502508.jpg" alt="Commercial Project" />
+                    </div>
+                </div>
+                
+                <section class="video-separator">
+                    <div class="separator-content">
+                        <div class="separator-text">High-end commercial work demonstrating expertise in brand storytelling and visual excellence.</div>
+                        <div class="separator-line"></div>
+                        <div class="separator-text">Various</div>
+                        <div class="separator-line"></div>
+                        <div class="separator-text">2023</div>
+                        <div class="separator-line"></div>
+                    </div>
+                </section>
+            </div>
+        </section>
+
         <!-- Content Section -->
         <section class="content">
             <h2>Portfolio</h2>
@@ -491,6 +736,15 @@
                 dropdownMenu.classList.remove('open');
             }
         });
+        
+        // Video Functions
+        function playFeaturedVideo() {
+            alert('Featured video clicked - would open modal or navigate to video page');
+        }
+        
+        function playVideo(videoId) {
+            alert('Video clicked: ' + videoId + ' - would navigate to video page');
+        }
     </script>
 </body>
 </html>
