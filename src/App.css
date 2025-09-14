@@ -603,13 +603,20 @@ body::before {
   white-space: normal !important;
 }
 
+.hero-text-container {
+  max-width: 750px;
+  width: 100%;
+}
+
 .hero-main-text {
   font-family: 'Space Mono', monospace;
   font-weight: 400;
   font-size: clamp(3rem, 6vw, 5rem);
-  line-height: 1.4;
+  line-height: 1.3;
   color: rgba(255, 255, 255, 0.95);
   text-align: left;
+  word-break: break-word;
+  overflow-wrap: break-word;
   perspective: 1000px;
   transform-style: preserve-3d;
 }
