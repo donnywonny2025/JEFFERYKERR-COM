@@ -377,10 +377,10 @@ body::before {
 
 .hero-content {
   position: relative;
-  margin: 15vh auto 0;
+  margin: 8vh auto 0;
   width: 100%;
   max-width: 750px;
-  text-align: center;
+  text-align: left;
   z-index: 20;
 }
 
@@ -436,25 +436,37 @@ body::before {
 }
 
 /* Hero Text Animation Styles */
-.hero-text h1 {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+.hero-text h1, .hero-main-text {
+  font-family: 'Space Mono', monospace;
   font-weight: 400;
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: clamp(3rem, 6vw, 5rem);
   line-height: 1.3;
   letter-spacing: -0.02em;
   color: rgba(255, 255, 255, 0.95);
+  text-align: left;
+}
+
+.hero-text {
+  position: relative;
+  margin: 20vh auto 0;
+  width: 100%;
+  max-width: 1050px;
+  padding: 0 60px;
+  text-align: left;
+  z-index: 20;
 }
 
 .hero-main-text {
   font-family: 'Space Mono', monospace;
   font-weight: 400;
-  font-size: 2rem;
+  font-size: clamp(3rem, 6vw, 5rem);
   line-height: 1.3;
   color: rgba(255, 255, 255, 0.95);
   margin: 0 0 1.5rem 0;
   opacity: 0;
   transform: translateY(20px);
   transition: all 1s ease-out;
+  text-align: left;
 }
 
 .hero-main-text.text-animate-in {
@@ -579,6 +591,22 @@ body::before {
 .meta-item a {
   color: var(--text-secondary);
   text-decoration: none;
+}
+
+.hero-text-roll {
+  display: inline;
+  white-space: normal;
+}
+
+.hero-text-roll span {
+  display: inline !important;
+  white-space: normal !important;
+}
+
+.hero-main-text {
+  white-space: normal;
+  word-wrap: break-word;
+  line-height: 1.4;
 }
 
 /* Circular Showreel Element */
