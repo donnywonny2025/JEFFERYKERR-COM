@@ -14,29 +14,14 @@
 
         body {
             font-family: 'Space Mono', monospace;
-            background: #0b0b0b;
+            background: #0a0a0a;
             color: #ffffff;
-            line-height: 1.0;
-            overflow-x: hidden;
-            position: relative;
-            font-weight: 400;
+            line-height: 1.3;
             min-height: 100vh;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
         }
 
-        /* CSS Variables */
-        :root {
-            --bg-primary: #0a0a0a;
-            --bg-secondary: #111111;
-            --text-primary: #ffffff;
-            --text-secondary: #cccccc;
-            --text-muted: #888888;
-            --accent: #ffffff;
-            --border: #333333;
-        }
-
-        /* Header Styles */
+        /* Header */
         .header {
             position: fixed;
             top: 0;
@@ -50,16 +35,16 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            width: 100%;
         }
 
         .logo {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
             font-size: 20px;
             font-weight: 500;
-            color: var(--text-primary);
+            color: #ffffff;
             text-decoration: none;
             letter-spacing: 0.5px;
-            opacity: 1;
         }
 
         .logo-k {
@@ -84,76 +69,68 @@
         }
 
         .digital-clock:hover {
-            color: white;
+            color: #ffffff;
         }
 
         .hamburger {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 12px;
             display: flex;
             flex-direction: column;
             justify-content: space-around;
-            width: 24px;
-            height: 18px;
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            padding: 0;
-            z-index: 1001;
+            width: 40px;
+            height: 40px;
+            transition: all 0.3s ease;
         }
 
         .hamburger span {
-            width: 24px;
-            height: 1px;
-            background: var(--text-primary);
+            display: block;
+            height: 2px;
+            background: #a1a1aa;
+            width: 100%;
             transition: all 0.3s ease;
             transform-origin: center;
         }
 
-        /* Hero Section - Exact positioning from your code */
-        .hero {
-            position: relative;
-            min-height: 100vh;
-            color: var(--text-primary);
-            background: transparent;
-            overflow: visible;
+        .hamburger:hover span {
+            background: white;
         }
 
+        /* Main Container - Everything left-aligned */
+        .main-container {
+            padding-top: 140px; /* Space for fixed header */
+            padding-left: 60px; /* Same as header padding */
+            padding-right: 60px;
+            max-width: none;
+        }
+
+        /* Hero Section - Left aligned */
         .hero-content {
-            position: relative;
-            margin: 15vh auto 0;
-            width: 100%;
             max-width: 750px;
-            text-align: center;
-            z-index: 20;
-            display: block;
-            padding-left: 0;
+            margin-bottom: 40px;
         }
 
-        /* Force hero heading to left-align - from your CSS */
-        .hero-content h1 {
+        .hero h1 {
             font-family: 'Space Mono', monospace;
-            font-size: clamp(2rem, 4vw, 3rem);
+            font-size: 2.5rem;
             font-weight: 400;
             line-height: 1.3;
             letter-spacing: -0.02em;
             color: rgba(255, 255, 255, 0.95);
-            text-transform: none;
-            margin: 0 0 24px 0;
             text-align: left;
-            width: calc(100% - 0px);
+            margin-bottom: 40px;
             max-width: 750px;
-            opacity: 0.9;
         }
 
-        /* Center hero meta under the h1 - from your CSS */
+        /* Meta info - Left aligned, stacked vertically */
         .hero-meta {
-            position: relative;
-            margin: 40px auto 0;
-            max-width: 750px;
-            padding: 0;
             display: flex;
-            gap: 20px;
-            justify-content: center;
-            align-items: center;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 60px;
         }
 
         .meta-item {
@@ -161,23 +138,21 @@
             align-items: center;
             gap: 6px;
             font-size: 11px;
-            color: var(--text-secondary);
+            color: #cccccc;
             font-weight: 400;
             opacity: 0.6;
             font-family: 'Space Mono', monospace;
         }
 
         .meta-item a {
-            color: var(--text-secondary);
+            color: #cccccc;
             text-decoration: none;
         }
 
-        /* Hero Video - Exact positioning from your code */
+        /* Hero Video - Left aligned */
         .hero-video {
-            position: relative;
-            margin: 60px auto 0;
-            max-width: 1050px;
-            padding: 0 60px;
+            max-width: 750px;
+            margin-bottom: 60px;
         }
 
         .hero-video-container {
@@ -185,46 +160,38 @@
             width: 100%;
             aspect-ratio: 16/9;
             border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
             overflow: hidden;
-            background: transparent;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            background: #000;
         }
 
         .hero-video-container iframe {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 140%;
-            height: 140%;
-            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
             border: none;
+            border-radius: 12px;
         }
 
-        /* Brand Logos Section */
+        /* Brand Logos - Left aligned */
         .brand-showcase {
-            padding: 0 80px 60px;
-            margin: 60px auto 0;
-            text-align: center;
-            background: transparent;
+            max-width: 750px;
+            margin-bottom: 60px;
         }
 
         .brand-logos {
             display: flex;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
-            gap: 80px;
-            max-width: 1400px;
-            margin: 0 auto;
+            gap: 40px;
             flex-wrap: wrap;
         }
 
         .brand-logo {
-            height: 45px;
+            height: 35px;
             width: auto;
             opacity: 0.3;
-            transition: all 0.4s ease;
             filter: brightness(0) invert(1);
-            transform: scale(1);
+            transition: all 0.4s ease;
         }
 
         .brand-logo:hover {
@@ -232,18 +199,16 @@
             transform: scale(1.1);
         }
 
-        /* Video Separator Section */
+        /* Video Separator - Left aligned */
         .video-separator {
-            padding: 0 80px 60px;
-            margin: 0 auto;
-            max-width: 1400px;
-            background: var(--bg-primary);
+            max-width: 750px;
+            margin-bottom: 60px;
         }
 
         .separator-content {
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: flex-start;
             gap: 15px;
         }
 
@@ -251,54 +216,34 @@
             font-family: 'Space Mono', monospace;
             font-size: 14px;
             font-weight: 300;
-            color: var(--text-primary);
+            color: #ffffff;
             letter-spacing: 0.5px;
-            text-align: center;
+            text-align: left;
             opacity: 0.8;
         }
 
         .separator-line {
             width: 100%;
             height: 1px;
-            background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 20%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0.2) 80%, transparent 100%);
-            position: relative;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
         }
 
-        .separator-line::after {
-            content: '';
-            position: absolute;
-            top: -1px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 2px;
-            height: 3px;
-            background: rgba(255, 255, 255, 0.6);
-            border-radius: 50%;
-        }
-
-        /* Video Grid Section */
+        /* Video Grid - Left aligned */
         .video-grid-section {
-            padding: 0 60px 60px;
-            margin-top: 60px;
-            max-width: 1050px;
-            margin-left: auto;
-            margin-right: auto;
+            max-width: 750px;
         }
 
         .video-grid {
             display: grid;
             grid-template-columns: 1fr;
             gap: 60px;
-            margin-top: 0;
         }
 
         .video-card {
             cursor: pointer;
             border-radius: 12px;
             overflow: hidden;
-            transition: transform 0.4s ease, opacity 0.4s ease;
-            background: transparent;
-            box-shadow: none;
+            transition: transform 0.4s ease;
         }
 
         .video-thumbnail {
@@ -318,17 +263,14 @@
 
         /* Footer */
         .footer {
-            padding: 80px 80px 40px;
+            padding: 80px 60px 40px;
             text-align: center;
-            background: var(--bg-primary);
-            position: relative;
+            margin-top: 120px;
         }
 
         .footer-content {
             max-width: 1400px;
             margin: 0 auto;
-            position: relative;
-            z-index: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -351,7 +293,6 @@
             width: 60px;
             height: 1px;
             background: rgba(255, 255, 255, 0.3);
-            margin: 0;
         }
 
         .footer-email a {
@@ -360,10 +301,6 @@
             color: rgba(255, 255, 255, 0.7);
             text-decoration: none;
             transition: color 0.3s ease;
-        }
-
-        .footer-email a:hover {
-            color: rgba(255, 255, 255, 1);
         }
 
         .footer-nav {
@@ -383,10 +320,6 @@
             transition: color 0.3s ease;
         }
 
-        .footer-nav a:hover {
-            color: rgba(255, 255, 255, 1);
-        }
-
         .footer-social {
             display: flex;
             gap: 20px;
@@ -399,10 +332,6 @@
             transition: color 0.3s ease;
         }
 
-        .footer-social a:hover {
-            color: rgba(255, 255, 255, 0.8);
-        }
-
         .footer-copyright {
             font-family: 'Space Mono', monospace;
             font-size: 11px;
@@ -411,58 +340,24 @@
             letter-spacing: 0.5px;
         }
 
-        /* Responsive Design */
+        /* Responsive */
         @media (max-width: 768px) {
-            .header {
-                padding: 20px 30px;
-            }
-            
-            .hero {
-                padding-top: 12vh;
+            .main-container {
                 padding-left: 30px;
                 padding-right: 30px;
             }
-
-            .hero-content {
-                width: 90%;
-                max-width: none;
-                margin: 8vh auto 0;
-            }
-
-            .hero-meta {
-                margin: 24px auto 0;
-                max-width: 90%;
-                padding: 0 20px;
-                justify-content: flex-start;
-            }
             
-            .hero-video {
-                padding: 0 30px;
+            .hero h1 {
+                font-size: 2rem;
             }
             
             .brand-logos {
-                gap: 40px;
+                gap: 20px;
             }
             
-            .video-grid-section {
-                padding: 0 30px 60px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .hero-meta {
+            .footer-nav {
                 flex-direction: column;
-                gap: 10px;
-                align-items: flex-start;
-            }
-            
-            .brand-logos {
-                flex-direction: column;
-                gap: 30px;
-            }
-            
-            .video-grid-section {
-                padding: 0 20px 60px;
+                gap: 20px;
             }
         }
     </style>
@@ -480,7 +375,7 @@
                     02:59:38 PM
                 </div>
                 
-                <button class="hamburger" id="hamburger-btn">
+                <button class="hamburger">
                     <span></span>
                     <span></span>
                     <span></span>
@@ -489,20 +384,22 @@
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
+    <!-- Main Container - Everything left-aligned -->
+    <div class="main-container">
+        <!-- Hero Content -->
         <div class="hero-content">
             <h1>I produce compelling visual content while building AI-enhanced workflows that change how creative work gets done.</h1>
+            
             <div class="hero-meta">
                 <div class="meta-item">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
                         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                         <circle cx="12" cy="10" r="3"></circle>
                     </svg>
                     <span>Grand Rapids, Michigan / World</span>
                 </div>
                 <div class="meta-item">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
                         <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
                         <polyline points="22,6 12,13 2,6"></polyline>
                     </svg>
@@ -523,69 +420,69 @@
                 </iframe>
             </div>
         </div>
-    </section>
 
-    <!-- Brand Logos Section -->
-    <section class="brand-showcase">
-        <div class="brand-logos">
-            <img src="https://picsum.photos/120/40?random=1" alt="Canon" class="brand-logo" />
-            <img src="https://picsum.photos/120/40?random=2" alt="YouTube" class="brand-logo" />
-            <img src="https://picsum.photos/120/40?random=3" alt="DJI" class="brand-logo" />
-            <img src="https://picsum.photos/120/40?random=4" alt="Hyundai" class="brand-logo" />
-            <img src="https://picsum.photos/120/40?random=5" alt="MusicBed" class="brand-logo" />
+        <!-- Brand Logos -->
+        <div class="brand-showcase">
+            <div class="brand-logos">
+                <img src="https://picsum.photos/120/40?random=1" alt="Canon" class="brand-logo" />
+                <img src="https://picsum.photos/120/40?random=2" alt="YouTube" class="brand-logo" />
+                <img src="https://picsum.photos/120/40?random=3" alt="DJI" class="brand-logo" />
+                <img src="https://picsum.photos/120/40?random=4" alt="Hyundai" class="brand-logo" />
+                <img src="https://picsum.photos/120/40?random=5" alt="MusicBed" class="brand-logo" />
+            </div>
         </div>
-    </section>
 
-    <!-- Video Separator -->
-    <section class="video-separator">
-        <div class="separator-content">
-            <div class="separator-text">A collection of clips from various projects over the years, blending traditional filmmaking with AI-generated content to create stunning visuals.</div>
-            <div class="separator-line"></div>
-            <div class="separator-text">Featured Showreel</div>
-            <div class="separator-line"></div>
-            <div class="separator-text">2025</div>
-            <div class="separator-line"></div>
+        <!-- Video Separator -->
+        <div class="video-separator">
+            <div class="separator-content">
+                <div class="separator-text">A collection of clips from various projects over the years, blending traditional filmmaking with AI-generated content to create stunning visuals.</div>
+                <div class="separator-line"></div>
+                <div class="separator-text">Featured Showreel</div>
+                <div class="separator-line"></div>
+                <div class="separator-text">2025</div>
+                <div class="separator-line"></div>
+            </div>
         </div>
-    </section>
 
-    <!-- Video Grid Section -->
-    <section class="video-grid-section">
-        <div class="video-grid">
-            <div class="video-card">
-                <div class="video-thumbnail">
-                    <img src="https://vumbnail.com/641527142.jpg" alt="Insta360" />
+        <!-- Video Grid -->
+        <div class="video-grid-section">
+            <div class="video-grid">
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <img src="https://vumbnail.com/641527142.jpg" alt="Insta360" />
+                    </div>
+                </div>
+
+                <div class="video-separator">
+                    <div class="separator-content">
+                        <div class="separator-text">Capturing the world in 360 degrees with Insta360 technology, showcasing immersive filmmaking techniques.</div>
+                        <div class="separator-line"></div>
+                        <div class="separator-text">Insta360</div>
+                        <div class="separator-line"></div>
+                        <div class="separator-text">2023</div>
+                        <div class="separator-line"></div>
+                    </div>
+                </div>
+
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <img src="https://vumbnail.com/641502508.jpg" alt="Commercial Project" />
+                    </div>
+                </div>
+
+                <div class="video-separator">
+                    <div class="separator-content">
+                        <div class="separator-text">High-end commercial work demonstrating expertise in brand storytelling and visual excellence.</div>
+                        <div class="separator-line"></div>
+                        <div class="separator-text">Various</div>
+                        <div class="separator-line"></div>
+                        <div class="separator-text">2023</div>
+                        <div class="separator-line"></div>
+                    </div>
                 </div>
             </div>
-
-            <section class="video-separator">
-                <div class="separator-content">
-                    <div class="separator-text">Capturing the world in 360 degrees with Insta360 technology, showcasing immersive filmmaking techniques.</div>
-                    <div class="separator-line"></div>
-                    <div class="separator-text">Insta360</div>
-                    <div class="separator-line"></div>
-                    <div class="separator-text">2023</div>
-                    <div class="separator-line"></div>
-                </div>
-            </section>
-
-            <div class="video-card">
-                <div class="video-thumbnail">
-                    <img src="https://vumbnail.com/641502508.jpg" alt="Commercial Project" />
-                </div>
-            </div>
-
-            <section class="video-separator">
-                <div class="separator-content">
-                    <div class="separator-text">High-end commercial work demonstrating expertise in brand storytelling and visual excellence.</div>
-                    <div class="separator-line"></div>
-                    <div class="separator-text">Various</div>
-                    <div class="separator-line"></div>
-                    <div class="separator-text">2023</div>
-                    <div class="separator-line"></div>
-                </div>
-            </section>
         </div>
-    </section>
+    </div>
 
     <!-- Footer -->
     <footer class="footer">
@@ -606,7 +503,7 @@
             <div class="footer-social">
                 <a href="#" aria-label="Instagram">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.40z"/>
                     </svg>
                 </a>
                 <a href="#" aria-label="YouTube">
