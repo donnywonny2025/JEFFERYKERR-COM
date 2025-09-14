@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jeff Kerr - Text Display</title>
+    <title>Jeff Kerr - Portfolio</title>
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -16,25 +16,28 @@
             font-family: 'Space Mono', monospace;
             background: #0a0a0a;
             color: #ffffff;
-            line-height: 1.4;
+            line-height: 1.3;
             min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
         }
 
         /* Header */
         .header {
-            padding: 40px 0;
-            text-align: left;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 40px 60px;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .logo {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             font-size: 20px;
             font-weight: 500;
             color: #ffffff;
@@ -45,314 +48,6 @@
         .logo-k {
             font-size: 26px;
             font-weight: 600;
-            vertical-align: baseline;
-            line-height: 1;
-        }
-
-        /* Hero Section */
-        .hero {
-            padding: 80px 0;
-            max-width: 750px;
-        }
-
-        .hero h1 {
-            font-family: 'Space Mono', monospace;
-            font-size: clamp(2rem, 4vw, 3rem);
-            font-weight: 400;
-            line-height: 1.3;
-            letter-spacing: -0.02em;
-            color: rgba(255, 255, 255, 0.95);
-            text-align: left;
-            margin-bottom: 40px;
-        }
-
-        .hero-meta {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            align-items: center;
-            margin: 40px auto 0;
-            max-width: 750px;
-        }
-
-        .meta-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 11px;
-            color: #cccccc;
-            font-weight: 400;
-            opacity: 0.6;
-            font-family: 'Space Mono', monospace;
-        }
-
-        .meta-item a {
-            color: #cccccc;
-            text-decoration: none;
-        }
-
-        .meta-item a:hover {
-            color: #ffffff;
-        }
-
-        /* Hero Video */
-        .hero-video {
-            margin: 60px auto 0;
-            max-width: 1050px;
-            padding: 0 60px;
-        }
-
-        .hero-video-container {
-            position: relative;
-            width: 100%;
-            aspect-ratio: 16/9;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            background: #000;
-        }
-
-        .hero-video-container iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            border-radius: 12px;
-        }
-
-        /* Play Button Overlay */
-        .hero-play-button {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.7);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 12px;
-            padding: 16px 24px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-            z-index: 10;
-        }
-
-        .hero-play-button:hover {
-            background: rgba(0, 0, 0, 0.8);
-            border-color: rgba(255, 255, 255, 0.5);
-            transform: translate(-50%, -50%) scale(1.05);
-        }
-
-        .hero-play-content {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .hero-play-icon {
-            width: 0;
-            height: 0;
-            border-left: 16px solid rgba(255, 255, 255, 0.9);
-            border-top: 10px solid transparent;
-            border-bottom: 10px solid transparent;
-        }
-
-        .hero-play-text {
-            color: rgba(255, 255, 255, 0.9);
-            font-family: 'Space Mono', monospace;
-            font-size: 14px;
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
-
-        /* Brand Logos */
-        .brand-showcase {
-            padding: 60px 0;
-            text-align: center;
-        }
-
-        .brand-logos {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 40px;
-            flex-wrap: wrap;
-            opacity: 0.6;
-        }
-
-        .brand-logo {
-            height: 40px;
-            width: auto;
-            filter: grayscale(100%) brightness(0) invert(1);
-            opacity: 0.5;
-            transition: all 0.3s ease;
-        }
-
-        .brand-logo:hover {
-            opacity: 1;
-            transform: scale(1.1);
-        }
-
-        /* Video Separator */
-        .video-separator {
-            padding: 40px 0;
-            text-align: center;
-        }
-
-        .separator-content {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        .separator-text {
-            font-family: 'Space Mono', monospace;
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.6);
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        .separator-line {
-            width: 40px;
-            height: 1px;
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        /* Video Grid */
-        .video-grid-section {
-            padding: 40px 0;
-        }
-
-        .video-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 60px;
-            max-width: 1050px;
-            margin: 0 auto;
-            padding: 0 60px;
-        }
-
-        .video-card {
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-
-        .video-card:hover {
-            transform: scale(1.02);
-        }
-
-        .video-thumbnail {
-            position: relative;
-            width: 100%;
-            aspect-ratio: 16/9;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        .video-thumbnail img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        /* Content Section */
-        .content {
-            padding: 80px 0;
-            text-align: center;
-        }
-
-        .content h2 {
-            font-size: 2rem;
-            font-weight: 300;
-            margin-bottom: 30px;
-            color: #ffffff;
-        }
-
-        .content p {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            color: #cccccc;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        /* Footer */
-        .footer {
-            padding: 80px 0 40px;
-            text-align: center;
-            margin-top: 80px;
-        }
-
-        .footer-logo {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
-            font-size: 2rem;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-            margin-bottom: 20px;
-        }
-
-        .footer-logo .logo-k {
-            font-size: 2.4rem;
-            font-weight: 600;
-        }
-
-        .footer-divider {
-            width: 60px;
-            height: 1px;
-            background: rgba(255, 255, 255, 0.3);
-            margin: 0 auto 20px;
-        }
-
-        .footer-email {
-            margin-bottom: 20px;
-        }
-
-        .footer-email a {
-            font-family: 'Space Mono', monospace;
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-        }
-
-        .footer-email a:hover {
-            color: rgba(255, 255, 255, 1);
-        }
-
-        .footer-nav {
-            display: flex;
-            justify-content: center;
-            gap: 60px;
-            margin: 10px 0;
-            flex-wrap: wrap;
-        }
-
-        .footer-nav a {
-            font-family: 'Space Mono', monospace;
-            font-size: 12px;
-            font-weight: 400;
-            letter-spacing: 1px;
-            color: rgba(255, 255, 255, 0.6);
-            text-decoration: none;
-            text-transform: uppercase;
-        }
-
-        .footer-nav a:hover {
-            color: rgba(255, 255, 255, 1);
-        }
-
-        .footer-copyright {
-            font-family: 'Space Mono', monospace;
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.4);
-
-        /* Hamburger Menu Styles */
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
         }
 
         .header-right {
@@ -364,27 +59,19 @@
         .digital-clock {
             font-family: 'Space Mono', monospace;
             font-size: 14px;
-            font-weight: 300;
             color: #a1a1aa;
-            transition: color 0.3s ease;
-        }
-
-        .digital-clock:hover {
-            color: #ffffff;
         }
 
         .hamburger {
             background: none;
             border: none;
             cursor: pointer;
-            padding: 12px;
+            padding: 8px;
             display: flex;
             flex-direction: column;
             justify-content: space-around;
-            width: 40px;
-            height: 40px;
-            transition: all 0.3s ease;
-            position: relative;
+            width: 24px;
+            height: 18px;
         }
 
         .hamburger span {
@@ -393,186 +80,116 @@
             background: #a1a1aa;
             width: 100%;
             transition: all 0.3s ease;
-            transform-origin: center;
         }
 
-        .hamburger:hover span {
-            background: white;
+        /* Main Content */
+        .main-content {
+            padding-top: 140px;
+            padding-left: 60px;
+            padding-right: 60px;
         }
 
-        .hamburger.open span:nth-child(1) {
-            transform: rotate(45deg) translate(5px, 5px);
+        .hero-text {
+            max-width: 750px;
+            margin-bottom: 60px;
         }
 
-        .hamburger.open span:nth-child(2) {
-            opacity: 0;
-        }
-
-        .hamburger.open span:nth-child(3) {
-            transform: rotate(-45deg) translate(7px, -6px);
-        }
-
-        /* Dropdown Menu */
-        .dropdown-menu {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            margin-top: 8px;
-            background: rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 24px;
-            min-width: 220px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            z-index: 1000;
-            display: none;
-        }
-
-        .dropdown-menu.open {
-            display: block;
-        }
-
-        .menu-header {
-            text-align: center;
-            margin-bottom: 20px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .menu-logo {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif;
-            font-size: 18px;
-            font-weight: 500;
-            color: #ffffff;
-            letter-spacing: 0.5px;
-        }
-
-        .menu-logo .logo-k {
-            font-size: 22px;
-            font-weight: 600;
-        }
-
-        .menu-nav {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .menu-nav a {
-            color: #ffffff;
-            text-decoration: none;
+        .hero-text h1 {
             font-family: 'Space Mono', monospace;
-            font-size: 14px;
+            font-size: clamp(2rem, 4vw, 3rem);
             font-weight: 400;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            padding: 8px 0;
-            transition: all 0.3s ease;
-            border-bottom: 1px solid transparent;
+            line-height: 1.3;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 40px;
         }
 
-        .menu-nav a:hover {
-            color: #00d4ff;
-            border-bottom-color: rgba(0, 212, 255, 0.3);
+        .hero-meta {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            justify-content: flex-start;
         }
 
-        .menu-nav a.active {
-            color: #00d4ff;
-            font-weight: 500;
-            border-bottom-color: rgba(0, 212, 255, 0.3);
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            color: #cccccc;
+            opacity: 0.6;
         }
 
-        .menu-email {
-            margin-top: 20px;
-            padding-top: 16px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: center;
-        }
-
-        .menu-email a {
-            color: rgba(255, 255, 255, 0.7);
+        .meta-item a {
+            color: #cccccc;
             text-decoration: none;
-            font-family: 'Space Mono', monospace;
-            font-size: 12px;
-            letter-spacing: 0.5px;
-            transition: color 0.3s ease;
         }
 
-        .menu-email a:hover {
-            color: #00d4ff;
-        }
-            margin: 20px 0 0;
-            letter-spacing: 0.5px;
+        /* Video Container */
+        .video-container {
+            max-width: 1050px;
+            margin: 0 auto;
         }
 
-        /* Responsive Design */
+        .video-frame {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            background: #000;
+        }
+
+        .video-frame iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2rem;
+            .header {
+                padding: 20px 30px;
             }
-
+            
+            .main-content {
+                padding: 120px 30px 0;
+            }
+            
             .hero-meta {
                 flex-direction: column;
-                gap: 15px;
-            }
-
-            .footer-nav {
-                flex-direction: column;
-                gap: 20px;
+                gap: 10px;
+                align-items: flex-start;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <header class="header">
-            <div class="header-content">
-                <a href="#" class="logo">
-                    <span class="logo-k">k</span>err
-                </a>
-                
-                <div class="header-right">
-                    <!-- Digital Clock -->
-                    <div class="digital-clock" id="digital-clock">
-                        --:--:-- --
-                    </div>
-                    
-                    <!-- Hamburger Menu -->
-                    <div style="position: relative;">
-                        <button class="hamburger" id="hamburger-btn">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </button>
-                        
-                        <!-- Dropdown Menu -->
-                        <div class="dropdown-menu" id="dropdown-menu">
-                            <div class="menu-header">
-                                <div class="menu-logo">
-                                    <span class="logo-k">k</span>err
-                                </div>
-                            </div>
-                            
-                            <nav class="menu-nav">
-                                <a href="#" class="active">HOME</a>
-                                <a href="#">🎨 BACKGROUNDS</a>
-                                <a href="#">WORK</a>
-                                <a href="#">CONTACT</a>
-                            </nav>
-                            
-                            <div class="menu-email">
-                                <a href="mailto:colour8k@mac.com">colour8k@mac.com</a>
-                            </div>
-                        </div>
-                    </div>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="#" class="logo">
+                <span class="logo-k">k</span>err
+            </a>
+            
+            <div class="header-right">
+                <div class="digital-clock" id="digital-clock">
+                    02:59:38 PM
                 </div>
+                
+                <button class="hamburger" id="hamburger-btn">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
             </div>
-        </header>
+        </div>
+    </header>
 
-        <!-- Hero Section -->
-        <section class="hero">
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Text -->
+        <div class="hero-text">
             <h1>I produce compelling visual content while building AI-enhanced workflows that change how creative work gets done.</h1>
             
             <div class="hero-meta">
@@ -591,11 +208,11 @@
                     <a href="mailto:colour8k@mac.com">colour8k@mac.com</a>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <!-- Hero Video -->
-        <div class="hero-video">
-            <div class="hero-video-container">
+        <!-- Video Container -->
+        <div class="video-container">
+            <div class="video-frame">
                 <iframe
                     src="https://player.vimeo.com/video/1116767679?autoplay=1&muted=1&loop=1&background=1"
                     frameborder="0"
@@ -603,105 +220,9 @@
                     allowfullscreen
                     title="Hero Video">
                 </iframe>
-                
-                <!-- Play Button Overlay -->
-                <div class="hero-play-button" onclick="playFeaturedVideo()">
-                    <div class="hero-play-content">
-                        <div class="hero-play-icon"></div>
-                        <span class="hero-play-text">PLAY FEATURED VIDEO</span>
-                    </div>
-                </div>
             </div>
         </div>
-
-        <!-- Brand Logos Section -->
-        <section class="brand-showcase">
-            <div class="brand-logos">
-                <img src="https://picsum.photos/120/40?random=1" alt="Canon" class="brand-logo" />
-                <img src="https://picsum.photos/120/40?random=2" alt="YouTube" class="brand-logo" />
-                <img src="https://picsum.photos/120/40?random=3" alt="DJI" class="brand-logo" />
-                <img src="https://picsum.photos/120/40?random=4" alt="Hyundai" class="brand-logo" />
-                <img src="https://picsum.photos/120/40?random=5" alt="MusicBed" class="brand-logo" />
-            </div>
-        </section>
-
-        <!-- Video Separator -->
-        <section class="video-separator">
-            <div class="separator-content">
-                <div class="separator-text">A collection of clips from various projects over the years, blending traditional filmmaking with AI-generated content to create stunning visuals.</div>
-                <div class="separator-line"></div>
-                <div class="separator-text">Featured Showreel</div>
-                <div class="separator-line"></div>
-                <div class="separator-text">2025</div>
-                <div class="separator-line"></div>
-            </div>
-        </section>
-
-        <!-- Video Grid -->
-        <section class="video-grid-section">
-            <div class="video-grid">
-                <div class="video-card" onclick="playVideo('insta360')">
-                    <div class="video-thumbnail">
-                        <img src="https://vumbnail.com/641527142.jpg" alt="Insta360" />
-                    </div>
-                </div>
-                
-                <section class="video-separator">
-                    <div class="separator-content">
-                        <div class="separator-text">Capturing the world in 360 degrees with Insta360 technology, showcasing immersive filmmaking techniques.</div>
-                        <div class="separator-line"></div>
-                        <div class="separator-text">Insta360</div>
-                        <div class="separator-line"></div>
-                        <div class="separator-text">2023</div>
-                        <div class="separator-line"></div>
-                    </div>
-                </section>
-
-                <div class="video-card" onclick="playVideo('commercial')">
-                    <div class="video-thumbnail">
-                        <img src="https://vumbnail.com/641502508.jpg" alt="Commercial Project" />
-                    </div>
-                </div>
-                
-                <section class="video-separator">
-                    <div class="separator-content">
-                        <div class="separator-text">High-end commercial work demonstrating expertise in brand storytelling and visual excellence.</div>
-                        <div class="separator-line"></div>
-                        <div class="separator-text">Various</div>
-                        <div class="separator-line"></div>
-                        <div class="separator-text">2023</div>
-                        <div class="separator-line"></div>
-                    </div>
-                </section>
-            </div>
-        </section>
-
-        <!-- Content Section -->
-        <section class="content">
-            <h2>Portfolio</h2>
-            <p>Director, cinematographer, and creative director specializing in visual storytelling and AI-enhanced creative workflows.</p>
-        </section>
-
-        <!-- Footer -->
-        <footer class="footer">
-            <div class="footer-logo">
-                <span class="logo-k">k</span>err
-            </div>
-            <div class="footer-divider"></div>
-            <div class="footer-email">
-                <a href="mailto:colour8k@mac.com">colour8k@mac.com</a>
-            </div>
-            <nav class="footer-nav">
-                <a href="#">HOME</a>
-                <a href="#">BACKGROUNDS</a>
-                <a href="#">WORK</a>
-                <a href="#">CONTACT</a>
-            </nav>
-            <div class="footer-copyright">
-                2025 Jeff Kerr. Crafting visual stories that move the world forward.
-            </div>
-        </footer>
-    </div>
+    </main>
     
     <script>
         // Digital Clock
@@ -716,35 +237,8 @@
             document.getElementById('digital-clock').textContent = timeString;
         }
         
-        // Update clock every second
         updateClock();
         setInterval(updateClock, 1000);
-        
-        // Hamburger Menu Toggle
-        const hamburgerBtn = document.getElementById('hamburger-btn');
-        const dropdownMenu = document.getElementById('dropdown-menu');
-        
-        hamburgerBtn.addEventListener('click', function() {
-            hamburgerBtn.classList.toggle('open');
-            dropdownMenu.classList.toggle('open');
-        });
-        
-        // Close menu when clicking outside
-        document.addEventListener('click', function(event) {
-            if (!hamburgerBtn.contains(event.target) && !dropdownMenu.contains(event.target)) {
-                hamburgerBtn.classList.remove('open');
-                dropdownMenu.classList.remove('open');
-            }
-        });
-        
-        // Video Functions
-        function playFeaturedVideo() {
-            alert('Featured video clicked - would open modal or navigate to video page');
-        }
-        
-        function playVideo(videoId) {
-            alert('Video clicked: ' + videoId + ' - would navigate to video page');
-        }
     </script>
 </body>
 </html>
