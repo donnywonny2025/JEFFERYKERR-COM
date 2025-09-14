@@ -8,10 +8,10 @@ import { TextShimmer } from '../src/components/motion-primitives/text-shimmer';
 import { SafeWrapper } from '../src/components/SafeWrapper';
 import { DigitalClock } from '../src/components/motion-primitives/digital-clock';
 import '../src/App.css';
-import LiquidEther from '../src/components/LiquidEther';
+import LiquidEtherSimple from '../src/components/LiquidEtherSimple';
 import { MapPin } from 'lucide-react';
 
-const Liquid: React.ComponentType<any> = LiquidEther as unknown as React.ComponentType<any>;
+const Liquid: React.ComponentType<any> = LiquidEtherSimple as unknown as React.ComponentType<any>;
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -115,42 +115,60 @@ export default function Home() {
 
   return (
     <div className="App">
-      {/* Animated Liquid Ether Background (unchanged) */}
-      <Liquid
-        colors={[ '#5227FF', '#FF9FFC', '#B19EEF', '#00d4ff', '#8b5cf6' ]}
-        style={{ opacity: 0.65 }}
-        enableStars={false}
-        starLayers={3}
-        starDensity={0.5}
-        starDriftSpeed={0.02}
-        starRotationSpeed={0.08}
-        starBrightness={2.0}
-        starTwinkleSpeed={2.0}
-      />
+      {/* Animated Liquid Ether Background (fixed container) */}
+      <div style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        zIndex: 1,
+        overflow: 'hidden'
+      }}>
+        <Liquid
+          colors={[ '#5227FF', '#FF9FFC', '#B19EEF', '#00d4ff', '#8b5cf6' ]}
+          style={{ 
+            opacity: 0.65,
+            width: '100%',
+            height: '100%'
+          }}
+          enableStars={false}
+          starLayers={3}
+          starDensity={0.5}
+          starDriftSpeed={0.02}
+          starRotationSpeed={0.08}
+          starBrightness={2.0}
+          starTwinkleSpeed={2.0}
+        />
+      </div>
 
       {/* Header */}
       <header className="header">
-        <div className="header-content" style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          width: '100%'
-        }}>
+        <div
+          className="header-content"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            width: '100%'
+          }}
+        >
           <Link href="/" className="logo">
             <TextShimmer duration={3} spread={1.5}>
               <span className="logo-k">k</span>err
             </TextShimmer>
           </Link>
 
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '20px'
-          }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '20px'
+            }}
+          >
             <SafeWrapper>
               <DigitalClock />
             </SafeWrapper>
-
             <MenuWrapper
               menuOpen={menuOpen}
               setMenuOpen={setMenuOpen}
@@ -208,12 +226,17 @@ export default function Home() {
       {/* MODERN CENTERED RESPONSIVE CONTAINER */}
       <div style={{
         width: '100%',
-        maxWidth: '1200px',
-        margin: '0 auto',
-        padding: '0 60px',
+        display: 'flex',
+        justifyContent: 'center',
         position: 'relative',
         zIndex: 20
       }}>
+        <div style={{
+          width: '100%',
+          maxWidth: '1200px',
+          padding: '0 60px',
+          margin: '0 auto'
+        }}>
 
         {/* Enhanced Hero Text Section */}
         <section style={{ 
@@ -373,7 +396,8 @@ export default function Home() {
           </React.Fragment>
         ))}
 
-      </div>
+        </div> {/* Close the inner container */}
+      </div> {/* Close the flex container */}
 
       {/* Footer (unchanged) */}
       <footer className="footer">

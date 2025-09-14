@@ -115,18 +115,32 @@ export default function Home() {
 
   return (
     <div className="App">
-      {/* Animated Liquid Ether Background - Using LiquidEtherSimple */}
-      <Liquid
-        colors={[ '#5227FF', '#FF9FFC', '#B19EEF', '#00d4ff', '#8b5cf6' ]}
-        style={{ opacity: 0.65 }}
-        enableStars={false}
-        starLayers={3}
-        starDensity={0.5}
-        starDriftSpeed={0.02}
-        starRotationSpeed={0.08}
-        starBrightness={2.0}
-        starTwinkleSpeed={2.0}
-      />
+      {/* Animated Liquid Ether Background - Using LiquidEtherSimple (fixed container) */}
+      <div style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        zIndex: 1,
+        overflow: 'hidden'
+      }}>
+        <Liquid
+          colors={[ '#5227FF', '#FF9FFC', '#B19EEF', '#00d4ff', '#8b5cf6' ]}
+          style={{ 
+            opacity: 0.65,
+            width: '100%',
+            height: '100%'
+          }}
+          enableStars={false}
+          starLayers={3}
+          starDensity={0.5}
+          starDriftSpeed={0.02}
+          starRotationSpeed={0.08}
+          starBrightness={2.0}
+          starTwinkleSpeed={2.0}
+        />
+      </div>
 
       {/* Header */}
       <header className="header">
@@ -208,12 +222,18 @@ export default function Home() {
       {/* MODERN CENTERED RESPONSIVE CONTAINER */}
       <div style={{
         width: '100%',
-        maxWidth: '1200px',
-        margin: '0 auto',
-        padding: '0 60px',
+        display: 'flex',
+        justifyContent: 'center',
         position: 'relative',
-        zIndex: 20
+        zIndex: 20,
+        boxSizing: 'border-box'
       }}>
+        <div style={{
+          width: '100%',
+          maxWidth: '1200px',
+          padding: '0 60px',
+          margin: '0 auto'
+        }}>
 
         {/* Enhanced Hero Text Section */}
         <section style={{ 
@@ -373,6 +393,7 @@ export default function Home() {
           </React.Fragment>
         ))}
 
+        </div>
       </div>
 
       {/* Footer (unchanged) */}
