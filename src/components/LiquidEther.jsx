@@ -52,7 +52,7 @@ const LiquidEther = React.memo(function LiquidEther({
           powerPreference: 'default' // Changed from high-performance for better compatibility
         });
         renderer.setSize(container.clientWidth, container.clientHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.0)); // Reduced from 1.5 to 1.0
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 0.85)); // Cap below 1 to reduce fragment work
         renderer.setClearColor(0x000000, 0);
 
         container.appendChild(renderer.domElement);
@@ -110,11 +110,11 @@ const LiquidEther = React.memo(function LiquidEther({
                                window.devicePixelRatio < 1.5;
 
         if (isLowEndDevice) {
-          renderer.setPixelRatio(1.0); // Reduce pixel ratio for better performance
+          renderer.setPixelRatio(0.85); // Further reduce pixel ratio on low-end devices
         }
 
-        // Always use conservative settings for menu compatibility
-        renderer.setPixelRatio(1.0);
+        // Use conservative settings globally
+        renderer.setPixelRatio(0.85);
 
         // Create palette texture from colors
         const paletteCanvas = document.createElement('canvas');
@@ -134,7 +134,7 @@ const LiquidEther = React.memo(function LiquidEther({
         paletteTexture.wrapT = THREE.ClampToEdgeWrapping;
 
         // Create velocity textures with reduced resolution for better performance
-        const textureSize = 32; // Reduced from 48 to 32 for better performance
+        const textureSize = 24; // Reduced from 32 to 24 for better performance
         const velocityData1 = new Float32Array(textureSize * textureSize * 4);
         const velocityData2 = new Float32Array(textureSize * textureSize * 4);
 
@@ -400,8 +400,8 @@ const LiquidEther = React.memo(function LiquidEther({
 
             float waterGlow = liquidField * 0.15;
             liquidColor += waterGlow;
-            vec3 finalColor = liquidColor + stars.rgb * 1.0;
-            float finalAlpha = liquidMask * 1.0 + stars.a * 0.4;
+            vec3 finalColor = liquidColor + stars.rgb * 0.8; // slightly reduce additive brightness
+            float finalAlpha = liquidMask * 0.95 + stars.a * 0.35; // slightly darker overall
             gl_FragColor = vec4(finalColor, finalAlpha);
           }
         `;
@@ -441,6 +441,8 @@ const LiquidEther = React.memo(function LiquidEther({
         let frameCount = 0;
         let fps = 60;
 
+        let isVisible = true;
+
         const animate = (currentTime) => {
           frameCount++;
           if (currentTime - lastTime >= 1000) {
@@ -449,7 +451,8 @@ const LiquidEther = React.memo(function LiquidEther({
             lastTime = currentTime;
           }
 
-          timeRef.current += 0.016;
+          // Slow down background motion
+          timeRef.current += 0.010;
           if (material) {
             material.uniforms.uTime.value = timeRef.current;
             material.uniforms.uMouse.value.set(0.5, 0.5);
@@ -462,14 +465,27 @@ const LiquidEther = React.memo(function LiquidEther({
             }
           }
 
-          // Fixed 30fps frame rate limiting for consistent performance
-          const targetDelay = 32; // ~30fps (1000ms/30 = ~33.33ms, using 32 for slight overclock)
-          setTimeout(() => {
-            animationRef.current = requestAnimationFrame(animate);
-          }, targetDelay);
+          // Frame rate limiting for consistent performance (~24fps)
+          const targetDelay = 42; // ~24fps
+          if (isVisible) {
+            setTimeout(() => {
+              animationRef.current = requestAnimationFrame(animate);
+            }, targetDelay);
+          } else {
+            animationRef.current = null;
+          }
         };
 
         animate();
+
+        // Pause when tab not visible to save resources
+        const onVisibility = () => {
+          isVisible = !document.hidden;
+          if (isVisible && !animationRef.current) {
+            animationRef.current = requestAnimationFrame(animate);
+          }
+        };
+        document.addEventListener('visibilitychange', onVisibility);
 
         const handleResize = () => {
           const width = container.clientWidth;
@@ -488,6 +504,7 @@ const LiquidEther = React.memo(function LiquidEther({
             cancelAnimationFrame(animationRef.current);
           }
           resizeObserver.disconnect();
+          document.removeEventListener('visibilitychange', onVisibility);
           if (renderer && container.contains(renderer.domElement)) {
             container.removeChild(renderer.domElement);
           }
