@@ -377,8 +377,8 @@ body::before {
 
 .hero-content {
   position: relative;
-  margin: 8vh auto 0;
-  width: 100%;
+  margin: 15vh 0 0 60px;
+  width: calc(100% - 60px);
   max-width: 750px;
   text-align: left;
   z-index: 20;
@@ -694,7 +694,7 @@ body::before {
 /* Hero video specific styling */
 .hero-video.featured-video-section {
   padding: 0 60px 60px !important;
-  margin: 60px auto 0 !important;
+  margin: 60px 0 0 60px !important;
   max-width: 1050px !important;
 }
 
