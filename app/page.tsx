@@ -12,7 +12,7 @@ import LiquidEther from '../src/components/LiquidEther';
 import StarField from '../src/components/StarField';
 import Menu from '../src/components/Menu/Menu';
 import '../src/components/Menu/Menu.css';
-import HeroHeading from '../src/components/HeroHeading';
+import HeroHeading from '../src/components/HeroHeading.tsx';
 
 gsap.registerPlugin(ScrollTrigger);
 
