@@ -102,6 +102,8 @@ Key/
 # Ignore embedded Git repositories
 versions/old/jeffreykerr-enhanced/.git/
 working/.git/
+.old/
+OLD/
 .clinerules/byterover-rules.md
 .kilocode/rules/byterover-rules.md
 .roo/rules/byterover-rules.md

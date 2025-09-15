@@ -16,13 +16,55 @@ import WeatherWidget from '../src/components/WeatherWidget';
 
 const Liquid: React.ComponentType<any> = LiquidEtherSimple as unknown as React.ComponentType<any>;
 
+// Character-level text splitting component
+const CharacterHoverText = ({ children, className = "" }: { children: string; className?: string }) => {
+  const text = typeof children === 'string' ? children : '';
+  
+  return (
+    <span className={className}>
+      {text.split('').map((char, index) => (
+        <span 
+          key={index} 
+          className="char-hover"
+          style={{
+            display: 'inline-block',
+            transition: 'all 0.15s ease',
+            cursor: 'pointer'
+          }}
+        >
+          {char === ' ' ? '\u00A0' : char}
+        </span>
+      ))}
+    </span>
+  );
+};
+
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [animationStage, setAnimationStage] = useState(0);
   const router = useRouter();
   
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
+
+  // Page load animation sequence
+  useEffect(() => {
+    const timer1 = setTimeout(() => setIsLoaded(true), 800); // Wait for background
+    const timer2 = setTimeout(() => setAnimationStage(1), 1000); // Hero text
+    const timer3 = setTimeout(() => setAnimationStage(2), 1200); // Contact info
+    const timer4 = setTimeout(() => setAnimationStage(3), 1400); // Video
+    const timer5 = setTimeout(() => setAnimationStage(4), 1600); // Metadata
+    
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+      clearTimeout(timer3);
+      clearTimeout(timer4);
+      clearTimeout(timer5);
+    };
+  }, []);
 
   // Expanded videos array with 5 videos and internal routes
   const videos = [
@@ -329,6 +371,58 @@ export default function Home() {
           background: rgba(255,255,255,0.08);
           transform: translateY(-1px);
         }
+        
+        /* Page load animations */
+        .hero-animate {
+          opacity: 0;
+          transform: translateY(20px);
+          transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .hero-animate.animate-in {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        
+        .contact-animate {
+          opacity: 0;
+          transform: translateY(15px);
+          transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .contact-animate.animate-in {
+          opacity: 0.6 !important;
+          transform: translateY(0);
+        }
+        
+        .video-animate {
+          opacity: 0;
+          transform: translateY(25px) scale(0.98);
+          transition: all 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .video-animate.animate-in {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+        
+        .metadata-animate {
+          opacity: 0;
+          transform: translateY(10px);
+          transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .metadata-animate.animate-in {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        
+        /* Character-level hover effects */
+        .char-hover:hover {
+          color: #ffffff !important;
+          text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+          transform: translateY(-1px);
+        }
       `}</style>
 
       {/* MODERN CENTERED RESPONSIVE CONTAINER */}
@@ -352,15 +446,17 @@ export default function Home() {
           paddingTop: '140px',
           marginBottom: '60px'
         }}>
-          <div style={{
-            fontFamily: "'Space Mono', monospace",
-            fontSize: 'clamp(1.5rem, 3vw, 2.2rem)',
-            fontWeight: '400',
-            lineHeight: '1.1',
-            color: 'rgba(255, 255, 255, 0.95)',
-            marginBottom: '40px',
-            maxWidth: '750px'
-          }}>
+          <div 
+            className={`hero-animate ${animationStage >= 1 ? 'animate-in' : ''}`}
+            style={{
+              fontFamily: "'Space Mono', monospace",
+              fontSize: 'clamp(1.5rem, 3vw, 2.2rem)',
+              fontWeight: '400',
+              lineHeight: '1.1',
+              color: 'rgba(255, 255, 255, 0.95)',
+              marginBottom: '40px',
+              maxWidth: '750px'
+            }}>
             <div style={{ marginBottom: '0.5rem', whiteSpace: 'nowrap' }}>
               I produce <span className="gradient-text">compelling visual content</span>
             </div>
@@ -372,21 +468,24 @@ export default function Home() {
             </div>
           </div>
 
-          <div style={{
-            display: 'flex',
-            gap: '2rem',
-            alignItems: 'center',
-            fontSize: '11px',
-            color: '#cccccc',
-            opacity: 0.6,
-            fontFamily: "'Space Mono', monospace"
-          }}>
+          <div 
+            className={`contact-animate ${animationStage >= 2 ? 'animate-in' : ''}`}
+            style={{
+              display: 'flex',
+              gap: '2rem',
+              alignItems: 'center',
+              fontSize: '11px',
+              color: '#cccccc',
+              fontFamily: "'Space Mono', monospace"
+            }}>
             <div className="contact-info" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <MapPin size={14} strokeWidth={1.5} color="rgba(255,255,255,0.6)" />
-              <span style={{ color: '#cccccc' }}>Grand Rapids, Michigan / World</span>
+              <CharacterHoverText>Grand Rapids, Michigan / World</CharacterHoverText>
             </div>
             <div className="contact-info">
-              <a href="mailto:colour8k@mac.com" style={{ color: '#cccccc', textDecoration: 'none' }}>colour8k@mac.com</a>
+              <a href="mailto:colour8k@mac.com" style={{ color: '#cccccc', textDecoration: 'none' }}>
+                <CharacterHoverText>colour8k@mac.com</CharacterHoverText>
+              </a>
             </div>
           </div>
         </section>
@@ -394,7 +493,7 @@ export default function Home() {
         {/* Hero Video */}
         <section style={{ marginBottom: '24px' }}>
           <div 
-            className="video-thumbnail"
+            className={`video-thumbnail video-animate ${animationStage >= 3 ? 'animate-in' : ''}`}
             style={{
               maxWidth: '750px',
               width: '100%',
@@ -443,17 +542,19 @@ export default function Home() {
 
         {/* Featured metadata directly under the hero video */}
         <section style={{ marginBottom: '80px' }}>
-          <div className="metadata-section" style={{ 
-            display: 'flex', 
-            flexDirection: 'column', 
-            gap: '15px', 
-            fontFamily: "'Space Mono', monospace", 
-            fontSize: '14px', 
-            fontWeight: '300', 
-            color: '#ffffff', 
-            opacity: 0.8, 
-            maxWidth: '750px' 
-          }}>
+          <div 
+            className={`metadata-section metadata-animate ${animationStage >= 4 ? 'animate-in' : ''}`}
+            style={{ 
+              display: 'flex', 
+              flexDirection: 'column', 
+              gap: '15px', 
+              fontFamily: "'Space Mono', monospace", 
+              fontSize: '14px', 
+              fontWeight: '300', 
+              color: '#ffffff', 
+              opacity: 0.8, 
+              maxWidth: '750px' 
+            }}>
             <div style={{ width: '100%', height: '1px', background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%)' }}></div>
             <div>Gemini IPO Investigation — YouTube Video</div>
             <div style={{ width: '100%', height: '1px', background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%)' }}></div>

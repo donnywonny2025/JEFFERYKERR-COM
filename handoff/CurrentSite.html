@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CurrentSite — Handoff Snapshot</title>
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --text: #ffffff;
+      --muted: #cccccc;
+      --glass-bg: rgba(255,255,255,0.06);
+      --glass-border: rgba(255,255,255,0.12);
+    }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+        Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', Arial, sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Header / Navigation */
+    .header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 50;
+      padding: 18px 24px;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(0,0,0,0));
+    }
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo { text-decoration: none; color: var(--text); font-weight: 600; letter-spacing: 0.04em; }
+    .logo-k { font-weight: 800; }
+
+    .hamburger {
+      display: flex; flex-direction: column; justify-content: space-around;
+      width: 24px; height: 16px; background: transparent; border: none; cursor: pointer; padding: 0; z-index: 1001;
+    }
+    .hamburger span { width: 24px; height: 2px; background: #a1a1aa; transition: all .3s ease; transform-origin: center; border-radius: 1px; }
+    .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(7px, -6px); }
+
+    .simple-menu-overlay { position: fixed; inset: 0; height: 100vh; background: transparent; z-index: 999; display: none; align-items: flex-start; justify-content: flex-end; padding-top: 70px; padding-right: 60px; }
+    .simple-menu-overlay.open { display: flex; }
+    .simple-menu-content { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 20px 16px; min-width: 140px; position: relative; pointer-events: auto; box-shadow: 0 4px 20px rgba(0,0,0,0.2); margin-left: auto; }
+    .simple-menu-nav { text-align: right; }
+    .simple-menu-item { display: block; color: #fff; text-decoration: none; font-family: 'Space Mono', monospace; font-size: 1rem; font-weight: 400; margin: 8px 0; letter-spacing: .8px; text-transform: uppercase; transition: color .2s ease; }
+    .simple-menu-item:hover { color: rgba(255,255,255,0.7); }
+    .simple-menu-email { margin-top: 20px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08); }
+    .simple-menu-email a { font-family: 'Space Mono', monospace; font-size: .85rem; color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; padding: 8px 16px; display: inline-block; letter-spacing: .6px; font-weight: 400; transition: all .2s ease; text-decoration: none; }
+    .simple-menu-email a:hover { color: rgba(255,255,255,0.9); background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.2); }
+
+    /* Content helpers */
+    .gradient-text {
+      background: linear-gradient(135deg, #00d4ff 0%, #8b5cf6 50%, #FF9FFC 100%);
+      background-size: 300% 300%;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      animation: continuousFlow 20s ease-in-out infinite;
+    }
+    @keyframes continuousFlow { 0%,100%{background-position:0% 50%;} 33%{background-position:100% 50%;} 66%{background-position:200% 50%;} }
+    .contact-info { position: relative; display: inline-flex; align-items: center; transition: opacity .3s ease; cursor: pointer; border-radius: 6px; padding: 2px 6px; overflow: hidden; }
+    .contact-info::after { content:''; position:absolute; top:0; bottom:0; width:140%; left:-60%; background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0) 100%); opacity:0; pointer-events:none; transform: translateX(-20%); }
+    .contact-info:hover::after { animation: shimmerSweep 900ms ease-out; }
+    @keyframes shimmerSweep { 0%{opacity:0; transform:translateX(-40%);} 20%{opacity:.25;} 80%{opacity:.12;} 100%{opacity:0; transform:translateX(60%);} }
+
+    .container { width: 100vw; display: flex; justify-content: center; position: relative; z-index: 20; min-height: 100vh; }
+    .inner { width: 100%; max-width: 1200px; padding: 0 60px; margin: 0 auto; }
+
+    .video-thumbnail { border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,.3); cursor: pointer; }
+    .metadata-section { display: flex; flex-direction: column; gap: 15px; font-family: 'Space Mono', monospace; font-size: 14px; font-weight: 300; color: #fff; opacity: .8; max-width: 750px; }
+
+    /* Footer */
+    .footer-wrap { position: relative; background: #000; overflow: hidden; }
+    footer.footer { position: relative; }
+    .footer-content { max-width: 1200px; margin: 0 auto; padding: 32px 24px; display: grid; grid-template-columns: 1fr; gap: 16px; align-items: center; }
+    .footer-logo { font-weight: 700; letter-spacing: 0.04em; }
+    .footer-divider { height: 1px; background: linear-gradient(90deg, rgba(255,255,255,.4) 0%, rgba(255,255,255,.2) 50%, transparent 100%); }
+    .footer-email a { color: #fff; text-decoration: none; }
+    .footer-nav a { color: #fff; text-decoration: none; margin-right: 16px; }
+    .footer-social a { color: #fff; margin-right: 12px; }
+
+    /* Liquid background container base (fallback CSS anim for mobile/error) */
+    @keyframes liquidFlow { 0% { background-position: 0% 50%, 100% 50%, 50% 0%; } 50% { background-position: 100% 50%, 0% 50%, 50% 100%; } 100% { background-position: 0% 50%, 100% 50%, 50% 0%; } }
+    #liquid-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; overflow: hidden; background: var(--bg); }
+  </style>
+</head>
+<body>
+  <!-- Liquid Background -->
+  <div id="liquid-bg"></div>
+
+  <!-- Header / Nav -->
+  <header class="header">
+    <div class="header-content">
+      <a href="#" class="logo"><span class="logo-k">k</span>err</a>
+      <button id="hamburger" class="hamburger" aria-label="Open menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </header>
+  <div id="menuOverlay" class="simple-menu-overlay" aria-hidden="true">
+    <div class="simple-menu-content" role="menu" aria-label="Main Menu">
+      <nav class="simple-menu-nav">
+        <a class="simple-menu-item" href="#home">HOME</a>
+        <a class="simple-menu-item" href="#backgrounds">🎨 BACKGROUNDS</a>
+        <a class="simple-menu-item" href="#work">WORK</a>
+        <a class="simple-menu-item" href="#contact">CONTACT</a>
+      </nav>
+      <div class="simple-menu-email">
+        <a href="mailto:colour8k@mac.com">colour8k@mac.com</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <main class="container">
+    <div class="inner">
+      <section style="padding-top: 140px; margin-bottom: 60px;">
+        <div style="font-family: 'Space Mono', monospace; font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 400; line-height: 1.1; color: rgba(255,255,255,0.95); margin-bottom: 40px; max-width: 750px;">
+          <div style="margin-bottom: .5rem; white-space: nowrap;">I produce <span class="gradient-text">compelling visual content</span></div>
+          <div style="margin-bottom: .5rem; white-space: nowrap;">while building <span class="gradient-text">AI-enhanced workflows</span></div>
+          <div style="white-space: nowrap;">that change how <span class="gradient-text">creative work gets done</span>.</div>
+        </div>
+        <div style="display: flex; gap: 2rem; align-items: center; font-size: 11px; color: var(--muted); opacity: .6; font-family: 'Space Mono', monospace;">
+          <div class="contact-info" style="display: flex; align-items: center; gap: .5rem;">
+            <span style="display:inline-block;width:14px;height:14px;border:1px solid rgba(255,255,255,0.5);border-radius:2px"></span>
+            <span>Grand Rapids, Michigan / World</span>
+          </div>
+          <div class="contact-info"><a href="mailto:colour8k@mac.com" style="color: #cccccc; text-decoration: none;">colour8k@mac.com</a></div>
+        </div>
+      </section>
+
+      <section style="margin-bottom: 24px;">
+        <div class="video-thumbnail" style="max-width: 750px; width: 100%; aspect-ratio: 16/9; background: #000; position: relative;">
+          <img src="https://img.youtube.com/vi/I6U5zDpzLq8/hqdefault.jpg" alt="Featured Video" style="width: 100%; height: 100%; object-fit: cover;" />
+          <div style="position: absolute; bottom: 16px; left: 16px; padding: 10px 14px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.18); background: rgba(0,0,0,0.45); backdrop-filter: blur(6px); color: #fff; font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: .08em;">PLAY FEATURED</div>
+        </div>
+      </section>
+
+      <section style="margin-bottom: 80px;">
+        <div class="metadata-section">
+          <div style="width: 100%; height: 1px; background: linear-gradient(90deg, rgba(255,255,255,.4) 0%, rgba(255,255,255,.2) 50%, transparent 100%);"></div>
+          <div>Gemini IPO Investigation — YouTube Video</div>
+          <div style="width: 100%; height: 1px; background: linear-gradient(90deg, rgba(255,255,255,.4) 0%, rgba(255,255,255,.2) 50%, transparent 100%);"></div>
+          <div>Featured Video</div>
+          <div style="width: 100%; height: 1px; background: linear-gradient(90deg, rgba(255,255,255,.4) 0%, rgba(255,255,255,.2) 50%, transparent 100%);"></div>
+          <div>2025</div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <div class="footer-wrap">
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-logo"><span class="logo-k">k</span>err</div>
+        <div class="footer-divider"></div>
+        <div class="footer-email"><a href="mailto:colour8k@mac.com">colour8k@mac.com</a></div>
+        <nav class="footer-nav">
+          <a href="#home">HOME</a>
+          <a href="#backgrounds">🎨 BACKGROUNDS</a>
+          <a href="#work">WORK</a>
+          <a href="#contact">CONTACT</a>
+        </nav>
+        <div class="footer-social">
+          <a href="#" aria-label="Instagram">IG</a>
+          <a href="#" aria-label="YouTube">YT</a>
+        </div>
+        <div class="footer-copyright">2025 Jeff Kerr. Crafting visual stories that move the world forward.</div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Three.js and Background Shader (inline, minimal) -->
+  <script src="https://unpkg.com/three@0.159.0/build/three.min.js"></script>
+  <script>
+    (function(){
+      const container = document.getElementById('liquid-bg');
+      if (!container) return;
+
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      const colors = ['#0a0a0a', '#1a0b2e', '#2d1b4e', '#3d2a5f', '#1a4d72', '#6b46c1', '#c084fc'];
+
+      // CSS fallback for mobile or WebGL failures
+      const cssFallback = () => {
+        container.style.background = `
+          radial-gradient(circle at 30% 70%, ${colors[0]}55 0%, transparent 50%),
+          radial-gradient(circle at 70% 30%, ${colors[1]}55 0%, transparent 50%),
+          linear-gradient(45deg, ${colors[0]}33, ${colors[1]}33)
+        `;
+        container.style.backgroundSize = '300% 300%, 200% 200%, 100% 100%';
+        container.style.animation = 'liquidFlow 15s ease-in-out infinite';
+      };
+
+      if (isMobile || !window.THREE || !window.WebGLRenderingContext) {
+        cssFallback();
+        return;
+      }
+
+      let renderer, scene, camera, material, mesh, paletteTexture, animationId;
+      try {
+        scene = new THREE.Scene();
+        camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+        renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true, powerPreference: 'default' });
+        renderer.setPixelRatio(0.5);
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        renderer.setClearColor(0x000000, 0);
+        container.appendChild(renderer.domElement);
+
+        // Build palette texture
+        const paletteCanvas = document.createElement('canvas');
+        paletteCanvas.width = colors.length; paletteCanvas.height = 1;
+        const ctx = paletteCanvas.getContext('2d');
+        colors.forEach((c,i)=>{ ctx.fillStyle=c; ctx.fillRect(i,0,1,1); });
+        paletteTexture = new THREE.CanvasTexture(paletteCanvas);
+        paletteTexture.magFilter = THREE.LinearFilter;
+        paletteTexture.minFilter = THREE.LinearFilter;
+
+        const vertexShader = `
+          varying vec2 vUv;
+          void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }
+        `;
+        const fragmentShader = `
+          uniform float uTime; uniform sampler2D uPalette; varying vec2 vUv;
+          float noise(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7))) * 43758.5453123); }
+          float smoothNoise(vec2 p){ vec2 i=floor(p); vec2 f=fract(p); f=f*f*(3.0-2.0*f);
+            float a=noise(i); float b=noise(i+vec2(1.0,0.0)); float c=noise(i+vec2(0.0,1.0)); float d=noise(i+vec2(1.0,1.0));
+            return mix(mix(a,b,f.x), mix(c,d,f.x), f.y);
+          }
+          void main(){ vec2 uv=vUv; float time=uTime*0.4; vec2 distortion=vec2(
+            sin(uv.y*6.0+time*0.8)*0.03, cos(uv.x*5.0+time*0.7)*0.025);
+            vec2 distortedUv=uv+distortion; float liquid1=sin(distortedUv.y*4.0+time)*cos(distortedUv.x*2.0+time*0.7)*0.5;
+            float liquid2=cos(distortedUv.x*3.0+time*0.8)*sin(distortedUv.y*5.0+time*1.1)*0.4;
+            float liquid3=sin((distortedUv.x+distortedUv.y)*2.5+time*1.3)*0.3; float wispy1=smoothNoise(distortedUv*8.0+time*0.2)*0.2;
+            float wispy2=smoothNoise(distortedUv*12.0-time*0.15)*0.15; float liquid=(liquid1+liquid2+liquid3+wispy1+wispy2)*0.5+0.5;
+            float turbulence=sin(distortedUv.x*7.0+distortedUv.y*4.0+time*0.6)*0.1; liquid+=turbulence;
+            float colorFlow1=sin(distortedUv.y*3.0+time*0.5)*0.3+0.7; float colorFlow2=cos(distortedUv.x*2.5+time*0.4)*0.2+0.5;
+            vec3 color1=texture2D(uPalette, vec2(colorFlow1,0.5)).rgb; vec3 color2=texture2D(uPalette, vec2(colorFlow2,0.5)).rgb;
+            vec3 finalColor=mix(color1,color2,smoothstep(0.3,0.7,liquid)); finalColor*=1.6; float shimmer=1.0+sin(liquid*6.28+time)*0.1; finalColor*=shimmer;
+            float mask=smoothstep(0.15,0.85,liquid); mask*=smoothstep(0.1,0.6,wispy1+wispy2+0.5);
+            float edgeFade=1.0 - smoothstep(0.0,0.8,length(uv-vec2(0.5))); edgeFade += smoothNoise(uv*6.0)*0.1;
+            gl_FragColor=vec4(finalColor, mask*edgeFade*0.7);
+          }
+        `;
+
+        material = new THREE.ShaderMaterial({
+          vertexShader, fragmentShader,
+          uniforms: { uTime: { value: 0 }, uPalette: { value: paletteTexture } },
+          transparent: true, depthWrite: false
+        });
+
+        const geometry = new THREE.PlaneGeometry(2,2);
+        mesh = new THREE.Mesh(geometry, material);
+        scene.add(mesh);
+
+        function resize(){
+          const w = container.clientWidth || window.innerWidth;
+          const h = container.clientHeight || window.innerHeight;
+          renderer.setSize(w,h,false);
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        let time = 0, lastFrame = 0; const frameTime = 66; // ~15fps
+        function animate(now){
+          if (now - lastFrame >= frameTime){
+            time += 0.016; material.uniforms.uTime.value = time; renderer.render(scene, camera); lastFrame = now;
+          }
+          animationId = requestAnimationFrame(animate);
+        }
+        animationId = requestAnimationFrame(animate);
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+          if (animationId) cancelAnimationFrame(animationId);
+          if (renderer && container.contains(renderer.domElement)) container.removeChild(renderer.domElement);
+          if (renderer) renderer.dispose(); if (geometry) geometry.dispose(); if (material) material.dispose(); if (paletteTexture) paletteTexture.dispose();
+        });
+      } catch (e){ cssFallback(); }
+    })();
+  </script>
+
+  <!-- Small JS: logo shimmer and menu toggle -->
+  <script>
+    // Simple text shimmer effect using CSS animation of background already applied
+    // Menu toggle
+    const hamburger = document.getElementById('hamburger');
+    const overlay = document.getElementById('menuOverlay');
+    function toggleMenu(){ hamburger.classList.toggle('open'); overlay.classList.toggle('open'); overlay.setAttribute('aria-hidden', overlay.classList.contains('open') ? 'false' : 'true'); }
+    hamburger.addEventListener('click', (e)=>{ e.stopPropagation(); toggleMenu(); });
+    document.addEventListener('click', (e)=>{ if (overlay.classList.contains('open') && !overlay.contains(e.target) && e.target !== hamburger){ toggleMenu(); } });
+  </script>
+</body>
+</html>
