@@ -1,7 +1,225 @@
 import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import * as THREE from 'three';
-import './LiquidEther.css';
+ 
+const LiquidEtherLegacy = React.memo(function LiquidEtherLegacy({
+  colors = ['#4A1FA3', '#E640E6', '#7B2CBF', '#00A8CC', '#6B46C1'],
+  style = {},
+  className = ''
+}) {
+  const mountRef = useRef(null);
+  const cleanupRef = useRef(null);
+
+  useEffect(() => {
+    if (!mountRef.current) return;
+
+    const container = mountRef.current;
+    let renderer, scene, camera, material, mesh, animationId;
+
+    // Mobile/low-power device detection
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    const isLowPower = navigator.hardwareConcurrency <= 4;
+    
+    if (isMobile || isLowPower) {
+      // CSS fallback for mobile/low-power devices
+      container.style.background = `
+        radial-gradient(circle at 30% 70%, ${colors[0]}44 0%, transparent 60%),
+        radial-gradient(circle at 70% 30%, ${colors[1]}44 0%, transparent 60%),
+        radial-gradient(circle at 50% 80%, ${colors[2]}33 0%, transparent 70%),
+        linear-gradient(45deg, ${colors[0]}22, ${colors[1]}22, ${colors[2]}22)
+      `;
+      container.style.backgroundSize = '400% 400%, 300% 300%, 250% 250%, 100% 100%';
+      container.style.animation = 'liquidFlow 20s ease-in-out infinite';
+      return;
+    }
+
+    try {
+      // WebGL setup
+      scene = new THREE.Scene();
+      camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+      
+      renderer = new THREE.WebGLRenderer({
+        antialias: false,
+        alpha: true,
+        powerPreference: 'default'
+      });
+      
+      // Performance settings
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 0.5));
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.setClearColor(0x000000, 0);
+      container.appendChild(renderer.domElement);
+
+      // Create color palette texture
+      const paletteCanvas = document.createElement('canvas');
+      paletteCanvas.width = colors.length;
+      paletteCanvas.height = 1;
+      const ctx = paletteCanvas.getContext('2d');
+      colors.forEach((color, i) => {
+        ctx.fillStyle = color;
+        ctx.fillRect(i, 0, 1, 1);
+      });
+
+      const paletteTexture = new THREE.CanvasTexture(paletteCanvas);
+      paletteTexture.magFilter = THREE.LinearFilter;
+      paletteTexture.minFilter = THREE.LinearFilter;
+
+      // Simplified shaders
+      const vertexShader = `
+        varying vec2 vUv;
+        void main() {
+          vUv = uv;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `;
+
+      const fragmentShader = `
+        uniform float uTime;
+        uniform sampler2D uPalette;
+        varying vec2 vUv;
+
+        float wave(vec2 p, float time, float freq, float amp) {
+          return sin(p.x * freq + time) * cos(p.y * freq + time * 0.7) * amp;
+        }
+
+        void main() {
+          vec2 uv = vUv;
+          float time = uTime * 0.4;
+          
+          // Simple liquid waves
+          float wave1 = wave(uv, time, 4.0, 0.3);
+          float wave2 = wave(uv + 0.5, time * 0.8, 3.0, 0.4);
+          float wave3 = wave(uv * 1.3, time * 1.2, 5.0, 0.2);
+          
+          // Combine waves
+          float liquid = (wave1 + wave2 + wave3) * 0.5 + 0.5;
+          
+          // Color sampling
+          vec2 colorUV1 = vec2(liquid, 0.5);
+          vec2 colorUV2 = vec2(1.0 - liquid, 0.5);
+          
+          vec3 color1 = texture2D(uPalette, colorUV1).rgb;
+          vec3 color2 = texture2D(uPalette, colorUV2).rgb;
+          
+          vec3 finalColor = mix(color1, color2, sin(liquid * 3.14159) * 0.5 + 0.5);
+          finalColor *= 1.6; // Boost brightness
+          
+          // Simple mask
+          float mask = smoothstep(0.1, 0.9, liquid);
+          float edgeFade = 1.0 - smoothstep(0.0, 0.7, length(uv - vec2(0.5)));
+          
+          gl_FragColor = vec4(finalColor, mask * edgeFade * 0.6);
+        }
+      `;
+
+      // Create material
+      material = new THREE.ShaderMaterial({
+        vertexShader,
+        fragmentShader,
+        uniforms: {
+          uTime: { value: 0 },
+          uPalette: { value: paletteTexture }
+        },
+        transparent: true,
+        depthWrite: false
+      });
+
+      // Create mesh
+      const geometry = new THREE.PlaneGeometry(2, 2);
+      mesh = new THREE.Mesh(geometry, material);
+      scene.add(mesh);
+
+      // Animation loop - 15fps for performance
+      let time = 0;
+      let lastFrame = 0;
+      const targetFPS = 15;
+      const frameTime = 1000 / targetFPS;
+
+      const animate = (currentTime) => {
+        if (currentTime - lastFrame >= frameTime) {
+          time += 0.016;
+          material.uniforms.uTime.value = time;
+          renderer.render(scene, camera);
+          lastFrame = currentTime;
+        }
+        animationId = requestAnimationFrame(animate);
+      };
+      animate();
+
+      // Handle resize
+      const handleResize = () => {
+        const width = container.clientWidth;
+        const height = container.clientHeight;
+        renderer.setSize(width, height);
+      };
+      window.addEventListener('resize', handleResize);
+
+      // Cleanup function
+      cleanupRef.current = () => {
+        if (animationId) cancelAnimationFrame(animationId);
+        window.removeEventListener('resize', handleResize);
+        if (renderer && container.contains(renderer.domElement)) {
+          container.removeChild(renderer.domElement);
+        }
+        if (renderer) renderer.dispose();
+        if (geometry) geometry.dispose();
+        if (material) material.dispose();
+        if (paletteTexture) paletteTexture.dispose();
+      };
+
+    } catch (error) {
+      // WebGL failed, use CSS fallback
+      container.style.background = `
+        radial-gradient(circle at 30% 70%, ${colors[0]}55 0%, transparent 50%),
+        radial-gradient(circle at 70% 30%, ${colors[1]}55 0%, transparent 50%),
+        linear-gradient(45deg, ${colors[0]}33, ${colors[1]}33, ${colors[2]}33)
+      `;
+      container.style.backgroundSize = '300% 300%, 200% 200%, 100% 100%';
+      container.style.animation = 'liquidFlow 15s ease-in-out infinite';
+    }
+
+    return cleanupRef.current;
+  }, [colors]);
+
+  // All styles inline - no separate CSS file needed
+  const containerStyles = {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100vw',
+    height: '100vh',
+    zIndex: -1,
+    pointerEvents: 'none',
+    opacity: 0.5,
+    // CSS animation for fallback
+    ...style
+  };
+
+  return (
+    <>
+      <style jsx>{`
+        @keyframes liquidFlow {
+          0% { background-position: 0% 50%, 100% 50%, 50% 0%; }
+          50% { background-position: 100% 50%, 0% 50%, 50% 100%; }
+          100% { background-position: 0% 50%, 100% 50%, 50% 0%; }
+        }
+      `}</style>
+      <div
+        ref={mountRef}
+        className={className}
+        style={containerStyles}
+      />
+    </>
+  );
+});
+
+LiquidEtherLegacy.propTypes = {
+  colors: PropTypes.arrayOf(PropTypes.string),
+  style: PropTypes.object,
+  className: PropTypes.string
+};
+
+/* Note: Legacy component not exported as default to avoid redeclaration. */
 
 const LiquidEther = React.memo(function LiquidEther({
   colors = ['#4A1FA3', '#E640E6', '#7B2CBF', '#00A8CC', '#6B46C1'],

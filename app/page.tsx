@@ -10,6 +10,9 @@ import { DigitalClock } from '../src/components/motion-primitives/digital-clock'
 import '../src/App.css';
 import LiquidEtherSimple from '../src/components/LiquidEtherSimple';
 import { MapPin } from 'lucide-react';
+import FooterStars from '../src/components/FooterStars';
+import { Meteors } from '../src/components/ui/meteors';
+import WeatherWidget from '../src/components/WeatherWidget';
 
 const Liquid: React.ComponentType<any> = LiquidEtherSimple as unknown as React.ComponentType<any>;
 
@@ -24,13 +27,23 @@ export default function Home() {
   // Expanded videos array with 5 videos and internal routes
   const videos = [
     {
+      id: 'featured-video',
+      title: 'Featured Video',
+      client: 'Jeff Kerr',
+      date: '2025',
+      thumbnail: 'https://img.youtube.com/vi/I6U5zDpzLq8/hqdefault.jpg',
+      href: 'https://www.youtube.com/watch?v=I6U5zDpzLq8',
+      route: '/projects/featured',
+      description: 'Our featured piece. Explore the full breakdown, credits, and context on the Featured page.'
+    },
+    {
       id: 'reel-2024',
       title: 'Featured Showreel',
       client: 'Jeff Kerr',
       date: '2025',
       thumbnail: 'https://vumbnail.com/1029802990.jpg',
       href: 'https://player.vimeo.com/video/1029802990',
-      route: '/projects/showreel-2024',
+      route: '/projects/showreel-2025',
       description: 'A collection of clips from various projects over the years, blending traditional filmmaking with AI-generated content to create stunning visuals.'
     },
     {
@@ -79,10 +92,18 @@ export default function Home() {
   const videoRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [videoStates, setVideoStates] = useState<boolean[]>(new Array(videos.length).fill(false));
 
-  // Updated click handler to use Next.js routing
+  // Simple click handler to navigate to the route
   const handleVideoClick = (video: { route: string }) => {
     if (video?.route) {
       router.push(video.route);
+    }
+  };
+
+  // Scroll to the Showreel section (the next video below the hero)
+  const scrollToShowreel = () => {
+    const el = videoRefs.current[1]; // videos[1] is the first item in the list below the hero
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   };
 
@@ -123,26 +144,32 @@ export default function Home() {
         width: '100vw',
         height: '100vh',
         zIndex: 1,
-        overflow: 'hidden'
+        overflow: 'hidden',
+        background: '#0a0a0a'
       }}>
         <Liquid
-          colors={[ '#1a0b2e', '#5227FF', '#FF9FFC', '#B19EEF', '#00d4ff', '#8b5cf6' ]}
+          colors={[ 
+            '#0a0a0a',      // Deep black
+            '#1a0b2e',      // Dark purple
+            '#2d1b4e',      // Medium purple
+            '#3d2a5f',      // Muted purple (replaces #5227FF)
+            '#1a4d72',      // Darker, muted blue 
+            '#6b46c1',      // More subdued light purple (replaces #8b5cf6)
+            '#c084fc'       // Softer pink (replaces #FF9FFC)
+          ]}
           style={{ 
             opacity: 0.85,
             width: '100%',
             height: '100%',
-            filter: 'contrast(1.2) saturate(1.3)'
+            filter: 'brightness(0.8) contrast(1.6) saturate(1.3)'
           }}
-          enableStars={true}
-          starLayers={3}
-          starDensity={0.2}
-          starDriftSpeed={0.03}
-          starRotationSpeed={0.08}
-          starBrightness={1.2}
-          starTwinkleSpeed={1.5}
-          minBrightness={0.1}
-          maxBrightness={0.8}
-          colorDecay={0.95}
+          enableStars={false}
+          initialBrightness={0.2}
+          colorIntensity={0.7}
+          backgroundDarkness={0.85}
+          flowSpeed={0.4}
+          turbulence={0.8}
+          colorMixing={0.6}
         />
       </div>
 
@@ -171,6 +198,9 @@ export default function Home() {
             }}
           >
             <SafeWrapper>
+              <WeatherWidget />
+            </SafeWrapper>
+            <SafeWrapper>
               <DigitalClock />
             </SafeWrapper>
             <MenuWrapper
@@ -185,42 +215,62 @@ export default function Home() {
       </header>
 
       {/* Add styles for animations and enhancements */}
-      <style jsx>{`
+      <style jsx global>{`
         .gradient-text {
           background: linear-gradient(135deg, #00d4ff 0%, #8b5cf6 50%, #FF9FFC 100%);
-          background-size: 200% 200%;
+          background-size: 300% 300%;
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
-          animation: gradientFlow 3s ease-in-out 0s 1 normal forwards, 
-                     subtlePulse 12s ease-in-out 3s infinite;
-          position: relative;
+          animation: continuousFlow 20s ease-in-out infinite;
         }
 
-        @keyframes gradientFlow {
-          0% {
-            background-position: 0% 50%;
-            filter: brightness(1);
-          }
-          50% {
-            background-position: 100% 50%;
-            filter: brightness(1.3);
-          }
-          100% {
-            background-position: 200% 50%;
-            filter: brightness(1);
-          }
-        }
-
-        @keyframes subtlePulse {
+        @keyframes continuousFlow {
           0%, 100% {
+            background-position: 0% 50%;
+          }
+          33% {
+            background-position: 100% 50%;
+          }
+          66% {
             background-position: 200% 50%;
-            filter: brightness(1);
           }
-          50% {
-            background-position: 250% 50%;
-            filter: brightness(1.1);
-          }
+        }
+
+        .contact-info {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          transition: opacity 0.3s ease;
+          cursor: pointer;
+          border-radius: 6px;
+          padding: 2px 6px;
+          overflow: hidden;
+        }
+
+        /* Shimmer sweep as an overlay so no background line remains */
+        .contact-info::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          width: 140%;
+          left: -60%;
+          background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0) 100%);
+          opacity: 0;
+          pointer-events: none;
+          transform: translateX(-20%);
+        }
+
+        .contact-info:hover::after {
+          animation: shimmerSweep 900ms ease-out;
+        }
+
+        @keyframes shimmerSweep {
+          0% { opacity: 0; transform: translateX(-40%); }
+          20% { opacity: 0.25; }
+          80% { opacity: 0.12; }
+          100% { opacity: 0; transform: translateX(60%); }
         }
         
         .video-container {
@@ -237,15 +287,15 @@ export default function Home() {
         }
         
         .video-thumbnail {
-          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+          transition: none;  /* Remove transitions */
           border-radius: 12px;
           overflow: hidden;
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);  /* Keep basic shadow */
+          cursor: pointer;
         }
         
         .video-thumbnail:hover {
-          transform: scale(1.02);
-          box-shadow: 0 8px 40px rgba(82, 39, 255, 0.3), 0 4px 20px rgba(0, 0, 0, 0.4);
+          /* Remove all hover effects - no scaling, no glow */
         }
         
         .metadata-section {
@@ -255,15 +305,40 @@ export default function Home() {
         .metadata-section:hover {
           opacity: 1 !important;
         }
+
+        /* Play Featured Video button */
+        .play-featured-btn {
+          position: absolute;
+          bottom: 16px;
+          left: 16px;
+          padding: 10px 14px;
+          border-radius: 999px;
+          border: 1px solid rgba(255,255,255,0.18);
+          background: rgba(0,0,0,0.45);
+          backdrop-filter: blur(6px);
+          color: #fff;
+          font-family: 'Space Mono', monospace;
+          font-size: 12px;
+          letter-spacing: 0.08em;
+          cursor: pointer;
+          transition: background 0.25s ease, transform 0.2s ease, opacity 0.25s ease;
+          opacity: 0.95;
+        }
+
+        .play-featured-btn:hover {
+          background: rgba(255,255,255,0.08);
+          transform: translateY(-1px);
+        }
       `}</style>
 
       {/* MODERN CENTERED RESPONSIVE CONTAINER */}
       <div style={{
-        width: '100%',
+        width: '100vw',
         display: 'flex',
         justifyContent: 'center',
         position: 'relative',
-        zIndex: 20
+        zIndex: 20,
+        minHeight: '100vh'
       }}>
         <div style={{
           width: '100%',
@@ -306,18 +381,18 @@ export default function Home() {
             opacity: 0.6,
             fontFamily: "'Space Mono', monospace"
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <div className="contact-info" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <MapPin size={14} strokeWidth={1.5} color="rgba(255,255,255,0.6)" />
-              <span>Grand Rapids, Michigan / World</span>
+              <span style={{ color: '#cccccc' }}>Grand Rapids, Michigan / World</span>
             </div>
-            <div>
+            <div className="contact-info">
               <a href="mailto:colour8k@mac.com" style={{ color: '#cccccc', textDecoration: 'none' }}>colour8k@mac.com</a>
             </div>
           </div>
         </section>
 
         {/* Hero Video */}
-        <section style={{ marginBottom: '80px' }}>
+        <section style={{ marginBottom: '24px' }}>
           <div 
             className="video-thumbnail"
             style={{
@@ -335,33 +410,38 @@ export default function Home() {
               alt={videos[0].title}
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
-
-            <div className="circular-showreel" role="button" tabIndex={0} onClick={() => handleVideoClick(videos[0])}>
-              <div className="circular-showreel-inner">
-                <svg className="rotating-text" viewBox="0 0 200 200">
-                  <defs><path id="circle" d="M 100, 100 m -75, 0 a 75,75 0 1,1 150,0 a 75,75 0 1,1 -150,0" /></defs>
-                  <text fontSize="14" fontWeight="700" letterSpacing="2px" fontFamily="'Space Mono', monospace">
-                    <textPath href="#circle">SHOWREEL • SHOWREEL • SHOWREEL • SHOWREEL •</textPath>
-                  </text>
-                </svg>
-                <div className="play-button-circular"><div className="play-icon-circular"></div></div>
-              </div>
+            {/* Centered Play button for Featured Video */}
+            <div
+              className="play-button-simple"
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                padding: '12px 24px',
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                backdropFilter: 'blur(10px)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                borderRadius: '6px',
+                fontFamily: "'Space Mono', monospace",
+                fontSize: '12px',
+                color: 'white',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleVideoClick(videos[0]);
+              }}
+              role="button"
+              aria-label="Play Featured Video"
+            >
+              ▶ PLAY
             </div>
           </div>
         </section>
 
-        {/* Brand Logos */}
-        <section style={{ marginBottom: '80px' }}>
-          <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', gap: '40px', flexWrap: 'wrap' }}>
-            <img src="https://picsum.photos/120/40?random=1" alt="Canon" style={{ height: '35px', opacity: 0.3, filter: 'brightness(0) invert(1)' }} />
-            <img src="https://picsum.photos/120/40?random=2" alt="YouTube" style={{ height: '35px', opacity: 0.3, filter: 'brightness(0) invert(1)' }} />
-            <img src="https://picsum.photos/120/40?random=3" alt="DJI" style={{ height: '35px', opacity: 0.3, filter: 'brightness(0) invert(1)' }} />
-            <img src="https://picsum.photos/120/40?random=4" alt="Hyundai" style={{ height: '35px', opacity: 0.3, filter: 'brightness(0) invert(1)' }} />
-            <img src="https://picsum.photos/120/40?random=5" alt="MusicBed" style={{ height: '35px', opacity: 0.3, filter: 'brightness(0) invert(1)' }} />
-          </div>
-        </section>
-
-        {/* Featured Video Separator */}
+        {/* Featured metadata directly under the hero video */}
         <section style={{ marginBottom: '80px' }}>
           <div className="metadata-section" style={{ 
             display: 'flex', 
@@ -374,24 +454,35 @@ export default function Home() {
             opacity: 0.8, 
             maxWidth: '750px' 
           }}>
-            <div>{videos[0].description}</div>
             <div style={{ width: '100%', height: '1px', background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%)' }}></div>
-            <div>{videos[0].title}</div>
+            <div>Gemini IPO Investigation — YouTube Video</div>
             <div style={{ width: '100%', height: '1px', background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%)' }}></div>
-            <div>{videos[0].date}</div>
+            <div>Featured Video</div>
             <div style={{ width: '100%', height: '1px', background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%)' }}></div>
+            <div>2025</div>
+          </div>
+        </section>
+
+        {/* Brand Logos moved below featured metadata */}
+        <section style={{ marginBottom: '140px' }}>
+          <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', gap: '40px', flexWrap: 'wrap' }}>
+            <img src="https://picsum.photos/120/40?random=1" alt="Canon" style={{ height: '35px', opacity: 0.3, filter: 'brightness(0) invert(1)' }} />
+            <img src="https://picsum.photos/120/40?random=2" alt="YouTube" style={{ height: '35px', opacity: 0.3, filter: 'brightness(0) invert(1)' }} />
+            <img src="https://picsum.photos/120/40?random=3" alt="DJI" style={{ height: '35px', opacity: 0.3, filter: 'brightness(0) invert(1)' }} />
+            <img src="https://picsum.photos/120/40?random=4" alt="Hyundai" style={{ height: '35px', opacity: 0.3, filter: 'brightness(0) invert(1)' }} />
+            <img src="https://picsum.photos/120/40?random=5" alt="MusicBed" style={{ height: '35px', opacity: 0.3, filter: 'brightness(0) invert(1)' }} />
           </div>
         </section>
 
         {/* Additional 4 Videos with scroll animations */}
-        {videos.slice(1).map((video, index) => (
+        {videos.slice(1, 5).map((video, index) => (
           <React.Fragment key={video.id}>
             <section style={{ marginBottom: '40px' }}>
               <div 
                 className={`video-container ${videoStates[index + 1] ? 'visible' : ''}`}
                 onClick={() => handleVideoClick(video)} 
                 ref={(el) => { videoRefs.current[index + 1] = el; }} 
-                style={{ cursor: 'pointer' }}
+                style={{ cursor: 'pointer', position: 'relative' }}
               >
                 <div className="video-thumbnail" style={{ 
                   maxWidth: '750px', 
@@ -404,6 +495,28 @@ export default function Home() {
                     alt={video.title} 
                     style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
                   />
+                  {/* Add circular SHOWREEL button to the first video (showreel) */}
+                  {index === 0 && (
+                    <div
+                      className="circular-showreel"
+                      role="button"
+                      tabIndex={0}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleVideoClick(video);
+                      }}
+                    >
+                      <div className="circular-showreel-inner">
+                        <svg className="rotating-text" viewBox="0 0 200 200">
+                          <defs><path id="circle" d="M 100, 100 m -75, 0 a 75,75 0 1,1 150,0 a 75,75 0 1,1 -150,0" /></defs>
+                          <text fontSize="14" fontWeight="700" letterSpacing="2px" fontFamily="'Space Mono', monospace">
+                            <textPath href="#circle">SHOWREEL • SHOWREEL • SHOWREEL • SHOWREEL •</textPath>
+                          </text>
+                        </svg>
+                        <div className="play-button-circular"><div className="play-icon-circular"></div></div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </section>
@@ -433,41 +546,45 @@ export default function Home() {
         </div> {/* Close the inner container */}
       </div> {/* Close the flex container */}
 
-      {/* Footer (unchanged) */}
-      <footer className="footer">
-        <div className="footer-content">
-          <div className="footer-logo">
-            <TextShimmer duration={3} spread={1.5}>
-              <span className="logo-k">k</span>err
-            </TextShimmer>
+      {/* Footer with black background and meteors overlay (to match backgrounds page) */}
+      <div style={{ position: 'relative', background: '#000', overflow: 'hidden' }}>
+        <Meteors number={20} />
+        <footer className="footer" style={{ position: 'relative' }}>
+          <div className="footer-content">
+            <div className="footer-logo">
+              <TextShimmer duration={3} spread={1.5}>
+                <span className="logo-k">k</span>err
+              </TextShimmer>
+            </div>
+            <div className="footer-divider"></div>
+            <div className="footer-email">
+              <a href="mailto:colour8k@mac.com">colour8k@mac.com</a>
+            </div>
+            <nav className="footer-nav">
+              <Link href="/">HOME</Link>
+              <Link href="/backgrounds">🎨 BACKGROUNDS</Link>
+              <a href="#">WORK</a>
+              <a href="#">CONTACT</a>
+            </nav>
+            <div className="footer-social">
+              <a href="#" aria-label="Instagram">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                </svg>
+              </a>
+              <a href="#" aria-label="YouTube">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                </svg>
+              </a>
+            </div>
+            <div className="footer-copyright">
+              2025 Jeff Kerr. Crafting visual stories that move the world forward.
+            </div>
           </div>
-          <div className="footer-divider"></div>
-          <div className="footer-email">
-            <a href="mailto:colour8k@mac.com">colour8k@mac.com</a>
-          </div>
-          <nav className="footer-nav">
-            <Link href="/">HOME</Link>
-            <Link href="/backgrounds">🎨 BACKGROUNDS</Link>
-            <a href="#">WORK</a>
-            <a href="#">CONTACT</a>
-          </nav>
-          <div className="footer-social">
-            <a href="#" aria-label="Instagram">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.948 0-3.204.014-3.668.072-4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.40s-.644-1.44-1.439-1.44z"/>
-              </svg>
-            </a>
-            <a href="#" aria-label="YouTube">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-              </svg>
-            </a>
-          </div>
-          <div className="footer-copyright">
-            2025 Jeff Kerr. Crafting visual stories that move the world forward.
-          </div>
-        </div>
-      </footer>
+        </footer>
+      </div>
+      
     </div>
   );
 }

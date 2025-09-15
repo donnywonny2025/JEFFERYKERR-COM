@@ -10,6 +10,7 @@ import { DigitalClock } from '../src/components/motion-primitives/digital-clock'
 import '../src/App.css';
 import LiquidEtherSimple from '../src/components/LiquidEtherSimple';
 import { MapPin } from 'lucide-react';
+import { Meteors } from '../src/components/ui/meteors';
 
 const Liquid: React.ComponentType<any> = LiquidEtherSimple as unknown as React.ComponentType<any>;
 
@@ -30,7 +31,7 @@ export default function Home() {
       date: '2025',
       thumbnail: 'https://vumbnail.com/1029802990.jpg',
       href: 'https://player.vimeo.com/video/1029802990',
-      route: '/projects/showreel-2024',
+      route: '/projects/showreel-2025',
       description: 'A collection of clips from various projects over the years, blending traditional filmmaking with AI-generated content to create stunning visuals.'
     },
     {
@@ -123,26 +124,32 @@ export default function Home() {
         width: '100vw',
         height: '100vh',
         zIndex: 1,
-        overflow: 'hidden'
+        overflow: 'hidden',
+        background: '#0a0a0a'
       }}>
         <Liquid
-          colors={[ '#1a0b2e', '#5227FF', '#FF9FFC', '#B19EEF', '#00d4ff', '#8b5cf6' ]}
+          colors={[ 
+            '#0a0a0a',      // Deep black
+            '#1a0b2e',      // Dark purple
+            '#2d1b4e',      // Medium purple
+            '#3d2a5f',      // Muted purple (replaces #5227FF)
+            '#1a4d72',      // Darker, muted blue 
+            '#6b46c1',      // More subdued light purple (replaces #8b5cf6)
+            '#c084fc'       // Softer pink (replaces #FF9FFC)
+          ]}
           style={{ 
             opacity: 0.85,
             width: '100%',
             height: '100%',
-            filter: 'contrast(1.2) saturate(1.3)'
+            filter: 'brightness(0.8) contrast(1.6) saturate(1.3)'
           }}
-          enableStars={true}
-          starLayers={3}
-          starDensity={0.2}
-          starDriftSpeed={0.03}
-          starRotationSpeed={0.08}
-          starBrightness={1.2}
-          starTwinkleSpeed={1.5}
-          minBrightness={0.1}
-          maxBrightness={0.8}
-          colorDecay={0.95}
+          enableStars={false}
+          initialBrightness={0.2}
+          colorIntensity={0.7}
+          backgroundDarkness={0.85}
+          flowSpeed={0.4}
+          turbulence={0.8}
+          colorMixing={0.6}
         />
       </div>
 
@@ -184,39 +191,58 @@ export default function Home() {
       <style jsx>{`
         .gradient-text {
           background: linear-gradient(135deg, #00d4ff 0%, #8b5cf6 50%, #FF9FFC 100%);
-          background-size: 200% 200%;
+          background-size: 300% 300%;
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
-          animation: gradientFlow 3s ease-in-out 0s 1 normal forwards, 
-                     subtlePulse 12s ease-in-out 3s infinite;
-          position: relative;
+          animation: continuousFlow 20s ease-in-out infinite;
         }
 
-        @keyframes gradientFlow {
-          0% {
-            background-position: 0% 50%;
-            filter: brightness(1);
-          }
-          50% {
-            background-position: 100% 50%;
-            filter: brightness(1.3);
-          }
-          100% {
-            background-position: 200% 50%;
-            filter: brightness(1);
-          }
-        }
-
-        @keyframes subtlePulse {
+        @keyframes continuousFlow {
           0%, 100% {
+            background-position: 0% 50%;
+          }
+          33% {
+            background-position: 100% 50%;
+          }
+          66% {
             background-position: 200% 50%;
-            filter: brightness(1);
           }
-          50% {
-            background-position: 250% 50%;
-            filter: brightness(1.1);
-          }
+        }
+
+        .contact-info {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          transition: opacity 0.3s ease;
+          cursor: pointer;
+          border-radius: 6px;
+          padding: 2px 6px;
+          overflow: hidden;
+        }
+
+        .contact-info::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          width: 140%;
+          left: -60%;
+          background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0) 100%);
+          opacity: 0;
+          pointer-events: none;
+          transform: translateX(-20%);
+        }
+
+        .contact-info:hover::after {
+          animation: shimmerSweep 900ms ease-out;
+        }
+
+        @keyframes shimmerSweep {
+          0% { opacity: 0; transform: translateX(-40%); }
+          20% { opacity: 0.25; }
+          80% { opacity: 0.12; }
+          100% { opacity: 0; transform: translateX(60%); }
         }
         
         .video-container {
@@ -233,15 +259,15 @@ export default function Home() {
         }
         
         .video-thumbnail {
-          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+          transition: none;  /* Remove transitions */
           border-radius: 12px;
           overflow: hidden;
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);  /* Keep basic shadow */
+          cursor: pointer;
         }
         
         .video-thumbnail:hover {
-          transform: scale(1.02);
-          box-shadow: 0 8px 40px rgba(82, 39, 255, 0.3), 0 4px 20px rgba(0, 0, 0, 0.4);
+          /* Remove all hover effects - no scaling, no glow */
         }
         
         .metadata-section {
@@ -255,12 +281,13 @@ export default function Home() {
 
       {/* MODERN CENTERED RESPONSIVE CONTAINER */}
       <div style={{
-        width: '100%',
+        width: '100vw',
         display: 'flex',
         justifyContent: 'center',
         position: 'relative',
         zIndex: 20,
-        boxSizing: 'border-box'
+        boxSizing: 'border-box',
+        minHeight: '100vh'
       }}>
         <div style={{
           width: '100%',
@@ -295,19 +322,19 @@ export default function Home() {
           </div>
 
           <div style={{
-            display: 'flex',
-            gap: '2rem',
-            alignItems: 'center',
-            fontSize: '11px',
-            color: '#cccccc',
-            opacity: 0.6,
-            fontFamily: "'Space Mono', monospace"
+            display: 'flex', 
+            gap: '2rem', 
+            alignItems: 'center', 
+            fontSize: '11px', 
+            color: '#cccccc', 
+            opacity: 0.6, 
+            fontFamily: "'Space Mono', monospace" 
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <div className="contact-info" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <MapPin size={14} strokeWidth={1.5} color="rgba(255,255,255,0.6)" />
               <span>Grand Rapids, Michigan / World</span>
             </div>
-            <div>
+            <div className="contact-info">
               <a href="mailto:colour8k@mac.com" style={{ color: '#cccccc', textDecoration: 'none' }}>colour8k@mac.com</a>
             </div>
           </div>
