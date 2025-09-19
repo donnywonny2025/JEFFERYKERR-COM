@@ -46,6 +46,13 @@ const LiquidEtherSimple = React.memo(function LiquidEtherSimple({
       renderer.setClearColor(0x000000, 0);
       container.appendChild(renderer.domElement);
 
+      const handleResize = () => {
+        if (!renderer || !container) return;
+        renderer.setSize(container.clientWidth, container.clientHeight);
+      };
+
+      window.addEventListener('resize', handleResize);
+
       // Create simple color palette
       const paletteCanvas = document.createElement('canvas');
       paletteCanvas.width = colors.length;
@@ -184,6 +191,7 @@ const LiquidEtherSimple = React.memo(function LiquidEtherSimple({
 
       // Cleanup
       cleanupRef.current = () => {
+        window.removeEventListener('resize', handleResize);
         if (animationId) cancelAnimationFrame(animationId);
         if (renderer && container.contains(renderer.domElement)) {
           container.removeChild(renderer.domElement);

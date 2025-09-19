@@ -39,31 +39,159 @@ const CharacterHoverText = ({ children, className = "" }: { children: string; cl
   );
 };
 
+// Canvas-based film grain noise overlay (optimized)
+const Noise = ({
+  patternSize = 80,
+  patternScaleX = 1,
+  patternScaleY = 1,
+  // If provided, treated as frames; we also support patternRefreshMs for better control
+  patternRefreshInterval = 3,
+  patternAlpha = 16,
+  patternRefreshMs,
+}: {
+  patternSize?: number;
+  patternScaleX?: number;
+  patternScaleY?: number;
+  patternRefreshInterval?: number; // legacy: frames between refresh
+  patternAlpha?: number;           // 0-255 alpha per grain pixel
+  patternRefreshMs?: number;       // preferred: ms between refresh (e.g., 160)
+}) => {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    console.debug('[Noise] Canvas grain initialized');
+
+    let animationId = 0;
+    let logicalW = 0;
+    let logicalH = 0;
+    let last = performance.now();
+    const prefersReduced = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false;
+    const refreshMs = Math.max(80, patternRefreshMs ?? Math.round(Math.max(1, patternRefreshInterval) * 16.6));
+
+    // Prepare small offscreen pattern canvas for tiling
+    const patternCanvas = document.createElement('canvas');
+    const patternCtx = patternCanvas.getContext('2d');
+    if (!patternCtx) return;
+    patternCanvas.width = patternSize;
+    patternCanvas.height = patternSize;
+
+    const genPattern = () => {
+      const imageData = patternCtx.createImageData(patternSize, patternSize);
+      const data = imageData.data;
+      for (let i = 0; i < data.length; i += 4) {
+        const v = Math.random() * 255;
+        data[i] = v; // R
+        data[i + 1] = v; // G
+        data[i + 2] = v; // B
+        data[i + 3] = Math.random() * patternAlpha; // A
+      }
+      patternCtx.putImageData(imageData, 0, 0);
+    };
+
+    const resize = () => {
+      const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+      logicalW = Math.max(1, window.innerWidth);
+      logicalH = Math.max(1, window.innerHeight);
+      canvas.width = Math.floor(logicalW * dpr);
+      canvas.height = Math.floor(logicalH * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+
+    const render = () => {
+      // create and cache pattern each refresh
+      const pattern = ctx.createPattern(patternCanvas, 'repeat');
+      if (!pattern) return;
+      ctx.clearRect(0, 0, logicalW, logicalH);
+      ctx.fillStyle = pattern;
+      ctx.resetTransform();
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      // Fill in CSS pixels space, transform already set by resize for DPR
+      ctx.fillRect(0, 0, logicalW, logicalH);
+    };
+
+    const loop = (now: number) => {
+      const hidden = document.hidden;
+      const interval = prefersReduced ? Math.max(300, refreshMs * 4) : refreshMs;
+      if (!hidden && now - last >= interval) {
+        genPattern();
+        render();
+        last = now;
+      }
+      animationId = requestAnimationFrame(loop);
+    };
+
+    resize();
+    genPattern();
+    render();
+    animationId = requestAnimationFrame(loop);
+
+    window.addEventListener('resize', resize);
+    const onVis = () => { /* handled per-frame via document.hidden */ };
+    document.addEventListener('visibilitychange', onVis);
+
+    return () => {
+      window.removeEventListener('resize', resize);
+      document.removeEventListener('visibilitychange', onVis);
+      if (animationId) cancelAnimationFrame(animationId);
+    };
+  }, [patternSize, patternScaleX, patternScaleY, patternRefreshInterval, patternAlpha, patternRefreshMs]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        pointerEvents: 'none',
+        zIndex: 1000,
+        mixBlendMode: 'overlay',
+      }}
+    />
+  );
+};
+
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [animationStage, setAnimationStage] = useState(0);
   const router = useRouter();
+  // Defer heavy embeds (like YouTube) until after first paint to avoid
+  // an initial reflow that can look like a flicker in dev
+  const [showFeaturedEmbed, setShowFeaturedEmbed] = useState(false);
   
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
 
-  // Page load animation sequence
+  // Staggered animation sequence for centered layout
   useEffect(() => {
-    const timer1 = setTimeout(() => setIsLoaded(true), 800); // Wait for background
-    const timer2 = setTimeout(() => setAnimationStage(1), 1000); // Hero text
-    const timer3 = setTimeout(() => setAnimationStage(2), 1200); // Contact info
-    const timer4 = setTimeout(() => setAnimationStage(3), 1400); // Video
-    const timer5 = setTimeout(() => setAnimationStage(4), 1600); // Metadata
-    
-    return () => {
-      clearTimeout(timer1);
-      clearTimeout(timer2);
-      clearTimeout(timer3);
-      clearTimeout(timer4);
-      clearTimeout(timer5);
-    };
+    const timers = [
+      setTimeout(() => setAnimationStage(1), 900),   // Hero line 1
+      setTimeout(() => setAnimationStage(2), 1100),  // Hero line 2
+      setTimeout(() => setAnimationStage(3), 1300),  // Hero line 3
+      setTimeout(() => setAnimationStage(4), 1500),  // Contact info
+      setTimeout(() => setAnimationStage(5), 1700),  // Featured video
+      setTimeout(() => setAnimationStage(6), 1900),  // Sponsor placeholder
+      setTimeout(() => setAnimationStage(7), 2100),  // Additional videos grid
+    ];
+
+    return () => timers.forEach(clearTimeout);
+  }, []);
+
+  // Enable Featured iframe shortly after first paint to keep initial render
+  // visually stable (prevents appear-disappear when the iframe initializes)
+  useEffect(() => {
+    let id = window.setTimeout(() => setShowFeaturedEmbed(true), 350);
+    return () => window.clearTimeout(id);
   }, []);
 
   // Expanded videos array with 5 videos and internal routes
@@ -130,6 +258,15 @@ export default function Home() {
     }
   ];
 
+  const columnStyle: React.CSSProperties = {
+    width: '100%',
+    maxWidth: '750px',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    paddingLeft: '20px',
+    paddingRight: '20px',
+  };
+
   // Refs for scroll animations
   const videoRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [videoStates, setVideoStates] = useState<boolean[]>(new Array(videos.length).fill(false));
@@ -183,8 +320,12 @@ export default function Home() {
         position: 'fixed',
         top: 0,
         left: 0,
+        right: 0,
+        bottom: 0,
         width: '100vw',
         height: '100vh',
+        minWidth: '100vw',
+        minHeight: '100vh',
         zIndex: 1,
         overflow: 'hidden',
         background: '#0a0a0a'
@@ -212,6 +353,30 @@ export default function Home() {
           flowSpeed={0.4}
           turbulence={0.8}
           colorMixing={0.6}
+        />
+      </div>
+      {/* Canvas-based Film Grain Overlay (subtle defaults; optimized) */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          pointerEvents: 'none',
+          zIndex: 25,
+          mixBlendMode: 'overlay',
+          opacity: 0.06,
+        }}
+      >
+        <Noise
+          patternSize={80}
+          patternScaleX={1}
+          patternScaleY={1}
+          patternRefreshMs={160}
+          patternRefreshInterval={10}
+          patternAlpha={16}
         />
       </div>
 
@@ -267,6 +432,18 @@ export default function Home() {
           animation: continuousFlow 20s ease-in-out infinite;
         }
 
+        /* Prevent horizontal scroll and ensure full viewport sizing */
+        html, body, #__next {
+          width: 100%;
+          min-height: 100%;
+          overflow-x: hidden;
+        }
+        .App {
+          min-width: 100vw;
+        }
+
+        /* Removed CSS grain styles in favor of Canvas-based Noise overlay */
+
         @keyframes continuousFlow {
           0%, 100% {
             background-position: 0% 50%;
@@ -276,6 +453,26 @@ export default function Home() {
           }
           66% {
             background-position: 200% 50%;
+          }
+        }
+
+        /* Simple fade-in-up used for section reveals with delay */
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(16px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in-up {
+          opacity: 0;
+          animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        .hero-line {
+          white-space: nowrap;
+        }
+
+        @media (max-width: 900px) {
+          .hero-line {
+            white-space: normal;
           }
         }
 
@@ -391,7 +588,7 @@ export default function Home() {
         }
         
         .contact-animate.animate-in {
-          opacity: 0.6 !important;
+          opacity: 1;
           transform: translateY(0);
         }
         
@@ -437,212 +634,371 @@ export default function Home() {
         <div style={{
           width: '100%',
           maxWidth: '1200px',
-          padding: '0 60px',
+          padding: '0 24px',
           margin: '0 auto'
         }}>
 
-        {/* Enhanced Hero Text Section */}
-        <section style={{ 
-          paddingTop: '140px',
-          marginBottom: '60px'
+        {/* Left-aligned Hero Text Section (flush with video left edge) */}
+        <section style={{
+          ...columnStyle,
+          textAlign: 'left',
+          marginBottom: '24px',
+          paddingTop: '140px'
         }}>
-          <div 
-            className={`hero-animate ${animationStage >= 1 ? 'animate-in' : ''}`}
-            style={{
-              fontFamily: "'Space Mono', monospace",
-              fontSize: 'clamp(1.5rem, 3vw, 2.2rem)',
-              fontWeight: '400',
-              lineHeight: '1.1',
-              color: 'rgba(255, 255, 255, 0.95)',
-              marginBottom: '40px',
-              maxWidth: '750px'
-            }}>
-            <div style={{ marginBottom: '0.5rem', whiteSpace: 'nowrap' }}>
+          <div style={{
+            fontFamily: "'Space Mono', monospace",
+            fontSize: 'clamp(1.5rem, 3vw, 2.2rem)',
+            fontWeight: '400',
+            lineHeight: '1.1',
+            color: 'rgba(255, 255, 255, 0.95)',
+            maxWidth: 'min(44rem, 100%)'
+          }}>
+            <div
+              className={`hero-animate ${animationStage >= 1 ? 'animate-in' : ''}`}
+              style={{
+                marginBottom: '0.5rem',
+                opacity: animationStage >= 1 ? 1 : 0,
+                transform: animationStage >= 1 ? 'translateY(0)' : 'translateY(20px)'
+              }}
+            >
               I produce <span className="gradient-text">compelling visual content</span>
             </div>
-            <div style={{ marginBottom: '0.5rem', whiteSpace: 'nowrap' }}>
+            <div
+              className={`hero-animate ${animationStage >= 2 ? 'animate-in' : ''}`}
+              style={{
+                marginBottom: '0.5rem',
+                opacity: animationStage >= 2 ? 1 : 0,
+                transform: animationStage >= 2 ? 'translateY(0)' : 'translateY(20px)'
+              }}
+            >
               while building <span className="gradient-text">AI-enhanced workflows</span>
             </div>
-            <div style={{ whiteSpace: 'nowrap' }}>
+            <div
+              className={`hero-animate ${animationStage >= 3 ? 'animate-in' : ''}`}
+              style={{
+                opacity: animationStage >= 3 ? 1 : 0,
+                transform: animationStage >= 3 ? 'translateY(0)' : 'translateY(20px)'
+              }}
+            >
               that change how <span className="gradient-text">creative work gets done</span>.
             </div>
           </div>
+        </section>
 
-          <div 
-            className={`contact-animate ${animationStage >= 2 ? 'animate-in' : ''}`}
+        {/* Left-aligned Contact Info (flush with video left edge) */}
+        <section
+          className={`contact-animate ${animationStage >= 4 ? 'animate-in' : ''}`}
+          style={{
+            ...columnStyle,
+            marginBottom: '40px',
+            display: 'flex',
+            gap: '12px',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            flexWrap: 'nowrap',
+            fontSize: '11px',
+            color: '#cccccc',
+            fontFamily: "'Space Mono', monospace",
+            textAlign: 'left',
+            opacity: animationStage >= 4 ? 1 : 0,
+            transform: animationStage >= 4 ? 'translateY(0)' : 'translateY(15px)'
+          }}
+        >
+          <div className="contact-info" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <MapPin size={14} strokeWidth={1.5} color="rgba(255,255,255,0.6)" />
+            <CharacterHoverText>Grand Rapids, Michigan / World</CharacterHoverText>
+          </div>
+          <div
+            aria-hidden="true"
             style={{
-              display: 'flex',
-              gap: '2rem',
-              alignItems: 'center',
-              fontSize: '11px',
-              color: '#cccccc',
-              fontFamily: "'Space Mono', monospace"
-            }}>
-            <div className="contact-info" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <MapPin size={14} strokeWidth={1.5} color="rgba(255,255,255,0.6)" />
-              <CharacterHoverText>Grand Rapids, Michigan / World</CharacterHoverText>
-            </div>
-            <div className="contact-info">
-              <a href="mailto:colour8k@mac.com" style={{ color: '#cccccc', textDecoration: 'none' }}>
-                <CharacterHoverText>colour8k@mac.com</CharacterHoverText>
-              </a>
-            </div>
+              width: '40px',
+              height: 0,
+              borderTop: '1px solid rgba(255,255,255,0.3)',
+              marginInline: '12px',
+              alignSelf: 'center'
+            }}
+          />
+          <div className="contact-info">
+            <a href="mailto:colour8k@mac.com" style={{ color: '#cccccc', textDecoration: 'none' }}>
+              <CharacterHoverText>colour8k@mac.com</CharacterHoverText>
+            </a>
           </div>
         </section>
 
-        {/* Hero Video */}
-        <section style={{ marginBottom: '24px' }}>
-          <div 
-            className={`video-thumbnail video-animate ${animationStage >= 3 ? 'animate-in' : ''}`}
+        {/* Featured Video Hero (reference for left edge) */}
+        <section style={{
+          ...columnStyle,
+          marginBottom: '60px'
+        }}>
+          <div
+            className={`video-thumbnail video-animate ${animationStage >= 5 ? 'animate-in' : ''}`}
             style={{
-              maxWidth: '750px',
               width: '100%',
+              borderRadius: '12px',
+              overflow: 'hidden',
+              backgroundColor: '#111',
+              position: 'relative',
               aspectRatio: '16/9',
-              background: '#000',
-              cursor: 'pointer',
-              position: 'relative'
-            }} 
-            onClick={() => handleVideoClick(videos[0])}
+              opacity: animationStage >= 5 ? 1 : 0,
+              transform: animationStage >= 5 ? 'translateY(0) scale(1)' : 'translateY(25px) scale(0.98)'
+            }}
+            role="button"
+            aria-label="Open Featured Video details"
+            onClick={() => router.push('/projects/featured')}
           >
-            <img
-              src={videos[0].thumbnail}
-              alt={videos[0].title}
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-            />
-            {/* Centered Play button for Featured Video */}
+            {/* Defer the autoplaying YouTube iframe slightly to avoid initial reflow */}
+            {showFeaturedEmbed ? (
+              <iframe
+                title="Featured video"
+                src={`https://www.youtube.com/embed/I6U5zDpzLq8?autoplay=1&mute=1&controls=0&loop=1&playlist=I6U5zDpzLq8&modestbranding=1&rel=0&playsinline=1`}
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  width: '100%',
+                  height: '100%',
+                  border: '0',
+                  display: 'block'
+                }}
+                loading="lazy"
+                allow="autoplay; fullscreen; picture-in-picture"
+                allowFullScreen
+              />
+            ) : (
+              <img
+                src="https://img.youtube.com/vi/I6U5zDpzLq8/hqdefault.jpg"
+                alt="Featured video preview"
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  display: 'block'
+                }}
+                decoding="async"
+                loading="eager"
+              />
+            )}
+
+            {/* Frosted glass Play button (legacy style) */}
             <div
-              className="play-button-simple"
-              style={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                padding: '12px 24px',
-                backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                backdropFilter: 'blur(10px)',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                borderRadius: '6px',
-                fontFamily: "'Space Mono', monospace",
-                fontSize: '12px',
-                color: 'white',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease'
-              }}
-              onClick={(e) => {
-                e.stopPropagation();
-                handleVideoClick(videos[0]);
-              }}
+              className="hero-play-button"
               role="button"
-              aria-label="Play Featured Video"
+              tabIndex={0}
+              aria-label={`Play featured video: ${videos[0].title}`}
+              onClick={(e) => { e.stopPropagation(); router.push('/projects/featured'); }}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); router.push('/projects/featured'); } }}
             >
-              ▶ PLAY
+              <div className="hero-play-content">
+                <div className="hero-play-icon" aria-hidden="true"></div>
+                <span className="hero-play-text">PLAY FEATURED VIDEO</span>
+              </div>
+            </div>
+
+            {/* Video overlay info */}
+            <div style={{
+              position: 'absolute', bottom: 0, left: 0, right: 0,
+              background: 'linear-gradient(transparent, rgba(0,0,0,0.8))',
+              padding: '60px 30px 30px', color: 'white'
+            }}>
+              <div style={{ fontFamily: "'Space Mono', monospace", fontSize: '14px', opacity: 0.8, marginBottom: '5px' }}>
+                Jeff Kerr • 2025
+              </div>
+              <h2 style={{ fontFamily: "'Space Mono', monospace", fontSize: '24px', fontWeight: '400', margin: 0, color: 'white' }}>
+                Featured Video
+              </h2>
             </div>
           </div>
         </section>
 
-        {/* Featured metadata directly under the hero video */}
-        <section style={{ marginBottom: '80px' }}>
-          <div 
-            className={`metadata-section metadata-animate ${animationStage >= 4 ? 'animate-in' : ''}`}
-            style={{ 
-              display: 'flex', 
-              flexDirection: 'column', 
-              gap: '15px', 
-              fontFamily: "'Space Mono', monospace", 
-              fontSize: '14px', 
-              fontWeight: '300', 
-              color: '#ffffff', 
-              opacity: 0.8, 
-              maxWidth: '750px' 
-            }}>
-            <div style={{ width: '100%', height: '1px', background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%)' }}></div>
-            <div>Gemini IPO Investigation — YouTube Video</div>
-            <div style={{ width: '100%', height: '1px', background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%)' }}></div>
-            <div>Featured Video</div>
-            <div style={{ width: '100%', height: '1px', background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%)' }}></div>
-            <div>2025</div>
+        {/* Placeholder for Centered Sponsor Logos */}
+        <section
+          className={`animate-fade-in-up`}
+          style={{
+            ...columnStyle,
+            marginBottom: '80px',
+            animationDelay: '1.5s',
+            animationFillMode: 'both',
+            opacity: animationStage >= 6 ? 1 : 0,
+            transform: animationStage >= 6 ? 'translateY(0)' : 'translateY(16px)',
+            transition: 'opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+          }}
+        >
+          <div style={{
+            padding: '40px 0', borderRadius: '8px', border: '1px dashed rgba(255,255,255,0.2)',
+            fontFamily: "'Space Mono', monospace", fontSize: '14px', color: 'rgba(255,255,255,0.5)', textAlign: 'center'
+          }}>
+            Sponsor Logos Will Go Here<br/>
+            <span style={{ fontSize: '12px', opacity: 0.7 }}>(Centered alignment matching video width)</span>
           </div>
         </section>
 
-        {/* Brand Logos moved below featured metadata */}
-        <section style={{ marginBottom: '140px' }}>
-          <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', gap: '40px', flexWrap: 'wrap' }}>
-            <img src="https://picsum.photos/120/40?random=1" alt="Canon" style={{ height: '35px', opacity: 0.3, filter: 'brightness(0) invert(1)' }} />
-            <img src="https://picsum.photos/120/40?random=2" alt="YouTube" style={{ height: '35px', opacity: 0.3, filter: 'brightness(0) invert(1)' }} />
-            <img src="https://picsum.photos/120/40?random=3" alt="DJI" style={{ height: '35px', opacity: 0.3, filter: 'brightness(0) invert(1)' }} />
-            <img src="https://picsum.photos/120/40?random=4" alt="Hyundai" style={{ height: '35px', opacity: 0.3, filter: 'brightness(0) invert(1)' }} />
-            <img src="https://picsum.photos/120/40?random=5" alt="MusicBed" style={{ height: '35px', opacity: 0.3, filter: 'brightness(0) invert(1)' }} />
-          </div>
-        </section>
-
-        {/* Additional 4 Videos with scroll animations */}
-        {videos.slice(1, 5).map((video, index) => (
-          <React.Fragment key={video.id}>
-            <section style={{ marginBottom: '40px' }}>
-              <div 
-                className={`video-container ${videoStates[index + 1] ? 'visible' : ''}`}
-                onClick={() => handleVideoClick(video)} 
-                ref={(el) => { videoRefs.current[index + 1] = el; }} 
-                style={{ cursor: 'pointer', position: 'relative' }}
-              >
-                <div className="video-thumbnail" style={{ 
-                  maxWidth: '750px', 
-                  width: '100%', 
-                  aspectRatio: '16/9', 
-                  background: '#000'
-                }}>
-                  <img 
-                    src={video.thumbnail} 
-                    alt={video.title} 
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-                  />
-                  {/* Add circular SHOWREEL button to the first video (showreel) */}
-                  {index === 0 && (
-                    <div
-                      className="circular-showreel"
-                      role="button"
-                      tabIndex={0}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleVideoClick(video);
-                      }}
-                    >
-                      <div className="circular-showreel-inner">
-                        <svg className="rotating-text" viewBox="0 0 200 200">
-                          <defs><path id="circle" d="M 100, 100 m -75, 0 a 75,75 0 1,1 150,0 a 75,75 0 1,1 -150,0" /></defs>
-                          <text fontSize="14" fontWeight="700" letterSpacing="2px" fontFamily="'Space Mono', monospace">
-                            <textPath href="#circle">SHOWREEL • SHOWREEL • SHOWREEL • SHOWREEL •</textPath>
-                          </text>
-                        </svg>
-                        <div className="play-button-circular"><div className="play-icon-circular"></div></div>
-                      </div>
+        {/* Full Video Portfolio List - Scrollable */}
+        <section style={{
+          ...columnStyle,
+          marginBottom: '100px'
+        }}>
+          <h2 
+            className="animate-fade-in-up"
+            style={{
+              fontFamily: "'Space Mono', monospace",
+              fontSize: '18px',
+              fontWeight: '400',
+              color: 'rgba(255, 255, 255, 0.8)',
+              marginBottom: '60px',
+              textAlign: 'center',
+              animationDelay: '1.8s',
+              animationFillMode: 'both',
+              opacity: animationStage >= 7 ? 1 : 0,
+              transform: animationStage >= 7 ? 'translateY(0)' : 'translateY(16px)',
+              transition: 'opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+            }}
+          >
+            More Work
+          </h2>
+          {/* Full video list - each video gets scroll animation */}
+          {videos.slice(1).map((video, index) => (
+            <div
+              key={video.id}
+              ref={(el) => { videoRefs.current[index + 1] = el; }}
+              className={`video-container ${videoStates[index + 1] ? 'visible' : ''}`}
+              style={{
+                width: '100%',
+                marginBottom: '80px',
+                cursor: 'pointer',
+                borderRadius: '12px',
+                overflow: 'hidden',
+                backgroundColor: '#111',
+                position: 'relative',
+                aspectRatio: '16/9',
+                filter: videoStates[index + 1] ? 'blur(0px)' : 'blur(4px)',
+                opacity: videoStates[index + 1] ? 1 : 0.4,
+                transform: videoStates[index + 1] ? 'translateY(0)' : 'translateY(20px)',
+                transition: 'filter 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
+              }}
+              onClick={() => {
+                if (video?.route) {
+                  handleVideoClick(video);
+                } else if (video?.href) {
+                  window.open(video.href, '_blank');
+                }
+              }}
+            >
+              {video.id === 'reel-2024' ? (
+                <iframe
+                  title="Showreel autoplay"
+                  src={`https://player.vimeo.com/video/1029802990?autoplay=1&muted=1&background=1&loop=1&controls=0&autopause=0&dnt=1`}
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    width: '100%',
+                    height: '100%',
+                    border: 0,
+                    display: 'block'
+                  }}
+                  allow="autoplay; fullscreen; picture-in-picture"
+                  allowFullScreen
+                />
+              ) : (
+                <img
+                  src={video.thumbnail}
+                  alt={video.title}
+                  style={{
+                    width: '100%',
+                    height: 'auto',
+                    aspectRatio: '16/9',
+                    objectFit: 'cover',
+                    display: 'block'
+                  }}
+                />
+              )}
+              {/* Special rotating Showreel overlay for showreel item */}
+              {video.id === 'reel-2024' && (
+                <div className="circular-showreel" onClick={(e) => { e.stopPropagation(); handleVideoClick(video); }}>
+                  <div className="circular-showreel-inner">
+                    <svg viewBox="0 0 100 100" className="rotating-text" aria-hidden="true">
+                      <defs>
+                        <path id="textcircle" d="M50,50 m-35,0 a35,35 0 1,1 70,0 a35,35 0 1,1 -70,0" />
+                      </defs>
+                      <text>
+                        <textPath xlinkHref="#textcircle" startOffset="0%">
+                          • SHOWREEL • SHOWREEL • SHOWREEL • SHOWREEL • SHOWREEL • SHOWREEL • SHOWREEL • SHOWREEL • SHOWREEL • SHOWREEL •
+                        </textPath>
+                      </text>
+                    </svg>
+                    <div className="play-button-circular">
+                      <div className="play-icon-circular" />
                     </div>
-                  )}
+                  </div>
                 </div>
-              </div>
-            </section>
-
-            <section style={{ marginBottom: '80px' }}>
-              <div className="metadata-section" style={{ 
-                display: 'flex', 
-                flexDirection: 'column', 
-                gap: '15px', 
-                fontFamily: "'Space Mono', monospace", 
-                fontSize: '14px', 
-                fontWeight: '300', 
-                color: '#ffffff', 
-                opacity: 0.8, 
-                maxWidth: '750px' 
+              )}
+              {/* Video overlay info */}
+              <div style={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                right: 0,
+                background: 'linear-gradient(transparent, rgba(0,0,0,0.8))',
+                padding: '60px 40px 40px',
+                color: 'white'
               }}>
-                <div>{video.description}</div>
-                <div style={{ width: '100%', height: '1px', background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%)' }}></div>
-                <div>{video.client}</div>
-                <div style={{ width: '100%', height: '1px', background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%)' }}></div>
-                <div>{video.date}</div>
+                <div style={{
+                  fontFamily: "'Space Mono', monospace",
+                  fontSize: '14px',
+                  opacity: 0.7,
+                  marginBottom: '8px'
+                }}>
+                  {video.client} • {video.date}
+                </div>
+                <h3 style={{
+                  fontFamily: "'Space Mono', monospace",
+                  fontSize: '28px',
+                  fontWeight: '400',
+                  margin: 0,
+                  color: 'white',
+                  marginBottom: '12px'
+                }}>
+                  {video.title}
+                </h3>
+                {video.description && (
+                  <p style={{
+                    fontFamily: "'Space Mono', monospace",
+                    fontSize: '14px',
+                    opacity: 0.8,
+                    margin: 0,
+                    maxWidth: '600px',
+                    lineHeight: '1.4'
+                  }}>
+                    {video.description}
+                  </p>
+                )}
               </div>
-            </section>
-          </React.Fragment>
-        ))}
+
+              {/* Default play button overlay for non-showreel items */}
+              {video.id !== 'reel-2024' && (
+                <div style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  width: '80px',
+                  height: '80px',
+                  borderRadius: '50%',
+                  backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '24px',
+                  color: '#000',
+                  transition: 'all 0.3s ease',
+                  cursor: 'pointer'
+                }}>
+                  ▶
+                </div>
+              )}
+            </div>
+          ))}
+        </section>
 
         </div> {/* Close the inner container */}
       </div> {/* Close the flex container */}

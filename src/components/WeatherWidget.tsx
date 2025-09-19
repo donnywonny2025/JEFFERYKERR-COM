@@ -29,10 +29,9 @@ const WeatherWidget: React.FC = () => {
     const fetchWeather = async () => {
       try {
         let result: WeatherData | null = null;
-        // Multiple IP-based services to broaden detection
+        // Multiple IP-based services to broaden detection (all free/no key)
         const ipServices = [
           'https://ipapi.co/json/',
-          'https://api.ipgeolocation.io/ipgeo?apiKey=&format=json',
           'https://freegeoip.app/json/',
           'https://ipwhois.app/json/'
         ];
