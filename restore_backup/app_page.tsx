@@ -685,40 +685,34 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Left-aligned Contact Info (flush with video left edge) */}
-        <section
+        <div
           className={`contact-animate ${animationStage >= 4 ? 'animate-in' : ''}`}
           style={{
             ...columnStyle,
-            marginTop: '32px',
-            marginBottom: '80px',
+            marginTop: '48px',
+            marginBottom: '60px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+            fontSize: '11px',
+            color: '#cccccc',
+            fontFamily: "'Space Mono', monospace",
+            textAlign: 'left',
             opacity: animationStage >= 4 ? 1 : 0,
             transform: animationStage >= 4 ? 'translateY(0)' : 'translateY(15px)'
           }}
         >
-          <div
-            className="contact-info"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              fontSize: '11px',
-              color: '#cccccc',
-              fontFamily: "'Space Mono', monospace"
-            }}
-          >
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-              <MapPin size={14} strokeWidth={1.5} color="rgba(255,255,255,0.6)" />
-              <CharacterHoverText>Grand Rapids, Michigan / World</CharacterHoverText>
-            </span>
-            <span style={{ opacity: 0.6 }}>|</span>
-            <span>
-              <a href="mailto:colour8k@mac.com" style={{ color: '#cccccc', textDecoration: 'none' }}>
-                <CharacterHoverText>colour8k@mac.com</CharacterHoverText>
-              </a>
-            </span>
-          </div>
-        </section>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+            <MapPin size={14} strokeWidth={1.5} color="rgba(255,255,255,0.6)" />
+            <CharacterHoverText>Grand Rapids, Michigan / World</CharacterHoverText>
+          </span>
+          <span style={{ opacity: 0.6 }}>|</span>
+          <span>
+            <a href="mailto:colour8k@mac.com" style={{ color: '#cccccc', textDecoration: 'none' }}>
+              <CharacterHoverText>colour8k@mac.com</CharacterHoverText>
+            </a>
+          </span>
+        </div>
 
         {/* Featured Video Hero (reference for left edge) */}
         <section style={{
