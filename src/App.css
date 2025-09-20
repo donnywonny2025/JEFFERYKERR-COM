@@ -632,15 +632,35 @@ body::before {
   border-radius: 12px;
   padding: 12px 16px;
   cursor: pointer;
-  transition: background 0.25s ease, transform 0.2s ease, opacity 0.25s ease, border-color 0.25s ease;
+  transition: background 0.25s ease, opacity 0.25s ease, border-color 0.25s ease;
   backdrop-filter: blur(6px);
   z-index: 30;
+  overflow: hidden;
+}
+
+.hero-play-button::after {
+  content: '';
+  position: absolute;
+  inset: -50% -120%;
+  background: linear-gradient(120deg,
+    rgba(255,255,255,0) 25%,
+    rgba(255,255,255,0.35) 45%,
+    rgba(255,255,255,0.7) 50%,
+    rgba(255,255,255,0.35) 55%,
+    rgba(255,255,255,0) 75%
+  );
+  transform: translateX(-120%) rotate(10deg);
+  transition: transform 0.6s ease;
+  pointer-events: none;
 }
 
 .hero-play-button:hover {
   background: rgba(255, 255, 255, 0.12);
   border-color: rgba(255, 255, 255, 0.28);
-  transform: translate(-50%, -50%) scale(1.04);
+}
+
+.hero-play-button:hover::after {
+  transform: translateX(130%) rotate(10deg);
 }
 
 .hero-play-content {
@@ -1766,4 +1786,3 @@ body::before {
 .social-link:hover {
   color: var(--text-primary);
 }
-

@@ -13,10 +13,10 @@ import '../../../src/App.css';
 
 const Liquid = LiquidEtherSimple as unknown as React.ComponentType<any>;
 
-export default function Showreel2025Page() {
+export default function Insta360Page() {
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const vimeoId = '1029802990';
+  const vimeoId = '641527142';
   const embedUrl = `https://player.vimeo.com/video/${vimeoId}?autoplay=0&loop=0&title=0&byline=0&portrait=0`;
 
   const separatorStyle = {
@@ -58,7 +58,6 @@ export default function Showreel2025Page() {
       </div>
 
       <div style={{ position: 'relative', zIndex: 20, minHeight: '100vh' }}>
-        {/* Header */}
         <header className="header" style={{ background: 'transparent' }}>
           <div
             className="header-content"
@@ -99,7 +98,6 @@ export default function Showreel2025Page() {
           </div>
         </header>
 
-        {/* Main content */}
         <div
           style={{
             width: '100%',
@@ -148,7 +146,7 @@ export default function Showreel2025Page() {
               >
                 <iframe
                   src={embedUrl}
-                  title="Showreel 2025"
+                  title="Insta360 Campaign"
                   allow="autoplay; fullscreen; picture-in-picture"
                   allowFullScreen
                   style={{ width: '100%', height: '100%', border: '0' }}
@@ -167,7 +165,7 @@ export default function Showreel2025Page() {
                   lineHeight: '1.2'
                 }}
               >
-                2025 Showreel — Vision & Velocity
+                Insta360 — Immersive Capture
               </h1>
 
               <p
@@ -179,7 +177,7 @@ export default function Showreel2025Page() {
                   maxWidth: '750px'
                 }}
               >
-                A sweeping cut of the past year's favourite shots—commercial, documentary, and exploratory AI-assisted experiments. Built to feel like one continuous breath, the reel leans on precise pacing, aggressive colour work, and tactile sound design to keep the energy high from first frame to last.
+                A showcase piece for Insta360 highlighting immersive 360° capture in dynamic outdoor environments. The edit fuses hyper-smooth motion with stylised transitions to emphasise how the camera keeps up with any adventure while colour grades and motion graphics steer the viewer through a compact story about freedom of movement.
               </p>
             </section>
 
@@ -209,15 +207,15 @@ export default function Showreel2025Page() {
                 </h3>
 
                 <div style={separatorStyle}></div>
-                <div>Runtime: 2:10</div>
+                <div>Client: Insta360</div>
                 <div style={separatorStyle}></div>
-                <div>Role: Director • DP • Editor</div>
+                <div>Role: Director, Cinematographer, Editor</div>
                 <div style={separatorStyle}></div>
-                <div>Highlights: Automotive, athletics, AI-assisted composites, live-action plates</div>
+                <div>Deliverables: Hero launch film + social cutdowns</div>
                 <div style={separatorStyle}></div>
-                <div>Music: Custom sound design with layered field recordings</div>
+                <div>Locations: Utah desert, Pacific coastline, alpine ridgeline</div>
                 <div style={separatorStyle}></div>
-                <div>Published: 2025</div>
+                <div>Published: 2023</div>
               </div>
             </section>
           </div>

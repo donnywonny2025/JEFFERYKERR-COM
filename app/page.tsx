@@ -526,15 +526,11 @@ export default function Home() {
         }
         
         .video-thumbnail {
-          transition: none;  /* Remove transitions */
           border-radius: 12px;
           overflow: hidden;
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);  /* Keep basic shadow */
+          position: relative;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
           cursor: pointer;
-        }
-        
-        .video-thumbnail:hover {
-          /* Remove all hover effects - no scaling, no glow */
         }
         
         .metadata-section {
@@ -562,13 +558,33 @@ export default function Home() {
           cursor: pointer;
           transition: background 0.25s ease, transform 0.2s ease, opacity 0.25s ease;
           opacity: 0.95;
+          overflow: hidden;
+        }
+
+        .play-featured-btn::after {
+          content: '';
+          position: absolute;
+          inset: -60% -120%;
+          background: linear-gradient(120deg,
+            rgba(255,255,255,0) 20%,
+            rgba(255,255,255,0.35) 45%,
+            rgba(255,255,255,0.65) 50%,
+            rgba(255,255,255,0.35) 55%,
+            rgba(255,255,255,0) 80%
+          );
+          transform: translateX(-120%) rotate(10deg);
+          transition: transform 0.6s ease;
+          pointer-events: none;
         }
 
         .play-featured-btn:hover {
           background: rgba(255,255,255,0.08);
-          transform: translateY(-1px);
         }
-        
+
+        .play-featured-btn:hover::after {
+          transform: translateX(130%) rotate(10deg);
+        }
+
         /* Page load animations */
         .hero-animate {
           opacity: 0;
@@ -690,8 +706,8 @@ export default function Home() {
           className={`contact-animate ${animationStage >= 4 ? 'animate-in' : ''}`}
           style={{
             ...columnStyle,
-            marginTop: '32px',
-            marginBottom: '80px',
+            marginTop: '40px',
+            marginBottom: '70px',
             opacity: animationStage >= 4 ? 1 : 0,
             transform: animationStage >= 4 ? 'translateY(0)' : 'translateY(15px)'
           }}
