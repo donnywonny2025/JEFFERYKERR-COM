@@ -987,24 +987,20 @@ export default function Home() {
 
               {/* Default play button overlay for non-showreel items */}
               {video.id !== 'reel-2024' && (
-                <div style={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  width: '80px',
-                  height: '80px',
-                  borderRadius: '50%',
-                  backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '24px',
-                  color: '#000',
-                  transition: 'all 0.3s ease',
-                  cursor: 'pointer'
-                }}>
-                  ▶
+                <div
+                  className="play-button-circular"
+                  role="button"
+                  aria-label={`Open ${video.title}`}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    if (video?.route) {
+                      handleVideoClick(video);
+                    } else if (video?.href) {
+                      window.open(video.href, '_blank');
+                    }
+                  }}
+                >
+                  <div className="play-icon-circular" aria-hidden="true" />
                 </div>
               )}
             </div>
@@ -1014,7 +1010,7 @@ export default function Home() {
         </div> {/* Close the inner container */}
       </div> {/* Close the flex container */}
 
-      {/* Footer with black background and meteors overlay (to match backgrounds page) */}
+      {/* Footer with meteors overlay (to match backgrounds page) */}
       <div style={{ position: 'relative', background: '#000', overflow: 'hidden' }}>
         <Meteors number={20} />
         <footer className="footer" style={{ position: 'relative' }}>

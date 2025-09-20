@@ -590,33 +590,24 @@ body::before {
   position: absolute;
   width: 100%;
   height: 100%;
-  /* Slow clockwise rotation */
-  animation: rotateOrganic 40s linear infinite;
+  animation: rotateClockwise 15s linear infinite;
   fill: rgba(255, 255, 255, 0.85);
-  /* Smaller, cleaner type */
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 1.2px;
   font-family: 'Space Mono', monospace;
-  /* Remove text shadow */
   filter: none;
 }
 
-/* Strengthen legibility of SVG text */
 .rotating-text text {
-  /* Remove stroke outline */
   paint-order: normal;
   stroke: transparent;
   stroke-width: 0;
 }
 
-/* Removed hover effects to prevent animation interruption */
-
-@keyframes rotateOrganic {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(90deg); }
-  50% { transform: rotate(180deg); }
-  75% { transform: rotate(270deg); }
+@keyframes rotateClockwise {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 /* Hero Video Play Button */
@@ -713,12 +704,51 @@ body::before {
   /* Remove drop shadow */
   box-shadow: none;
   backdrop-filter: blur(6px);
+  overflow: hidden;
+  z-index: 30;
 }
 
 .circular-showreel:hover .play-button-circular {
   background: rgba(255, 255, 255, 0.2);
   border-color: rgba(255, 255, 255, 0.4);
-  transform: translate(-50%, -50%) scale(1.1);
+  transform: translate(-50%, -50%);
+}
+
+.play-button-circular::after {
+  content: '';
+  position: absolute;
+  inset: -50% -120%;
+  background: linear-gradient(120deg,
+    rgba(255,255,255,0) 25%,
+    rgba(255,255,255,0.35) 45%,
+    rgba(255,255,255,0.7) 50%,
+    rgba(255,255,255,0.35) 55%,
+    rgba(255,255,255,0) 75%
+  );
+  transform: translateX(-120%) rotate(10deg);
+  transition: transform 0.6s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.play-button-circular:hover,
+.video-container:hover .play-button-circular,
+.featured-video-card:hover .play-button-circular,
+.hero-video-card:hover .play-button-circular {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translate(-50%, -50%);
+}
+
+.circular-showreel:hover .play-button-circular::after {
+  transform: translateX(130%) rotate(10deg);
+}
+
+.play-button-circular:hover::after,
+.video-container:hover .play-button-circular::after,
+.featured-video-card:hover .play-button-circular::after,
+.hero-video-card:hover .play-button-circular::after {
+  transform: translateX(130%) rotate(10deg);
 }
 
 .play-icon-circular {
@@ -729,6 +759,15 @@ body::before {
   border-bottom: 7px solid transparent;
   margin-left: 2px;
   transition: all 0.3s ease;
+  position: relative;
+  z-index: 2;
+}
+
+.play-button-circular:hover .play-icon-circular,
+.video-container:hover .play-button-circular .play-icon-circular,
+.featured-video-card:hover .play-button-circular .play-icon-circular,
+.hero-video-card:hover .play-button-circular .play-icon-circular {
+  border-left-color: rgba(255, 255, 255, 1);
 }
 
 .circular-showreel:hover .play-icon-circular {
@@ -1190,6 +1229,11 @@ body::before {
 
 .social-link:hover {
   color: var(--text-primary);
+}
+
+/* Local dev override: ensure footer has solid black background */
+.footer {
+  background: #000 !important;
 }
 
 /* Meteor Effect Animation */
@@ -1785,4 +1829,12 @@ body::before {
 
 .social-link:hover {
   color: var(--text-primary);
+}
+
+/* Force black footer background - strongest override (end of file for precedence) */
+footer.footer,
+.footer {
+  background-color: #000 !important;
+  background-image: none !important;
+  background: #000 !important;
 }
