@@ -266,14 +266,22 @@ export default function Home() {
 
       {/* Header */}
       <div className="top-nav-background" aria-hidden="true"></div>
-      <header className="header">
+      <header
+        className="header"
+        style={{
+          padding: '24px 0 0'
+        }}
+      >
         <div
           className="header-content"
           style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            width: '100%'
+            width: '100%',
+            maxWidth: '1050px',
+            margin: '0 auto',
+            padding: '0 60px'
           }}
         >
           <Link href="/" className="logo">
@@ -286,7 +294,7 @@ export default function Home() {
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '20px'
+              gap: '14px'
             }}
           >
             <SafeWrapper>
@@ -368,8 +376,8 @@ export default function Home() {
           transition: opacity 0.3s ease;
           cursor: pointer;
           border-radius: 6px;
-          padding: 2px 6px;
-          overflow: hidden;
+          padding: 2px 0;
+          overflow: visible;
         }
 
         /* Shimmer sweep as an overlay so no background line remains */
@@ -600,16 +608,23 @@ export default function Home() {
           <div
             className="contact-info"
             style={{
+              position: 'relative',
               display: 'flex',
               alignItems: 'center',
               gap: '12px',
               fontSize: '11px',
               color: '#cccccc',
-              fontFamily: "'Space Mono', monospace"
+              fontFamily: "'Space Mono', monospace",
+              overflow: 'visible'
             }}
           >
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-              <MapPin size={14} strokeWidth={1.5} color="rgba(255,255,255,0.6)" />
+            <MapPin
+              size={14}
+              strokeWidth={1.5}
+              color="rgba(255,255,255,0.6)"
+              style={{ marginRight: '8px' }}
+            />
+            <span>
               <CharacterHoverText>Grand Rapids, Michigan / World</CharacterHoverText>
             </span>
             <span style={{ opacity: 0.6 }}>|</span>

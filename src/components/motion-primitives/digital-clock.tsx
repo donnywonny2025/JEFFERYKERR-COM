@@ -35,7 +35,7 @@ export function DigitalClock() {
     <div
       className='flex items-center gap-0.5 font-mono text-zinc-400 hover:text-white transition-colors duration-300 cursor-pointer'
       style={{
-        fontSize: '14px',
+        fontSize: '11px',
         fontWeight: '300'
       }}
     >
@@ -47,7 +47,7 @@ export function DigitalClock() {
         value={parseInt(seconds) || 0}
         padStart={true}
       />
-      <span className='text-zinc-400 text-sm ml-2 hover:text-zinc-200 transition-colors duration-300'>{period}</span>
+      <span className='text-zinc-400 ml-2 hover:text-zinc-200 transition-colors duration-300' style={{ fontSize: '11px' }}>{period}</span>
     </div>
   );
 }

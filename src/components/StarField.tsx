@@ -50,6 +50,7 @@ export default function StarField() {
   const animationRef = useRef<number>();
   const timeRef = useRef<number>(0);
   const rotationRef = useRef<number>(0);
+  const spawnMarginRef = useRef<number>(0);
 
   // Configuration
   const [starCount] = useState(1200);
@@ -73,9 +74,12 @@ export default function StarField() {
     const initializeStars = () => {
       const stars: Star[] = [];
 
-      // Create stars in a larger area to account for rotation
-      // This prevents stars from disappearing during rotation
-      const margin = Math.max(canvas.width, canvas.height) * 0.8;
+      // Create stars in a much larger radius to account for corner rotation.
+      // Use the canvas diagonal so the padded area always covers the viewport
+      // no matter where the rotated rectangle swings.
+      const diagonal = Math.sqrt(canvas.width ** 2 + canvas.height ** 2);
+      const margin = diagonal; // ensures full coverage during rotation
+      spawnMarginRef.current = margin;
 
       for (let i = 0; i < starCount; i++) {
         stars.push({
@@ -154,9 +158,10 @@ export default function StarField() {
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Set up rotation around bottom-right anchor point
-      const anchorX = canvas.width;   // Bottom-right X
-      const anchorY = canvas.height;  // Bottom-right Y
+      // Set up rotation around the bottom-right corner of the spawn rectangle
+      const spawnMargin = spawnMarginRef.current;
+      const anchorX = canvas.width + spawnMargin;
+      const anchorY = canvas.height + spawnMargin;
 
       ctx.save();
       ctx.translate(anchorX, anchorY);        // Move to anchor
