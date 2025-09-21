@@ -72,7 +72,9 @@ export function NoiseSequence({
         topRef.current.style.opacity = `${opacity}`;
         // briefly drop back opacity to 0 to crossfade
         requestAnimationFrame(() => {
-          backRef.current!.style.opacity = "0";
+          if (backRef.current) {
+            backRef.current.style.opacity = "0";
+          }
         });
       }
       i = next;
