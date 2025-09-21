@@ -6,8 +6,10 @@ import { TextShimmer } from '../../src/components/motion-primitives/text-shimmer
 import { SafeWrapper } from '../../src/components/SafeWrapper';
 import { DigitalClock } from '../../src/components/motion-primitives/digital-clock';
 import LiquidEther from '../../src/components/LiquidEther';
+import LiquidEtherSimple from '../../src/components/LiquidEtherSimple';
 import StarField from '../../src/components/StarField';
 import { Meteors } from '../../src/components/ui/meteors';
+import { Noise } from '../../src/components/ui/noise';
 import '../../src/App.css';
 
 export default function BackgroundsShowcase() {
@@ -37,6 +39,16 @@ export default function BackgroundsShowcase() {
       id: 'starfield',
       title: 'Star Field',
       description: 'Animated star field with twinkling effects'
+    },
+    {
+      id: 'placeholder',
+      title: 'New Background',
+      description: 'Blank placeholder to test a third background option'
+    },
+    {
+      id: 'home-liquid',
+      title: 'Home Liquid + Noise',
+      description: 'Replicates the homepage Liquid background with the foreground noise overlay'
     }
   ];
 
@@ -50,8 +62,100 @@ export default function BackgroundsShowcase() {
         />
       )}
 
+      {currentBackground === 'home-liquid' && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 0 }}>
+          {/* Homepage Liquid background settings */}
+          <div style={{ position: 'absolute', inset: 0, zIndex: 0, overflow: 'hidden', background: '#0a0a0a' }}>
+            <LiquidEtherSimple
+              colors={[
+                '#0a0a0a',
+                '#1a0b2e',
+                '#2d1b4e',
+                '#3d2a5f',
+                '#1a4d72',
+                '#6b46c1',
+                '#c084fc'
+              ]}
+              style={{
+                opacity: 0.85,
+                width: '100%',
+                height: '100%',
+                filter: 'brightness(0.8) contrast(1.6) saturate(1.3)'
+              }}
+              enableStars={false}
+              initialBrightness={0.2}
+              colorIntensity={0.7}
+              backgroundDarkness={0.85}
+              flowSpeed={0.4}
+              turbulence={0.8}
+              colorMixing={0.6}
+            />
+          </div>
+          {/* Noise overlay intentionally disabled for handoff testing */}
+        </div>
+      )}
+
       {currentBackground === 'starfield' && (
         <StarField />
+      )}
+
+      {currentBackground === 'placeholder' && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 0 }}>
+          {/* Colored background layer */}
+          <div
+            aria-label="Placeholder Background"
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background:
+                'linear-gradient(180deg, rgba(0,212,255,0.15) 0%, rgba(138,43,226,0.15) 50%, rgba(0,0,0,0.9) 100%)'
+            }}
+          />
+          {/* Centered demo text overlay */}
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexDirection: 'column',
+              gap: '12px',
+              color: 'white',
+              textAlign: 'center',
+              pointerEvents: 'none'
+            }}
+          >
+            <h1 style={{
+              fontFamily: 'Space Mono, monospace',
+              fontWeight: 700,
+              fontSize: 'min(12vw, 96px)',
+              letterSpacing: '-0.02em',
+              margin: 0,
+              textShadow: '0 4px 24px rgba(0,0,0,0.35)'
+            }}>
+              DEMO TEXT
+            </h1>
+            <p style={{
+              fontFamily: 'Space Mono, monospace',
+              fontSize: 'min(4.5vw, 22px)',
+              opacity: 0.8,
+              margin: 0
+            }}>
+              Placeholder colored background with centered overlay
+            </p>
+          </div>
+
+          {/* Foreground grain overlay */}
+          <Noise
+            patternSize={269}
+            patternScaleX={1}
+            patternScaleY={1.01}
+            patternRefreshInterval={1}
+            patternAlpha={40}
+            className="absolute inset-0 z-[2] opacity-70 mix-blend-overlay pointer-events-none"
+          />
+        </div>
       )}
 
       {/* Header */}
