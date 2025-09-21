@@ -1,4 +1,6 @@
 @import "tailwindcss";
+/* Component styles */
+@import "./components/footer.css";
 
 /* Portfolio-wide CSS custom properties */
 :root {
@@ -1382,7 +1384,7 @@ body::before {
 
 /* Footer - Sam Kolder Style */
 .footer {
-  padding: 80px 80px 40px;
+  padding: 40px 80px 40px; /* keep symmetrical and consistent with component file */
   text-align: center;
   background: var(--bg-primary);
   position: relative;

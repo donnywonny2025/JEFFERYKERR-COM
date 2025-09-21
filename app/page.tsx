@@ -7,7 +7,6 @@ import MenuWrapper from '../src/components/MenuWrapper';
 import { TextShimmer } from '../src/components/motion-primitives/text-shimmer';
 import { SafeWrapper } from '../src/components/SafeWrapper';
 import { DigitalClock } from '../src/components/motion-primitives/digital-clock';
-import '../src/App.css';
 import LiquidEtherSimple from '../src/components/LiquidEtherSimple';
 import { MapPin } from 'lucide-react';
 import FooterStars from '../src/components/FooterStars';
@@ -1011,9 +1010,12 @@ export default function Home() {
       </div> {/* Close the flex container */}
 
       {/* Footer with meteors overlay (to match backgrounds page) */}
-      <div style={{ position: 'relative', background: '#000', overflow: 'hidden' }}>
-        <Meteors number={20} />
-        <footer className="footer" style={{ position: 'relative' }}>
+      <div style={{ position: 'relative', background: '#000', overflow: 'hidden', zIndex: 40 }}>
+        <footer className="footer" style={{ position: 'relative', zIndex: 41 }}>
+          {/* Meteors overlay above black background but below footer content */}
+          <div style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none' }} aria-hidden="true">
+            <Meteors number={20} />
+          </div>
           <div className="footer-content">
             <div className="footer-logo">
               <TextShimmer duration={3} spread={1.5}>
