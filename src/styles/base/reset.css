@@ -1,0 +1,42 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Space Mono', monospace;
+  background: #0b0b0b;
+  color: var(--text-primary);
+  line-height: 1.0;
+  overflow-x: hidden;
+  position: relative;
+  font-weight: 400;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Film grain overlay */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+    radial-gradient(circle at 25% 25%, rgba(255,255,255,0.008) 1px, transparent 1px),
+    radial-gradient(circle at 75% 75%, rgba(255,255,255,0.006) 1px, transparent 1px),
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,0.004) 0.5px, transparent 0.5px);
+  background-size: 3px 3px, 4px 4px, 2px 2px;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.4;
+  animation: grain 22s steps(10) infinite;
+}
+
+.app {
+  min-height: 100vh;
+  position: relative;
+}

@@ -1,0 +1,152 @@
+/* Footer - Sam Kolder Style */
+.footer {
+  padding: 80px 80px 40px;
+  text-align: center;
+  background: var(--bg-primary);
+  position: relative;
+}
+
+.footer-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.footer-logo {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  font-size: 2rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.footer-logo .logo-k {
+  font-size: 2.4rem;
+  font-weight: 600;
+}
+
+.footer-divider {
+  width: 60px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.3);
+  margin: 0;
+}
+
+.footer-email {
+  margin: 0;
+}
+
+.footer-email a {
+  font-family: 'Space Mono', monospace;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-email a:hover {
+  color: rgba(255, 255, 255, 1);
+}
+
+.footer-nav {
+  display: flex;
+  gap: 60px;
+  margin: 10px 0;
+}
+
+.footer-nav a {
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 1px;
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color 0.3s ease;
+}
+
+.footer-nav a:hover {
+  color: rgba(255, 255, 255, 1);
+}
+
+.footer-copyright {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+  margin: 20px 0 0;
+  letter-spacing: 0.5px;
+}
+
+
+.footer-social {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin: 10px 0 0;
+}
+
+.footer-social a {
+  color: rgba(255, 255, 255, 0.4);
+  transition: color 0.3s ease;
+}
+
+.footer-social a:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.social-link {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 300;
+  transition: color 0.3s ease;
+}
+
+.social-link:hover {
+  color: var(--text-primary);
+}
+
+/* Local dev override: ensure footer has solid black background */
+.footer {
+  background: #000 !important;
+}
+
+/* Meteor Effect Animation */
+.animate-meteor-effect {
+  animation: meteor 5s linear infinite;
+}
+
+/* Contained Meteor Effect - stays within footer bounds */
+.animate-meteor-contained {
+  animation: meteor-contained 4s linear infinite;
+  animation-fill-mode: both; /* Ensure animation starts immediately */
+}
+
+.animate-meteor-long {
+  animation: meteor-long 6s linear infinite;
+  animation-fill-mode: both; /* Ensure animation starts immediately */
+}
+
+/* New Hamburger Menu Animations */
+
+.footer-bottom {
+  border-top: 1px solid var(--border);
+  padding-top: 40px;
+  margin-top: 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+/* Force black footer background - strongest override (end of file for precedence) */
+footer.footer,
+.footer {
+  background-color: #000 !important;
+  background-image: none !important;
+  background: #000 !important;
+}

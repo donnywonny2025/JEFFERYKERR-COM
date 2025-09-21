@@ -1,0 +1,436 @@
+/* Hero Section - Better proportions */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  color: var(--text-primary);
+  background: transparent;
+  overflow: visible;
+}
+
+.hero-content {
+  position: relative;
+  margin: 15vh 0 0 60px;
+  width: calc(100% - 60px);
+  max-width: 750px;
+  text-align: left;
+  z-index: 20;
+}
+
+/* Heading override */
+.hero-content h1 {
+  font-family: 'Space Mono', monospace;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  color: rgba(255, 255, 255, 0.95);
+  text-transform: none;
+  margin: 0 auto;
+  opacity: 0.9;
+}
+
+
+/* Hero Text Animation Styles */
+.hero-text h1, .hero-main-text {
+  font-family: 'Space Mono', monospace;
+  font-weight: 400;
+  font-size: 2rem;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  color: rgba(255, 255, 255, 0.95);
+  text-align: left;
+}
+
+.hero-text {
+  position: relative;
+  margin: 20vh auto 0;
+  width: 100%;
+  max-width: 1050px;
+  padding: 0 60px;
+  text-align: left;
+  z-index: 20;
+}
+
+.hero-main-text {
+  font-family: 'Space Mono', monospace;
+  font-weight: 400;
+  font-size: clamp(3rem, 6vw, 5rem);
+  line-height: 1.3;
+  color: rgba(255, 255, 255, 0.95);
+  margin: 0 0 1.5rem 0;
+  text-align: left;
+}
+
+
+.hero-meta {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.8s ease-out 0.3s;
+}
+
+.hero-meta.meta-animate-in {
+  opacity: 0.8;
+  transform: translateY(0);
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.meta-item a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+
+/* Meta information animation */
+.hero-meta {
+  opacity: 0;
+  transform: translateY(15px);
+  transition: all 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform, opacity;
+}
+
+.hero-meta-visible {
+  opacity: 1;
+  transform: translateY(0);
+  animation-delay: 1.9s;
+  animation-fill-mode: both;
+}
+
+.hero-meta p {
+  font-size: 11px;
+  margin-bottom: 10px;
+  color: var(--text-secondary);
+  font-weight: 400;
+  opacity: 0.6;
+  font-family: 'Space Mono', monospace;
+  display: inline;
+}
+
+.hero-meta p:last-child {
+  margin-left: 20px;
+}
+
+/* Force hero heading to left-align with the hero/video container */
+.hero-content {
+  display: block;
+  padding-left: 0;
+}
+.hero-content h1 {
+  margin: 0 0 24px 0;
+  text-align: left;
+  width: calc(100% - 0px);
+  max-width: 750px;
+}
+
+.hero-meta {
+  /* Center hero meta under the h1 */
+  position: relative;
+  margin: 40px auto 0; /* center the meta section */
+  max-width: 750px; /* keep width matching the hero content */
+  padding: 0; /* ensure no side padding shifts the left edge */
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-weight: 400;
+  opacity: 0.6;
+  font-family: 'Space Mono', monospace;
+}
+
+.meta-item a {
+  color: var(--text-secondary);
+  text-decoration: none;
+}
+
+.hero-text-roll {
+  display: inline;
+  white-space: normal;
+}
+
+.hero-text-roll span {
+  display: inline !important;
+  white-space: normal !important;
+}
+
+.hero-text-container {
+  max-width: 750px;
+  width: 100%;
+}
+
+.hero-main-text {
+  font-family: 'Space Mono', monospace;
+  font-weight: 400;
+  font-size: 2rem;
+  line-height: 1.3;
+  color: rgba(255, 255, 255, 0.95);
+  text-align: left;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+/* Circular Showreel Element */
+.circular-showreel {
+  position: absolute;
+  top: 50%; /* Center vertically */
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* Smaller ring per request */
+  width: 160px;
+  height: 160px;
+  cursor: pointer;
+  z-index: 998;
+  transition: all 0.3s ease;
+  background: transparent;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Subtle glow to add definition */
+.circular-showreel::after {
+  /* Remove halo/glow */
+  content: none;
+}
+
+/* Removed hover scale effect to prevent animation interruption */
+
+.circular-showreel-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.rotating-text {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  animation: rotateClockwise 15s linear infinite;
+  fill: rgba(255, 255, 255, 0.85);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  font-family: 'Space Mono', monospace;
+  filter: none;
+}
+
+.rotating-text text {
+  paint-order: normal;
+  stroke: transparent;
+  stroke-width: 0;
+}
+
+/* Hero Video Play Button */
+.hero-play-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* Frosted pill style to match legacy look */
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  /* Rounded-square shape per updated design */
+  border-radius: 12px;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: background 0.25s ease, opacity 0.25s ease, border-color 0.25s ease;
+  backdrop-filter: blur(6px);
+  z-index: 30;
+  overflow: hidden;
+}
+
+.hero-play-button::after {
+  content: '';
+  position: absolute;
+  inset: -50% -120%;
+  background: linear-gradient(120deg,
+    rgba(255,255,255,0) 25%,
+    rgba(255,255,255,0.35) 45%,
+    rgba(255,255,255,0.7) 50%,
+    rgba(255,255,255,0.35) 55%,
+    rgba(255,255,255,0) 75%
+  );
+  transform: translateX(-120%) rotate(10deg);
+  transition: transform 0.6s ease;
+  pointer-events: none;
+}
+
+.hero-play-button:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+.hero-play-button:hover::after {
+  transform: translateX(130%) rotate(10deg);
+}
+
+.hero-play-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hero-play-icon {
+  width: 0;
+  height: 0;
+  border-left: 16px solid rgba(255, 255, 255, 0.9);
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.hero-play-button:hover .hero-play-icon {
+  border-left-color: rgba(255, 255, 255, 1);
+}
+
+.hero-play-text {
+  color: rgba(255, 255, 255, 0.95);
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  transition: all 0.3s ease;
+}
+
+.hero-play-button:hover .hero-play-text {
+  color: rgba(255, 255, 255, 1);
+}
+
+
+
+/* Hero video specific styling */
+.hero-video.featured-video-section {
+  padding: 0 60px 60px !important;
+  margin: 60px 0 0 60px !important;
+  max-width: 1050px !important;
+}
+
+.hero-video .featured-video-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.hero-video-card {
+  cursor: pointer;
+  transition: all 0.4s ease;
+  border-radius: 12px;
+  overflow: visible;
+  background: transparent;
+  backdrop-filter: none;
+}
+
+/* .hero-video-card:hover - removed hover effects */
+
+.hero-video-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  background: transparent;
+}
+
+.hero-video-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 12px;
+  transform: scale(1);
+  transform-origin: center center;
+}
+
+/* Hero Section with TextRoll Animation */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  padding: 0 2rem;
+}
+
+.hero-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Meta text animation */
+.hero-meta {
+  margin-top: 2rem;
+  font-size: 1.125rem;
+  color: rgb(55 65 81); /* gray-700 */
+  animation: fadeInUp 0.8s ease forwards;
+  opacity: 0;
+  animation-delay: 1.2s; /* after TextRoll finishes */
+}
+
+.hero-meta p {
+  margin-bottom: 0.5rem;
+}
+
+.hero-meta a {
+  color: rgb(55 65 81); /* gray-700 */
+  text-decoration: underline;
+  transition: color 0.3s ease;
+}
+
+.hero-meta a:hover {
+  color: rgb(0 0 0); /* black */
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .hero-meta {
+    color: rgb(209 213 219); /* gray-300 */
+  }
+
+  .hero-meta a {
+    color: rgb(209 213 219); /* gray-300 */
+  }
+
+  .hero-meta a:hover {
+    color: rgb(255 255 255); /* white */
+  }
+}
+
+/* Responsive text sizes */
+@media (max-width: 640px) {
+  .hero-content h1 {
+    font-size: 3rem;
+  }
+}
+
+@media (min-width: 640px) {
+  .hero-content h1 {
+    font-size: 3.75rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .hero-content h1 {
+    font-size: 4.5rem;
+  }
+}

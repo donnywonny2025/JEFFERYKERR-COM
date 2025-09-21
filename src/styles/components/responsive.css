@@ -1,0 +1,168 @@
+/* Responsive Design for Video Pages */
+@media (max-width: 768px) {
+  .video-page-content {
+    padding: 0 20px;
+  }
+  
+  .video-page h1 {
+    font-size: 32px;
+  }
+  
+  .video-page .video-meta {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .related-videos {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .modal-overlay {
+    padding: 20px;
+  }
+  
+  .modal-close {
+    top: -40px;
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 20px 30px;
+  }
+  
+  .header-content {
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .nav {
+    gap: 30px;
+  }
+  
+  .hero {
+    padding: 120px 30px 80px;
+  }
+  
+  .hero-title {
+    font-size: 42px;
+  }
+  
+  .hero-info {
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-start;
+  }
+  
+  .hero-content {
+    width: 90%;
+    max-width: none;
+    margin: 8vh auto 0;
+  }
+
+  /* Ensure hero meta centers on small screens */
+  .hero-meta {
+    margin: 24px auto 0;
+    max-width: 90%;
+    padding: 0 20px;
+    justify-content: flex-start;
+  }
+  
+  .hero-video {
+  position: relative;
+  bottom: auto;
+  left: auto;
+  transform: none;
+  width: 90%;
+  max-width: 600px;
+  margin: 40px auto 0;
+  border-radius: 15px;
+  }
+  
+  .circular-showreel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px;
+  height: 80px;
+  z-index: 200;
+  }
+  
+  .featured-video-section {
+    padding: 15px 30px 0;
+  }
+  
+  .featured-video-info {
+    padding: 25px;
+  }
+  
+  .featured-video-title {
+    font-size: 1.3rem;
+  }
+  
+  .video-grid-section {
+    padding: 80px 30px;
+  }
+  
+  .video-grid {
+    gap: 60px;
+  }
+  
+  .brand-logos {
+    gap: 40px;
+  }
+  
+  .footer-stats {
+    justify-content: center;
+    gap: 60px;
+  }
+  
+  .play-circle {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .play-icon {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 32px;
+  }
+  
+  .brand-logos {
+    flex-direction: column;
+    gap: 30px;
+  }
+  
+  .featured-video-section {
+    padding: 10px 20px 0;
+  }
+  
+  .featured-video-info {
+    padding: 20px;
+  }
+  
+  .featured-video-title {
+    font-size: 1.2rem;
+  }
+  
+  .featured-video-meta {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .video-grid-section {
+    padding: 60px 20px;
+  }
+  
+  .video-grid {
+    gap: 40px;
+  }
+}
+

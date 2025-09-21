@@ -1,4 +1,5 @@
 import "./globals.css"
+import "../src/App.css"
 
 export const metadata = {
   title: "Jeff Kerr — Director & Creative",
