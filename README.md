@@ -319,6 +319,30 @@ interface Video {
 - **Film Grain Effect** - Cinematic visual overlay
 - **Morphing Dialogs** - Interactive modal animations
 
+## 🎛️ Noise Overlay Settings (Backgrounds Testing Page)
+
+The backgrounds testing page (`app/backgrounds/page.tsx`) includes a selectable "New Background" option with a grain/film-noise foreground overlay for evaluation.
+
+- **Component**: `src/components/ui/noise.tsx`
+- **Current settings (as of latest working copy):**
+  - `patternSize`: `269`
+  - `patternScaleX`: `1`
+  - `patternScaleY`: `1.01`
+  - `patternRefreshInterval`: `1`
+  - `patternAlpha`: `40` (per-pixel alpha, 0–255)
+  - `className`: `"absolute inset-0 z-[2] opacity-70 mix-blend-overlay pointer-events-none"`
+
+These values were chosen to make the grain clearly visible while minimizing large-scale tiling artifacts. The prime-ish `patternSize` and slight Y-scale offset help reduce banding; the overlay blend and opacity keep the texture readable on top of color gradients.
+
+### Tweaking guidance
+- Lower visibility: reduce `opacity-70` to `opacity-50` and/or set `patternAlpha` ≈ `24–32`.
+- Softer blend: change `mix-blend-overlay` to `mix-blend-soft-light`.
+- Fewer tiling artifacts: use prime-ish sizes like `257`/`269` and keep small anisotropy (`patternScaleY` ≈ `1.01–1.03`).
+- Performance: raise `patternRefreshInterval` (e.g., `2`) to refresh the pattern less often.
+
+### Where it’s used
+- Rendered only when the "New Background" option is selected in `backgroundOptions` on `app/backgrounds/page.tsx`.
+
 ## 🎨 Technologies Used
 
 - **Next.js 15** - React framework

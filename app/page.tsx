@@ -12,6 +12,7 @@ import { MapPin } from 'lucide-react';
 import FooterStars from '../src/components/FooterStars';
 import { Meteors } from '../src/components/ui/meteors';
 import WeatherWidget from '../src/components/WeatherWidget';
+import { NoiseSequence } from '../src/components/ui/noise_sequence';
 
 const Liquid: React.ComponentType<any> = LiquidEtherSimple as unknown as React.ComponentType<any>;
 
@@ -35,126 +36,6 @@ const CharacterHoverText = ({ children, className = "" }: { children: string; cl
         </span>
       ))}
     </span>
-  );
-};
-
-// Canvas-based film grain noise overlay (optimized)
-const Noise = ({
-  patternSize = 80,
-  patternScaleX = 1,
-  patternScaleY = 1,
-  // If provided, treated as frames; we also support patternRefreshMs for better control
-  patternRefreshInterval = 3,
-  patternAlpha = 16,
-  patternRefreshMs,
-}: {
-  patternSize?: number;
-  patternScaleX?: number;
-  patternScaleY?: number;
-  patternRefreshInterval?: number; // legacy: frames between refresh
-  patternAlpha?: number;           // 0-255 alpha per grain pixel
-  patternRefreshMs?: number;       // preferred: ms between refresh (e.g., 160)
-}) => {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    console.debug('[Noise] Canvas grain initialized');
-
-    let animationId = 0;
-    let logicalW = 0;
-    let logicalH = 0;
-    let last = performance.now();
-    const prefersReduced = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false;
-    const refreshMs = Math.max(80, patternRefreshMs ?? Math.round(Math.max(1, patternRefreshInterval) * 16.6));
-
-    // Prepare small offscreen pattern canvas for tiling
-    const patternCanvas = document.createElement('canvas');
-    const patternCtx = patternCanvas.getContext('2d');
-    if (!patternCtx) return;
-    patternCanvas.width = patternSize;
-    patternCanvas.height = patternSize;
-
-    const genPattern = () => {
-      const imageData = patternCtx.createImageData(patternSize, patternSize);
-      const data = imageData.data;
-      for (let i = 0; i < data.length; i += 4) {
-        const v = Math.random() * 255;
-        data[i] = v; // R
-        data[i + 1] = v; // G
-        data[i + 2] = v; // B
-        data[i + 3] = Math.random() * patternAlpha; // A
-      }
-      patternCtx.putImageData(imageData, 0, 0);
-    };
-
-    const resize = () => {
-      const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
-      logicalW = Math.max(1, window.innerWidth);
-      logicalH = Math.max(1, window.innerHeight);
-      canvas.width = Math.floor(logicalW * dpr);
-      canvas.height = Math.floor(logicalH * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    };
-
-    const render = () => {
-      // create and cache pattern each refresh
-      const pattern = ctx.createPattern(patternCanvas, 'repeat');
-      if (!pattern) return;
-      ctx.clearRect(0, 0, logicalW, logicalH);
-      ctx.fillStyle = pattern;
-      ctx.resetTransform();
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      // Fill in CSS pixels space, transform already set by resize for DPR
-      ctx.fillRect(0, 0, logicalW, logicalH);
-    };
-
-    const loop = (now: number) => {
-      const hidden = document.hidden;
-      const interval = prefersReduced ? Math.max(300, refreshMs * 4) : refreshMs;
-      if (!hidden && now - last >= interval) {
-        genPattern();
-        render();
-        last = now;
-      }
-      animationId = requestAnimationFrame(loop);
-    };
-
-    resize();
-    genPattern();
-    render();
-    animationId = requestAnimationFrame(loop);
-
-    window.addEventListener('resize', resize);
-    const onVis = () => { /* handled per-frame via document.hidden */ };
-    document.addEventListener('visibilitychange', onVis);
-
-    return () => {
-      window.removeEventListener('resize', resize);
-      document.removeEventListener('visibilitychange', onVis);
-      if (animationId) cancelAnimationFrame(animationId);
-    };
-  }, [patternSize, patternScaleX, patternScaleY, patternRefreshInterval, patternAlpha, patternRefreshMs]);
-
-  return (
-    <canvas
-      ref={canvasRef}
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        pointerEvents: 'none',
-        zIndex: 1000,
-        mixBlendMode: 'overlay',
-      }}
-    />
   );
 };
 
@@ -314,7 +195,7 @@ export default function Home() {
 
   return (
     <div className="App">
-      {/* Animated Liquid Ether Background (fixed container) */}
+      {/* Background from Testing Lab: LiquidEtherSimple tuned variant */}
       <div style={{
         position: 'fixed',
         top: 0,
@@ -330,31 +211,33 @@ export default function Home() {
         background: '#0a0a0a'
       }}>
         <Liquid
-          colors={[ 
-            '#0a0a0a',      // Deep black
-            '#1a0b2e',      // Dark purple
-            '#2d1b4e',      // Medium purple
-            '#3d2a5f',      // Muted purple (replaces #5227FF)
-            '#1a4d72',      // Darker, muted blue 
-            '#6b46c1',      // More subdued light purple (replaces #8b5cf6)
-            '#c084fc'       // Softer pink (replaces #FF9FFC)
+          colors={[
+            '#000000',
+            '#1a1a1a',
+            '#3a2a4a',
+            '#2a3a5a',
+            '#4a4a7a',
+            '#5a3a6a',
+            '#3a5a5a',
+            '#2a2a4a'
           ]}
-          style={{ 
-            opacity: 0.85,
+          style={{
+            opacity: 0.75,
             width: '100%',
             height: '100%',
-            filter: 'brightness(0.8) contrast(1.6) saturate(1.3)'
+            filter: 'brightness(0.8) contrast(2.0) saturate(1.2)'
           }}
           enableStars={false}
-          initialBrightness={0.2}
-          colorIntensity={0.7}
+          initialBrightness={0.25}
+          colorIntensity={1.2}
           backgroundDarkness={0.85}
-          flowSpeed={0.4}
-          turbulence={0.8}
-          colorMixing={0.6}
+          flowSpeed={0.25}
+          turbulence={2.2}
+          colorMixing={0.4}
         />
       </div>
-      {/* Canvas-based Film Grain Overlay (subtle defaults; optimized) */}
+
+      {/* Grain from Testing Lab: NoiseSequence (smooth, non-flicker) */}
       <div
         aria-hidden="true"
         style={{
@@ -364,22 +247,25 @@ export default function Home() {
           width: '100vw',
           height: '100vh',
           pointerEvents: 'none',
-          zIndex: 25,
-          mixBlendMode: 'overlay',
-          opacity: 0.06,
+          zIndex: 15
         }}
       >
-        <Noise
-          patternSize={80}
-          patternScaleX={1}
-          patternScaleY={1}
-          patternRefreshMs={160}
-          patternRefreshInterval={10}
-          patternAlpha={16}
+        <NoiseSequence
+          frames={16}
+          tileSize={512}
+          alpha={44}
+          intervalMs={100}
+          fadeMs={180}
+          backgroundSize={420}
+          opacity={0.45}
+          blend={'screen'}
+          rotateDeg={0.3}
+          className="absolute inset-0 pointer-events-none"
         />
       </div>
 
       {/* Header */}
+      <div className="top-nav-background" aria-hidden="true"></div>
       <header className="header">
         <div
           className="header-content"

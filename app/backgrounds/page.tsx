@@ -10,6 +10,9 @@ import LiquidEtherSimple from '../../src/components/LiquidEtherSimple';
 import StarField from '../../src/components/StarField';
 import { Meteors } from '../../src/components/ui/meteors';
 import { Noise } from '../../src/components/ui/noise';
+import { NoiseSmooth } from '../../src/components/ui/noise_smooth';
+import { NoiseDrift } from '../../src/components/ui/noise_drift';
+import { NoiseSequence } from '../../src/components/ui/noise_sequence';
 import '../../src/App.css';
 
 export default function BackgroundsShowcase() {
@@ -68,30 +71,43 @@ export default function BackgroundsShowcase() {
           <div style={{ position: 'absolute', inset: 0, zIndex: 0, overflow: 'hidden', background: '#0a0a0a' }}>
             <LiquidEtherSimple
               colors={[
-                '#0a0a0a',
-                '#1a0b2e',
-                '#2d1b4e',
-                '#3d2a5f',
-                '#1a4d72',
-                '#6b46c1',
-                '#c084fc'
+                '#000000', // Pure black (contrast)
+                '#1a1a1a', // Very dark gray (base)
+                '#3a2a4a', // Visible dark purple
+                '#2a3a5a', // Visible dark blue
+                '#4a4a7a', // Medium blue (not too bright)
+                '#5a3a6a', // Medium purple (edge highlights)
+                '#3a5a5a', // Dark teal (accent)
+                '#2a2a4a', // Dark blue-purple (transitions)
               ]}
               style={{
-                opacity: 0.85,
+                opacity: 0.75, // keep good visibility
                 width: '100%',
                 height: '100%',
-                filter: 'brightness(0.8) contrast(1.6) saturate(1.3)'
+                filter: 'brightness(0.8) contrast(2.0) saturate(1.2)', // higher contrast for sharp edges
               }}
               enableStars={false}
-              initialBrightness={0.2}
-              colorIntensity={0.7}
-              backgroundDarkness={0.85}
-              flowSpeed={0.4}
-              turbulence={0.8}
-              colorMixing={0.6}
+              initialBrightness={0.25}     // restore some brightness
+              colorIntensity={1.2}         // keep dynamic shifting
+              backgroundDarkness={0.85}    // slightly darker than base, but visible
+              flowSpeed={0.25}            // slightly faster for more movement
+              turbulence={2.2}            // defined but more flow
+              colorMixing={0.4}           // smoother transitions while defined
             />
           </div>
-          {/* Noise overlay intentionally disabled for handoff testing */}
+          {/* Foreground Grain: frame sequence with crossfade for speck-level motion (no sweeping) */}
+          <NoiseSequence
+            frames={16}
+            tileSize={512}
+            alpha={44}
+            intervalMs={100}
+            fadeMs={180}
+            backgroundSize={420}
+            opacity={0.45}
+            blend={'screen'}
+            rotateDeg={0.3}
+            className="absolute inset-0 z-[6] pointer-events-none"
+          />
         </div>
       )}
 
