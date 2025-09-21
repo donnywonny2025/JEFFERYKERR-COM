@@ -13,6 +13,7 @@ import { Noise } from '../../src/components/ui/noise';
 import { NoiseSmooth } from '../../src/components/ui/noise_smooth';
 import { NoiseDrift } from '../../src/components/ui/noise_drift';
 import { NoiseSequence } from '../../src/components/ui/noise_sequence';
+import HeroSparklesScene from '../../src/components/HeroSparklesScene';
 import '../../src/App.css';
 
 export default function BackgroundsShowcase() {
@@ -42,6 +43,11 @@ export default function BackgroundsShowcase() {
       id: 'starfield',
       title: 'Star Field',
       description: 'Animated star field with twinkling effects'
+    },
+    {
+      id: 'sparkles',
+      title: 'Hero Sparkles',
+      description: 'Homepage hero copy floating above a luminous sparkles horizon'
     },
     {
       id: 'placeholder',
@@ -113,6 +119,10 @@ export default function BackgroundsShowcase() {
 
       {currentBackground === 'starfield' && (
         <StarField />
+      )}
+
+      {currentBackground === 'sparkles' && (
+        <HeroSparklesScene particleDensity={720} />
       )}
 
       {currentBackground === 'placeholder' && (

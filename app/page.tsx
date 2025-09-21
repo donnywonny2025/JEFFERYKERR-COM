@@ -735,12 +735,34 @@ export default function Home() {
             transition: 'opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
           }}
         >
-          <div style={{
-            padding: '40px 0', borderRadius: '8px', border: '1px dashed rgba(255,255,255,0.2)',
-            fontFamily: "'Space Mono', monospace", fontSize: '14px', color: 'rgba(255,255,255,0.5)', textAlign: 'center'
-          }}>
-            Sponsor Logos Will Go Here<br/>
-            <span style={{ fontSize: '12px', opacity: 0.7 }}>(Centered alignment matching video width)</span>
+          <div
+            style={{
+              width: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '24px 0'
+            }}
+          >
+            {/* Use the SVG as a luminance mask so we get pure transparent background and crisp white logos */}
+            <div
+              role="img"
+              aria-label="Sponsor logo"
+              style={{
+                width: 'min(95%, 1400px)',
+                height: 'clamp(90px, 13.5vw, 200px)',
+                backgroundColor: 'rgba(255,255,255,0.96)',
+                WebkitMaskImage: 'url(/logos/sponsor.svg)',
+                maskImage: 'url(/logos/sponsor.svg)',
+                WebkitMaskRepeat: 'no-repeat',
+                maskRepeat: 'no-repeat',
+                WebkitMaskPosition: 'center',
+                maskPosition: 'center',
+                WebkitMaskSize: 'contain',
+                maskSize: 'contain',
+                filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.45))',
+              }}
+            />
           </div>
         </section>
 
