@@ -107,34 +107,34 @@ export default function Home() {
       description: 'Dynamic athletic storytelling that captures the essence of movement and performance through innovative cinematography.'
     },
     {
-      id: 'insta360',
-      title: 'Insta360',
-      client: 'Insta360',
-      date: '2023',
-      thumbnail: 'https://vumbnail.com/641527142.jpg',
-      href: 'https://player.vimeo.com/video/641527142',
-      route: '/projects/insta360',
-      description: 'Capturing the world in 360 degrees with Insta360 technology, showcasing immersive filmmaking techniques.'
-    },
-    {
       id: 'commercial-project',
-      title: 'Commercial Project',
-      client: 'Various',
-      date: '2023',
+      title: 'Council for Responsible Nutrition',
+      client: 'Council for Responsible Nutrition (CRN)',
+      date: '2022',
       thumbnail: 'https://vumbnail.com/641502508.jpg',
       href: 'https://player.vimeo.com/video/641502508',
       route: '/projects/commercial',
-      description: 'High-end commercial work demonstrating expertise in brand storytelling and visual excellence.'
+      description: 'An animation-led explainer produced for a national release across web and social.'
+    },
+    {
+      id: 'insta360',
+      title: 'FTC — LeanSpa',
+      client: 'Federal Trade Commission (FTC)',
+      date: '2023',
+      thumbnail: 'https://vumbnail.com/641503564.jpg',
+      href: 'https://player.vimeo.com/video/641503564',
+      route: '/projects/insta360',
+      description: 'National campaign series addressing deceptive diet ads; this 1:31 spot was one of several with TV, radio, web, and social cutdowns.'
     },
     {
       id: 'ai-documentary',
-      title: 'AI & Future of Work',
-      client: 'Tech Forward',
-      date: '2024',
-      thumbnail: 'https://vumbnail.com/892847362.jpg',
-      href: 'https://player.vimeo.com/video/892847362',
+      title: 'Apollo 11 — 50th Anniversary',
+      client: 'NASA',
+      date: '2019',
+      thumbnail: 'https://vumbnail.com/641599879.jpg',
+      href: 'https://player.vimeo.com/video/641599879',
       route: '/projects/ai-documentary',
-      description: 'Exploring the intersection of artificial intelligence and creative workflows in modern media production.'
+      description: 'Central projection film produced for NASA’s Apollo 11 50th Anniversary ceremony in Washington, D.C.'
     }
   ];
 
@@ -817,7 +817,7 @@ export default function Home() {
                 }
               }}
             >
-              {(video.id === 'reel-2024' || video.id === 'new-balance-campaign') ? (
+              {(video.id === 'reel-2024' || video.id === 'new-balance-campaign' || video.id === 'commercial-project') ? (
                 <iframe
                   title="Autoplay video"
                   src={`${video.href}?autoplay=1&muted=1&background=1&loop=1&controls=0&autopause=0&dnt=1`}

@@ -16,7 +16,7 @@ const Liquid = LiquidEtherSimple as unknown as React.ComponentType<any>;
 export default function Insta360Page() {
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const vimeoId = '1120683744';
+  const vimeoId = '641503564';
   const embedUrl = `https://player.vimeo.com/video/${vimeoId}?autoplay=0&loop=0&title=0&byline=0&portrait=0`;
 
   const separatorStyle = {
@@ -146,7 +146,7 @@ export default function Insta360Page() {
               >
                 <iframe
                   src={embedUrl}
-                  title="Insta360 Campaign"
+                  title="FTC — LeanSpa"
                   allow="autoplay; fullscreen; picture-in-picture"
                   allowFullScreen
                   style={{ width: '100%', height: '100%', border: '0' }}
@@ -165,7 +165,7 @@ export default function Insta360Page() {
                   lineHeight: '1.2'
                 }}
               >
-                Insta360 — Immersive Capture
+                FTC — LeanSpa
               </h1>
 
               <p
@@ -177,7 +177,7 @@ export default function Insta360Page() {
                   maxWidth: '750px'
                 }}
               >
-                Rome, 2026 — A short showcase for Insta360 highlighting immersive 360° capture in dynamic outdoor settings. It was a pleasure working on this one.
+                National campaign series for the Federal Trade Commission (FTC) addressing deceptive diet ads. This one-minute–thirty spot was one of several, supported by TV, radio, web, and social cutdowns.
               </p>
             </section>
 
@@ -207,15 +207,17 @@ export default function Insta360Page() {
                 </h3>
 
                 <div style={separatorStyle}></div>
-                <div>Client: Insta360</div>
+                <div>Client: Federal Trade Commission (FTC)</div>
                 <div style={separatorStyle}></div>
-                <div>Role: Director, Cinematographer, Editor</div>
+                <div>Role: Producer</div>
                 <div style={separatorStyle}></div>
-                <div>Deliverables: Hero launch film and social cutdowns</div>
+                <div>Deliverables: National TV spots, internet ads, TV/radio ads, web and social cutdowns</div>
                 <div style={separatorStyle}></div>
-                <div>Location: Rome, Italy</div>
+                <div>Location: United States</div>
                 <div style={separatorStyle}></div>
-                <div>Published: 2026</div>
+                <div>Launch: 2023</div>
+                <div style={separatorStyle}></div>
+                <div>Published: 2023</div>
               </div>
             </section>
           </div>

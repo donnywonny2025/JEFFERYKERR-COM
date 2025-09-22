@@ -56,7 +56,7 @@
   background: rgba(255, 255, 255, 0.12); /* More subtle frosted glass */
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 8px; /* Less rounded corners */
-  padding: 8px 6px 6px 10px; /* Extra-tight right & bottom edges */
+  padding: 12px 6px 3px 12px; /* Tighter all around while maintaining balance */
   width: auto; /* Let content define width */
   min-width: 140px; /* Back to compact baseline */
   max-width: 80vw;
@@ -81,14 +81,14 @@
   font-family: 'Space Mono', monospace;
   font-size: 0.9rem; /* Tighter scale */
   font-weight: 400; /* Slightly bolder */
-  margin: 2px 0; /* Extra-tight spacing */
+  margin: 6px 0; /* More generous spacing between nav items */
   letter-spacing: 0.5px; /* Slightly reduced tracking */
   text-transform: uppercase;
   transition: all 0.2s ease; /* Faster transition */
   position: relative;
   z-index: 1;
   text-align: right;
-  line-height: 1.15; /* Denser line height */
+  line-height: 1.3; /* More generous line spacing */
 }
 
 .simple-menu-item:hover {
@@ -97,13 +97,13 @@
 
 /* Simple Menu Email */
 .simple-menu-email {
-  margin-top: 6px; /* Even tighter spacing */
-  padding-top: 6px; /* Tighter divider gap */
+  margin-top: 16px; /* Much more separation from nav */
+  padding-top: 12px; /* Stronger visual hierarchy */
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   position: relative;
   z-index: 1;
   text-align: right;
-  padding-right: 2px; /* Nudge chip closer to right edge */
+  padding-right: 6px; /* Match tighter container padding */
 }
 
 .simple-menu-email a {

@@ -165,7 +165,7 @@ export default function CommercialProjectPage() {
                   lineHeight: '1.2'
                 }}
               >
-                Commercial Highlights — Brand Stories
+                Council for Responsible Nutrition
               </h1>
 
               <p
@@ -177,7 +177,7 @@ export default function CommercialProjectPage() {
                   maxWidth: '750px'
                 }}
               >
-                A compilation of high-energy commercial spots produced for a mix of lifestyle and tech brands. Every vignette leans on bold framing, rhythmic edits, and stylised typography to hammer home each product's key message while keeping a unified visual language across the campaign.
+                We loved building this animation-led explainer for the Council for Responsible Nutrition. Clear visuals and a tight script helped turn a complex topic into a simple, engaging story—crafted for a national release across web and social.
               </p>
             </section>
 
@@ -207,15 +207,15 @@ export default function CommercialProjectPage() {
                 </h3>
 
                 <div style={separatorStyle}></div>
-                <div>Clients: Adobe, Bang & Olufsen, Adidas, Regional Tourism Boards</div>
+                <div>Client: Council for Responsible Nutrition (CRN)</div>
                 <div style={separatorStyle}></div>
-                <div>Role: Creative Director, Edit Supervisor</div>
+                <div>Role: Producer</div>
                 <div style={separatorStyle}></div>
-                <div>Deliverables: Broadcast spots, social variants, motion graphics toolkit</div>
+                <div>Deliverables: Web and social variants</div>
                 <div style={separatorStyle}></div>
-                <div>Focus: Cinematic product reveals and documentary-style brand storytelling</div>
+                <div>Focus: Explainer</div>
                 <div style={separatorStyle}></div>
-                <div>Published: 2023</div>
+                <div>Published: 2022</div>
               </div>
             </section>
           </div>

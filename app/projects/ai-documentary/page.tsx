@@ -16,7 +16,7 @@ const Liquid = LiquidEtherSimple as unknown as React.ComponentType<any>;
 export default function AiDocumentaryPage() {
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const vimeoId = '892847362';
+  const vimeoId = '641599879';
   const embedUrl = `https://player.vimeo.com/video/${vimeoId}?autoplay=0&loop=0&title=0&byline=0&portrait=0`;
 
   const separatorStyle = {
@@ -165,7 +165,7 @@ export default function AiDocumentaryPage() {
                   lineHeight: '1.2'
                 }}
               >
-                AI & The Future of Work
+                Apollo 11 — 50th Anniversary
               </h1>
 
               <p
@@ -177,7 +177,7 @@ export default function AiDocumentaryPage() {
                   maxWidth: '750px'
                 }}
               >
-                A documentary short exploring how emerging AI tools are changing creative pipelines and labour expectations. Interviews with start-ups, enterprise teams, and gig workers are intercut with impressionistic AI-generated sequences to visualise both optimism and unease about the next decade of automation.
+                Produced for NASA’s 50th Anniversary of Apollo 11 in Washington, D.C. This film served as the central projection during the evening ceremony, accompanied by interactive elements and six supporting videos around the Mall. A special night shared with astronauts, delegates, and guests—an honour to help bring to life.
               </p>
             </section>
 
@@ -207,15 +207,15 @@ export default function AiDocumentaryPage() {
                 </h3>
 
                 <div style={separatorStyle}></div>
-                <div>Client: Tech Forward</div>
+                <div>Client: NASA</div>
                 <div style={separatorStyle}></div>
-                <div>Role: Director, Executive Producer</div>
+                <div>Role: Producer</div>
                 <div style={separatorStyle}></div>
-                <div>Deliverables: 12-minute documentary, 3 promotional cutdowns, AI art pack</div>
+                <div>Deliverables: 6 video inserts, multiple animations</div>
                 <div style={separatorStyle}></div>
-                <div>Interviews: Robotics labs, policy analysts, gig economy creators</div>
+                <div>Notes: Premiered during the official DC ceremony with additional interactive projections</div>
                 <div style={separatorStyle}></div>
-                <div>Published: 2024</div>
+                <div>Published: 2019</div>
               </div>
             </section>
           </div>
