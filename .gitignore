@@ -83,6 +83,7 @@ temp/
 .trae/
 Key/
 *.json
+!tsconfig.json
 !package.json
 
 # Netlify
