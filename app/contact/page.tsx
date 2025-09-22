@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import MenuWrapper from '../../src/components/MenuWrapper';
 import { TextShimmer } from '../../src/components/motion-primitives/text-shimmer';
 import { SafeWrapper } from '../../src/components/SafeWrapper';
@@ -16,6 +17,7 @@ const Liquid: React.ComponentType<any> = LiquidEtherSimple as unknown as React.C
 
 export default function ContactPage() {
   const [menuOpen, setMenuOpen] = React.useState(false);
+  const router = useRouter();
 
   return (
     <div className="App">
@@ -60,7 +62,18 @@ export default function ContactPage() {
             <SafeWrapper>
               <DigitalClock />
             </SafeWrapper>
-            <MenuWrapper menuOpen={menuOpen} setMenuOpen={setMenuOpen} onNavigate={() => setMenuOpen(false)} />
+            <MenuWrapper 
+              menuOpen={menuOpen} 
+              setMenuOpen={setMenuOpen} 
+              onNavigate={(action: string) => {
+                setMenuOpen(false);
+                if (action === 'contact') {
+                  router.push('/contact');
+                } else if (action === 'home') {
+                  router.push('/');
+                }
+              }} 
+            />
           </div>
         </div>
       </header>

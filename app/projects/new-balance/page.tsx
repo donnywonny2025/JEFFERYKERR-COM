@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { TextShimmer } from '../../../src/components/motion-primitives/text-shimmer';
 import { SafeWrapper } from '../../../src/components/SafeWrapper';
 import { DigitalClock } from '../../../src/components/motion-primitives/digital-clock';
@@ -15,6 +16,7 @@ const Liquid = LiquidEtherSimple as unknown as React.ComponentType<any>;
 
 export default function NewBalanceCampaignPage() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const router = useRouter();
 
   const vimeoId = '1120683744';
   const embedUrl = `https://player.vimeo.com/video/${vimeoId}?autoplay=0&loop=0&title=0&byline=0&portrait=0`;
@@ -92,6 +94,11 @@ export default function NewBalanceCampaignPage() {
                 setMenuOpen={setMenuOpen}
                 onNavigate={(action: string) => {
                   setMenuOpen(false);
+                  if (action === 'contact') {
+                    router.push('/contact');
+                  } else if (action === 'home') {
+                    router.push('/');
+                  }
                 }}
               />
             </div>
@@ -177,7 +184,7 @@ export default function NewBalanceCampaignPage() {
                   maxWidth: '750px'
                 }}
               >
-                Rome, 2025 — A short showcase for New Balance highlighting immersive, kinetic motion in dynamic outdoor settings. Directed by Brian Cibula, this piece pairs high-energy pacing with clean graphic moments to deliver a focused, modern brand vignette.
+                Rome, 2025 — A short showcase for New Balance around the Run Roma (2026 edition) marathon in Rome, Italy. Directed by Brian Cibula, this piece leans on tight editorial, advanced cinematography, and 360° camera technology to deliver a focused, high-energy brand vignette.
               </p>
             </section>
 
@@ -213,7 +220,7 @@ export default function NewBalanceCampaignPage() {
                 <div style={separatorStyle}></div>
                 <div>Director: Brian Cibula</div>
                 <div style={separatorStyle}></div>
-                <div>Deliverables: Hero launch film and social cutdowns</div>
+                <div>Deliverables: TV and web</div>
                 <div style={separatorStyle}></div>
                 <div>Location: Rome, Italy</div>
                 <div style={separatorStyle}></div>

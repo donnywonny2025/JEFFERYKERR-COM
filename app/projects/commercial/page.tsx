@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { TextShimmer } from '../../../src/components/motion-primitives/text-shimmer';
 import { SafeWrapper } from '../../../src/components/SafeWrapper';
 import { DigitalClock } from '../../../src/components/motion-primitives/digital-clock';
@@ -15,6 +16,7 @@ const Liquid = LiquidEtherSimple as unknown as React.ComponentType<any>;
 
 export default function CommercialProjectPage() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const router = useRouter();
 
   const vimeoId = '641502508';
   const embedUrl = `https://player.vimeo.com/video/${vimeoId}?autoplay=0&loop=0&title=0&byline=0&portrait=0`;
@@ -92,6 +94,11 @@ export default function CommercialProjectPage() {
                 setMenuOpen={setMenuOpen}
                 onNavigate={(action: string) => {
                   setMenuOpen(false);
+                  if (action === 'contact') {
+                    router.push('/contact');
+                  } else if (action === 'home') {
+                    router.push('/');
+                  }
                 }}
               />
             </div>

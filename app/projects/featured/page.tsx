@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { TextShimmer } from '../../../src/components/motion-primitives/text-shimmer';
 import { SafeWrapper } from '../../../src/components/SafeWrapper';
 import { DigitalClock } from '../../../src/components/motion-primitives/digital-clock';
@@ -15,6 +16,7 @@ const Liquid = LiquidEtherSimple as unknown as React.ComponentType<any>;
 
 export default function FeaturedPage() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const router = useRouter();
 
   const ytId = 'I6U5zDpzLq8';
   const embedUrl = `https://www.youtube.com/embed/${ytId}?rel=0&modestbranding=1&playsinline=1`;
@@ -93,6 +95,11 @@ export default function FeaturedPage() {
                 setMenuOpen={setMenuOpen}
                 onNavigate={(action: string) => {
                   setMenuOpen(false);
+                  if (action === 'contact') {
+                    router.push('/contact');
+                  } else if (action === 'home') {
+                    router.push('/');
+                  }
                 }}
               />
             </div>
@@ -182,7 +189,7 @@ export default function FeaturedPage() {
                   maxWidth: '750px'
                 }}
               >
-                It's been a pleasure working with Dan Egan to launch this new investigative channel. I'm thrilled to be part of building Thorough Productions from the ground up - it's been really fun crafting these deep-dive financial analysis pieces. This Gemini IPO investigation required balancing complex regulatory details with engaging storytelling to keep viewers hooked throughout.
+                It's been a pleasure working with Dan Egan to launch this new investigative channel. I'm thrilled to be part of building Danny was here TV from the ground up - it's been really fun crafting these deep-dive financial analysis pieces. This Gemini IPO investigation required balancing complex regulatory details with engaging storytelling to keep viewers hooked throughout. Remember to like and subscribe 😊
               </p>
             </section>
 
@@ -221,7 +228,7 @@ export default function FeaturedPage() {
                 <div style={separatorStyle}></div>
                 <div>Role: Channel Creator, Lead Editor</div>
                 <div style={separatorStyle}></div>
-                <div>Channel: Thorough Productions</div>
+                <div>Channel: Danny was here TV</div>
                 <div style={separatorStyle}></div>
                 <div>Published: September 12, 2025</div>
               </div>

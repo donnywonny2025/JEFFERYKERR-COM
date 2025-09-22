@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { TextShimmer } from '../../../src/components/motion-primitives/text-shimmer';
 import { SafeWrapper } from '../../../src/components/SafeWrapper';
 import { DigitalClock } from '../../../src/components/motion-primitives/digital-clock';
@@ -15,6 +16,7 @@ const Liquid = LiquidEtherSimple as unknown as React.ComponentType<any>;
 
 export default function Showreel2025Page() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const router = useRouter();
 
   const vimeoId = '1120665473';
   const embedUrl = `https://player.vimeo.com/video/${vimeoId}?autoplay=0&loop=0&title=0&byline=0&portrait=0`;
@@ -93,6 +95,11 @@ export default function Showreel2025Page() {
                 setMenuOpen={setMenuOpen}
                 onNavigate={(action: string) => {
                   setMenuOpen(false);
+                  if (action === 'contact') {
+                    router.push('/contact');
+                  } else if (action === 'home') {
+                    router.push('/');
+                  }
                 }}
               />
             </div>
@@ -167,7 +174,7 @@ export default function Showreel2025Page() {
                   lineHeight: '1.2'
                 }}
               >
-                2025 Showreel — Vision & Velocity
+                2025 Showreel
               </h1>
 
               <p
@@ -179,7 +186,7 @@ export default function Showreel2025Page() {
                   maxWidth: '750px'
                 }}
               >
-                A sweeping cut of the past year's favourite shots—commercial, documentary, and exploratory AI-assisted experiments. Built to feel like one continuous breath, the reel leans on precise pacing, aggressive colour work, and tactile sound design to keep the energy high from first frame to last.
+                A sweeping cut of work over the years across commercial, corporate, government, and documentary.
               </p>
             </section>
 
@@ -209,13 +216,7 @@ export default function Showreel2025Page() {
                 </h3>
 
                 <div style={separatorStyle}></div>
-                <div>Runtime: 2:10</div>
-                <div style={separatorStyle}></div>
-                <div>Role: Director • DP • Editor</div>
-                <div style={separatorStyle}></div>
-                <div>Highlights: Automotive, athletics, AI-assisted composites, live-action plates</div>
-                <div style={separatorStyle}></div>
-                <div>Music: Custom sound design with layered field recordings</div>
+                <div>Highlights: A series of work from over the years</div>
                 <div style={separatorStyle}></div>
                 <div>Published: 2025</div>
               </div>

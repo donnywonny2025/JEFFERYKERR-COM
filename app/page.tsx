@@ -91,10 +91,10 @@ export default function Home() {
       title: 'Featured Showreel',
       client: 'Jeff Kerr',
       date: '2025',
-      thumbnail: 'https://vumbnail.com/1120665473.jpg',
-      href: 'https://player.vimeo.com/video/1120665473',
+      thumbnail: 'https://vumbnail.com/1120706636.jpg',
+      href: 'https://player.vimeo.com/video/1120706636',
       route: '/projects/showreel-2025',
-      description: 'A collection of clips from various projects over the years, blending traditional filmmaking with AI-generated content to create stunning visuals.'
+      description: 'A sweeping cut of work over the years across commercial, corporate, government, and documentary.'
     },
     {
       id: 'new-balance-campaign',
@@ -104,17 +104,7 @@ export default function Home() {
       thumbnail: 'https://vumbnail.com/1120683744.jpg',
       href: 'https://player.vimeo.com/video/1120683744',
       route: '/projects/new-balance',
-      description: 'Dynamic athletic storytelling that captures the essence of movement and performance through innovative cinematography.'
-    },
-    {
-      id: 'commercial-project',
-      title: 'Council for Responsible Nutrition',
-      client: 'Council for Responsible Nutrition (CRN)',
-      date: '2022',
-      thumbnail: 'https://vumbnail.com/641502508.jpg',
-      href: 'https://player.vimeo.com/video/641502508',
-      route: '/projects/commercial',
-      description: 'An animation-led explainer produced for a national release across web and social.'
+      description: 'Essence of movement and performance through innovative technology.'
     },
     {
       id: 'insta360',
@@ -125,6 +115,16 @@ export default function Home() {
       href: 'https://player.vimeo.com/video/641503564',
       route: '/projects/insta360',
       description: 'National campaign series addressing deceptive diet ads; this 1:31 spot was one of several with TV, radio, web, and social cutdowns.'
+    },
+    {
+      id: 'commercial-project',
+      title: 'Council for Responsible Nutrition',
+      client: 'Council for Responsible Nutrition (CRN)',
+      date: '2022',
+      thumbnail: 'https://vumbnail.com/641502508.jpg',
+      href: 'https://player.vimeo.com/video/641502508',
+      route: '/projects/commercial',
+      description: 'An animation-led explainer produced for a national release across web and social.'
     },
     {
       id: 'ai-documentary',
@@ -308,6 +308,12 @@ export default function Home() {
               setMenuOpen={setMenuOpen}
               onNavigate={(action: string) => {
                 setMenuOpen(false);
+                if (action === 'contact') {
+                  router.push('/contact');
+                } else if (action === 'home') {
+                  router.push('/');
+                }
+                // Add other navigation cases as needed
               }}
             />
           </div>
@@ -953,7 +959,7 @@ export default function Home() {
               <Link href="/">HOME</Link>
               <Link href="/backgrounds">🎨 BACKGROUNDS</Link>
               <a href="#">WORK</a>
-              <a href="#">CONTACT</a>
+              <Link href="/contact">CONTACT</Link>
             </nav>
             <div className="footer-social">
               <a href="#" aria-label="Instagram">
