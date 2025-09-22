@@ -539,6 +539,21 @@ export default function Home() {
           text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
           transform: translateY(-1px);
         }
+
+        /* Stats card styles (moved here from inner section to avoid nested styled-jsx) */
+        .contact-info-card { max-width: 95%; margin: 0 auto; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 32px 40px; backdrop-filter: blur(20px); }
+        .contact-stats-card { position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; max-width: 95%; padding: 42px 36px; }
+        .contact-stats-inner { position: relative; z-index: 2; width: min(96%, 950px); margin: 0 auto; text-align: center; }
+        .stats-title { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.72); text-align: center; margin: 0 0 35px; }
+        .stats-divider { width: 1px; height: 32px; margin: 0 auto 48px; background: rgba(255,255,255,0.32); }
+        .metric-row { display: flex; flex-direction: column; align-items: center; gap: 4px; justify-content: center; margin: 50px 0; }
+        .metric-value { font-family: 'Space Mono', monospace; font-size: clamp(24px, 3.5vw, 32px); font-weight: 500; letter-spacing: 0.01em; font-variant-numeric: tabular-nums lining-nums; color: rgba(255,255,255,0.98); line-height: 1.1; }
+        .metric-label { font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 400; color: rgba(255,255,255,0.7); white-space: nowrap; letter-spacing: 0.02em; text-align: center; }
+        .metric-hr { width: 70%; height: 1px; background: rgba(255,255,255,0.22); margin: 28px auto; }
+        .stats-cta { display: inline-flex; align-items: center; gap: 12px; padding: 14px 26px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.06); background: #ffffff; color: #111111; box-shadow: 0 6px 24px rgba(0,0,0,0.22); font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.08em; cursor: pointer; user-select: none; transition: transform 0.18s ease, box-shadow 0.25s ease, background 0.25s ease; }
+        .stats-cta:hover { transform: translateY(-1px); box-shadow: 0 10px 28px rgba(0,0,0,0.28); }
+        .stats-cta .arrow { width: 22px; height: 1px; background: #111; position: relative; }
+        .stats-cta .arrow::after { content: ''; position: absolute; right: -2px; top: -3px; width: 7px; height: 7px; border-top: 1px solid #111; border-right: 1px solid #111; transform: rotate(45deg); }
       `}</style>
 
       {/* MODERN CENTERED RESPONSIVE CONTAINER */}
@@ -603,6 +618,10 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        
+
+        
 
         {/* Left-aligned Contact Info (flush with video left edge) */}
         <section
@@ -827,7 +846,7 @@ export default function Home() {
                 }
               }}
             >
-              {(video.id === 'reel-2024' || video.id === 'new-balance-campaign' || video.id === 'commercial-project') ? (
+              {(video.id === 'reel-2024' || video.id === 'new-balance-campaign' || video.id === 'commercial-project' || video.id === 'insta360' || video.id === 'featured-video') ? (
                 <iframe
                   title="Autoplay video"
                   src={`${video.href}?autoplay=1&muted=1&background=1&loop=1&controls=0&autopause=0&dnt=1`}
@@ -940,6 +959,57 @@ export default function Home() {
               )}
             </div>
           ))}
+        </section>
+
+        {/* Contact Stats Card (placed directly under Apollo 11 list) */}
+        <section style={{
+          ...columnStyle,
+          marginBottom: '100px'
+        }}>
+          <div className="contact-info-card contact-stats-card animate-fade-in-up" style={{ animationDelay: '0.1s', animationFillMode: 'forwards', position: 'relative' }}>
+            {/* Background Vimeo video (full opacity) */}
+            <div aria-hidden="true" style={{ position: 'absolute', inset: 0, zIndex: 1, overflow: 'hidden', pointerEvents: 'none', borderRadius: 'inherit' }}>
+              <iframe
+                title="Stats background video"
+                src="https://player.vimeo.com/video/1120798857?autoplay=1&muted=1&background=1&loop=1&controls=0&autopause=0&dnt=1&playsinline=1"
+                style={{ position: 'absolute', top: '50%', left: '50%', width: '100%', height: '100%', transform: 'translate(-50%, -50%) scale(1.6)', transformOrigin: 'center', border: 0, display: 'block' }}
+                allow="autoplay; fullscreen; picture-in-picture"
+                loading="lazy"
+              />
+            </div>
+            <div className="contact-stats-inner">
+              <div className="stats-title">LET'S CHAT</div>
+              <div className="stats-divider" aria-hidden="true" />
+
+              <div className="metric-row">
+                <div className="metric-value">20+</div>
+                <div className="metric-label">Years Creating</div>
+              </div>
+              <div className="metric-hr" aria-hidden="true" />
+
+              <div className="metric-row">
+                <div className="metric-value">Millions</div>
+                <div className="metric-label">Have Watched</div>
+              </div>
+              <div className="metric-hr" aria-hidden="true" />
+
+              <div className="metric-row">
+                <div className="metric-value">Stories</div>
+                <div className="metric-label">That Connect</div>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'center', marginTop: '26px' }}>
+                <a
+                  href="mailto:colour8k@mac.com?subject=Quick%20hello%2C%20just%20checked%20out%20your%20website&body=Hi%20Jeffrey"
+                  className="stats-cta"
+                  aria-label="Email Jeff Kerr"
+                >
+                  CONTACT
+                  <span className="arrow" aria-hidden="true" />
+                </a>
+              </div>
+            </div>
+          </div>
         </section>
 
         </div> {/* Close the inner container */}
