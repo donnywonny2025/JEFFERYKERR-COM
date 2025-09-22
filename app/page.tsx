@@ -97,6 +97,16 @@ export default function Home() {
       description: 'A collection of clips from various projects over the years, blending traditional filmmaking with AI-generated content to create stunning visuals.'
     },
     {
+      id: 'new-balance-campaign',
+      title: 'New Balance Campaign',
+      client: 'New Balance',
+      date: '2025',
+      thumbnail: 'https://vumbnail.com/1120683744.jpg',
+      href: 'https://player.vimeo.com/video/1120683744',
+      route: '/projects/new-balance',
+      description: 'Dynamic athletic storytelling that captures the essence of movement and performance through innovative cinematography.'
+    },
+    {
       id: 'insta360',
       title: 'Insta360',
       client: 'Insta360',
@@ -115,16 +125,6 @@ export default function Home() {
       href: 'https://player.vimeo.com/video/641502508',
       route: '/projects/commercial',
       description: 'High-end commercial work demonstrating expertise in brand storytelling and visual excellence.'
-    },
-    {
-      id: 'new-balance-campaign',
-      title: 'New Balance Campaign',
-      client: 'New Balance',
-      date: '2024',
-      thumbnail: 'https://vumbnail.com/785643210.jpg',
-      href: 'https://player.vimeo.com/video/785643210',
-      route: '/projects/new-balance',
-      description: 'Dynamic athletic storytelling that captures the essence of movement and performance through innovative cinematography.'
     },
     {
       id: 'ai-documentary',
@@ -817,10 +817,10 @@ export default function Home() {
                 }
               }}
             >
-              {video.id === 'reel-2024' ? (
+              {(video.id === 'reel-2024' || video.id === 'new-balance-campaign') ? (
                 <iframe
-                  title="Showreel autoplay"
-                  src={`https://player.vimeo.com/video/1120665473?autoplay=1&muted=1&background=1&loop=1&controls=0&autopause=0&dnt=1`}
+                  title="Autoplay video"
+                  src={`${video.href}?autoplay=1&muted=1&background=1&loop=1&controls=0&autopause=0&dnt=1`}
                   style={{
                     position: 'absolute',
                     inset: 0,

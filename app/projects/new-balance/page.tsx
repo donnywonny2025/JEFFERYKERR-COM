@@ -16,7 +16,7 @@ const Liquid = LiquidEtherSimple as unknown as React.ComponentType<any>;
 export default function NewBalanceCampaignPage() {
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const vimeoId = '785643210';
+  const vimeoId = '1120683744';
   const embedUrl = `https://player.vimeo.com/video/${vimeoId}?autoplay=0&loop=0&title=0&byline=0&portrait=0`;
 
   const separatorStyle = {
@@ -165,7 +165,7 @@ export default function NewBalanceCampaignPage() {
                   lineHeight: '1.2'
                 }}
               >
-                New Balance — Creative Producer / Creative Director
+                New Balance — Creative Director
               </h1>
 
               <p
@@ -209,7 +209,7 @@ export default function NewBalanceCampaignPage() {
                 <div style={separatorStyle}></div>
                 <div>Client: New Balance</div>
                 <div style={separatorStyle}></div>
-                <div>Role: Creative Producer, Creative Director</div>
+                <div>Role: Creative Director</div>
                 <div style={separatorStyle}></div>
                 <div>Director: Brian Cibula</div>
                 <div style={separatorStyle}></div>
