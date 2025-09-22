@@ -165,7 +165,7 @@ export default function NewBalanceCampaignPage() {
                   lineHeight: '1.2'
                 }}
               >
-                New Balance Campaign — Run Your Rhythm
+                New Balance — Creative Producer / Creative Director
               </h1>
 
               <p
@@ -177,7 +177,7 @@ export default function NewBalanceCampaignPage() {
                   maxWidth: '750px'
                 }}
               >
-                A kinetic short film following athletes across multiple cities, each sequence tailored to the cadence of their sport. We leaned into high-frame-rate capture, whip-pan transitions, and stylised lighting to connect the emotional momentum of the run with New Balance’s latest footwear line.
+                Rome, 2025 — A short showcase for New Balance highlighting immersive, kinetic motion in dynamic outdoor settings. Directed by Brian Cibula, this piece pairs high-energy pacing with clean graphic moments to deliver a focused, modern brand vignette.
               </p>
             </section>
 
@@ -209,13 +209,15 @@ export default function NewBalanceCampaignPage() {
                 <div style={separatorStyle}></div>
                 <div>Client: New Balance</div>
                 <div style={separatorStyle}></div>
-                <div>Role: Director, Motion Design Lead</div>
+                <div>Role: Creative Producer, Creative Director</div>
                 <div style={separatorStyle}></div>
-                <div>Deliverables: Hero launch film, social vertical variants, athlete IDs</div>
+                <div>Director: Brian Cibula</div>
                 <div style={separatorStyle}></div>
-                <div>Locations: New York, Lisbon, Tokyo</div>
+                <div>Deliverables: Hero launch film and social cutdowns</div>
                 <div style={separatorStyle}></div>
-                <div>Published: 2024</div>
+                <div>Location: Rome, Italy</div>
+                <div style={separatorStyle}></div>
+                <div>Published: 2025</div>
               </div>
             </section>
           </div>

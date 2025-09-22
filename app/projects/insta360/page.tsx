@@ -16,7 +16,7 @@ const Liquid = LiquidEtherSimple as unknown as React.ComponentType<any>;
 export default function Insta360Page() {
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const vimeoId = '641527142';
+  const vimeoId = '1120683744';
   const embedUrl = `https://player.vimeo.com/video/${vimeoId}?autoplay=0&loop=0&title=0&byline=0&portrait=0`;
 
   const separatorStyle = {
@@ -177,7 +177,7 @@ export default function Insta360Page() {
                   maxWidth: '750px'
                 }}
               >
-                A showcase piece for Insta360 highlighting immersive 360° capture in dynamic outdoor environments. The edit fuses hyper-smooth motion with stylised transitions to emphasise how the camera keeps up with any adventure while colour grades and motion graphics steer the viewer through a compact story about freedom of movement.
+                Rome, 2026 — A short showcase for Insta360 highlighting immersive 360° capture in dynamic outdoor settings. It was a pleasure working on this one.
               </p>
             </section>
 
@@ -211,11 +211,11 @@ export default function Insta360Page() {
                 <div style={separatorStyle}></div>
                 <div>Role: Director, Cinematographer, Editor</div>
                 <div style={separatorStyle}></div>
-                <div>Deliverables: Hero launch film + social cutdowns</div>
+                <div>Deliverables: Hero launch film and social cutdowns</div>
                 <div style={separatorStyle}></div>
-                <div>Locations: Utah desert, Pacific coastline, alpine ridgeline</div>
+                <div>Location: Rome, Italy</div>
                 <div style={separatorStyle}></div>
-                <div>Published: 2023</div>
+                <div>Published: 2026</div>
               </div>
             </section>
           </div>
