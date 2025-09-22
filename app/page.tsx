@@ -91,8 +91,8 @@ export default function Home() {
       title: 'Featured Showreel',
       client: 'Jeff Kerr',
       date: '2025',
-      thumbnail: 'https://vumbnail.com/1029802990.jpg',
-      href: 'https://player.vimeo.com/video/1029802990',
+      thumbnail: 'https://vumbnail.com/1120665473.jpg',
+      href: 'https://player.vimeo.com/video/1120665473',
       route: '/projects/showreel-2025',
       description: 'A collection of clips from various projects over the years, blending traditional filmmaking with AI-generated content to create stunning visuals.'
     },
@@ -820,7 +820,7 @@ export default function Home() {
               {video.id === 'reel-2024' ? (
                 <iframe
                   title="Showreel autoplay"
-                  src={`https://player.vimeo.com/video/1029802990?autoplay=1&muted=1&background=1&loop=1&controls=0&autopause=0&dnt=1`}
+                  src={`https://player.vimeo.com/video/1120665473?autoplay=1&muted=1&background=1&loop=1&controls=0&autopause=0&dnt=1`}
                   style={{
                     position: 'absolute',
                     inset: 0,
