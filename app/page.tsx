@@ -76,16 +76,19 @@ export default function Home() {
 
   // Expanded videos array with 5 videos and internal routes
   const videos = [
+    // Index 0 is not rendered in the list; it's used conceptually for the hero.
+    // Move New Balance into index 0 to designate it as the hero piece.
     {
-      id: 'featured-video',
-      title: 'Featured Video',
-      client: 'Jeff Kerr',
+      id: 'new-balance-campaign',
+      title: 'New Balance Campaign',
+      client: 'New Balance',
       date: '2025',
-      thumbnail: 'https://img.youtube.com/vi/I6U5zDpzLq8/hqdefault.jpg',
-      href: 'https://www.youtube.com/watch?v=I6U5zDpzLq8',
-      route: '/projects/featured',
-      description: 'Our featured piece. Explore the full breakdown, credits, and context on the Featured page.'
+      thumbnail: 'https://vumbnail.com/1120683744.jpg',
+      href: 'https://player.vimeo.com/video/1120683744',
+      route: '/projects/new-balance',
+      description: 'Essence of movement and performance through innovative technology.'
     },
+    // Keep the Showreel as the first visible list item below the hero
     {
       id: 'reel-2024',
       title: 'Featured Showreel',
@@ -96,15 +99,16 @@ export default function Home() {
       route: '/projects/showreel-2025',
       description: 'A sweeping cut of work over the years across commercial, corporate, government, and documentary.'
     },
+    // Place the previous Featured Video where New Balance used to be in the list
     {
-      id: 'new-balance-campaign',
-      title: 'New Balance Campaign',
-      client: 'New Balance',
+      id: 'featured-video',
+      title: 'Danny Was Here TV',
+      client: 'Jeff Kerr',
       date: '2025',
-      thumbnail: 'https://vumbnail.com/1120683744.jpg',
-      href: 'https://player.vimeo.com/video/1120683744',
-      route: '/projects/new-balance',
-      description: 'Essence of movement and performance through innovative technology.'
+      thumbnail: 'https://vumbnail.com/1120721555.jpg',
+      href: 'https://player.vimeo.com/video/1120721555',
+      route: '/projects/DannyWasHereTV',
+      description: 'Danny Was Here TV video showcase.'
     },
     {
       id: 'insta360',
@@ -661,13 +665,13 @@ export default function Home() {
             }}
             role="button"
             aria-label="Open Featured Video details"
-            onClick={() => router.push('/projects/featured')}
+            onClick={() => router.push('/projects/new-balance')}
           >
-            {/* Defer the autoplaying YouTube iframe slightly to avoid initial reflow */}
+            {/* Autoplaying Vimeo hero for New Balance Campaign */}
             {showFeaturedEmbed ? (
               <iframe
                 title="Featured video"
-                src={`https://www.youtube.com/embed/I6U5zDpzLq8?autoplay=1&mute=1&controls=0&loop=1&playlist=I6U5zDpzLq8&modestbranding=1&rel=0&playsinline=1`}
+                src={`https://player.vimeo.com/video/1120683744?autoplay=1&muted=1&background=1&loop=1&controls=0&autopause=0&dnt=1`}
                 style={{
                   position: 'absolute',
                   inset: 0,
@@ -682,8 +686,8 @@ export default function Home() {
               />
             ) : (
               <img
-                src="https://img.youtube.com/vi/I6U5zDpzLq8/hqdefault.jpg"
-                alt="Featured video preview"
+                src="https://vumbnail.com/1120683744.jpg"
+                alt="New Balance Campaign preview"
                 style={{
                   position: 'absolute',
                   inset: 0,
@@ -703,8 +707,8 @@ export default function Home() {
               role="button"
               tabIndex={0}
               aria-label={`Play featured video: ${videos[0].title}`}
-              onClick={(e) => { e.stopPropagation(); router.push('/projects/featured'); }}
-              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); router.push('/projects/featured'); } }}
+              onClick={(e) => { e.stopPropagation(); router.push('/projects/new-balance'); }}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); router.push('/projects/new-balance'); } }}
             >
               <div className="hero-play-content">
                 <div className="hero-play-icon" aria-hidden="true"></div>
@@ -719,10 +723,10 @@ export default function Home() {
               padding: '60px 30px 30px', color: 'white'
             }}>
               <div style={{ fontFamily: "'Space Mono', monospace", fontSize: '14px', opacity: 0.8, marginBottom: '5px' }}>
-                Jeff Kerr • 2025
+                New Balance • 2025
               </div>
               <h2 style={{ fontFamily: "'Space Mono', monospace", fontSize: '24px', fontWeight: '400', margin: 0, color: 'white' }}>
-                Featured Video
+                New Balance Campaign
               </h2>
             </div>
           </div>
@@ -833,7 +837,10 @@ export default function Home() {
                     width: '100%',
                     height: '100%',
                     border: 0,
-                    display: 'block'
+                    display: 'block',
+                    // Re-applied scaling specifically for New Balance Campaign to hide source letterboxing
+                    transform: video.id === 'new-balance-campaign' ? 'scale(1.28)' : undefined,
+                    transformOrigin: 'center center'
                   }}
                   allow="autoplay; fullscreen; picture-in-picture"
                   allowFullScreen

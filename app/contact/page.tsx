@@ -92,6 +92,102 @@ export default function ContactPage() {
           padding: 32px 40px;
           backdrop-filter: blur(20px);
         }
+        /* Stats card uses same base as contact-info-card, with visual tweaks */
+        .contact-stats-card {
+          margin-top: 28px;
+          position: relative;
+          overflow: hidden;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          max-width: 95%; /* Match .contact-info-card width */
+          padding: 42px 36px; /* Proper internal spacing */
+        }
+        .contact-stats-inner {
+          position: relative;
+          z-index: 2;
+          width: min(96%, 950px);
+          margin: 0 auto;
+          text-align: center; /* center-align all content */
+        }
+        .stats-title {
+          font-family: 'Space Mono', monospace;
+          font-size: 10px; /* Smaller title */
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          color: rgba(255,255,255,0.72);
+          text-align: center;
+          margin: 0 0 35px; /* Reduce title spacing */
+        }
+        .stats-divider {
+          width: 1px;
+          height: 32px;
+          margin: 0 auto 48px; /* breathing room above first metric */
+          background: rgba(255,255,255,0.32);
+        }
+        .metric-row {
+          display: flex;
+          flex-direction: column; /* Stack number ABOVE label */
+          align-items: center;
+          gap: 4px; /* Tight gap between number and its label */
+          justify-content: center;
+          margin: 50px 0; /* More generous spacing between stat blocks */
+        }
+        .metric-value {
+          font-family: 'Space Mono', monospace;
+          font-size: clamp(24px, 3.5vw, 32px); /* Refined, smaller numbers */
+          font-weight: 500; /* Lighter weight, not heavy */
+          letter-spacing: 0.01em;
+          font-variant-numeric: tabular-nums lining-nums;
+          color: rgba(255,255,255,0.98);
+          line-height: 1.1;
+        }
+        .metric-label {
+          font-family: 'Space Mono', monospace;
+          font-size: 11px; /* Smaller, cleaner labels */
+          font-weight: 400;
+          color: rgba(255,255,255,0.7); /* More muted */
+          white-space: nowrap;
+          letter-spacing: 0.02em;
+          text-align: center;
+        }
+        .metric-hr {
+          width: 70%; /* Slightly wider separators */
+          height: 1px;
+          background: rgba(255,255,255,0.22); /* subtle divider */
+          margin: 28px auto; /* Tighter separator spacing */
+        }
+        .stats-cta {
+          display: inline-flex;
+          align-items: center;
+          gap: 12px;
+          padding: 14px 26px; /* pill button */
+          border-radius: 12px;
+          border: 1px solid rgba(0,0,0,0.06);
+          background: #ffffff;
+          color: #111111;
+          box-shadow: 0 6px 24px rgba(0,0,0,0.22);
+          font-family: 'Space Mono', monospace;
+          font-size: 12px;
+          letter-spacing: 0.08em;
+          cursor: pointer;
+          user-select: none;
+          transition: transform 0.18s ease, box-shadow 0.25s ease, background 0.25s ease;
+        }
+        .stats-cta:hover { transform: translateY(-1px); box-shadow: 0 10px 28px rgba(0,0,0,0.28); }
+        .stats-cta .arrow { width: 22px; height: 1px; background: #111; position: relative; }
+        .stats-cta .arrow::after { content: ''; position: absolute; right: -2px; top: -3px; width: 7px; height: 7px; border-top: 1px solid #111; border-right: 1px solid #111; transform: rotate(45deg); }
+
+        /* Soft vignette + subtle gradient backdrop for the stats card */
+        .stats-backdrop {
+          position: absolute;
+          inset: 0;
+          z-index: 1;
+          background:
+            radial-gradient(1200px 600px at 20% 85%, rgba(107,70,193,0.16), transparent 70%),
+            radial-gradient(1000px 600px at 80% 20%, rgba(192,132,252,0.12), transparent 70%),
+            linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+        }
         
         .contact-section {
           margin-bottom: 0;
@@ -187,7 +283,7 @@ export default function ContactPage() {
           <h1 className="animate-fade-in-up" style={{ fontFamily: "'Space Mono', monospace", fontSize: '32px', fontWeight: 400, color: 'rgba(255,255,255,0.95)', marginBottom: '36px', animationDelay: '0.2s', animationFillMode: 'forwards', textAlign: 'center' }}>What's up?</h1>
 
           {/* Constrain the form for better readability */}
-          <div style={{ width: '100%', maxWidth: '480px', margin: '0 auto' }}>
+          <div id="contact-form" style={{ width: '100%', maxWidth: '480px', margin: '0 auto' }}>
             <ContactForm />
           </div>
 
@@ -233,6 +329,51 @@ export default function ContactPage() {
                     Instagram
                   </a>
                 </div>
+              </div>
+            </div>
+          </div>
+          {/* Stats card (below existing contact card) */}
+          <div className="contact-info-card contact-stats-card animate-fade-in-up" style={{ animationDelay: '0.15s', animationFillMode: 'forwards' }}>
+            {/* Background Vimeo video (full opacity) */}
+            <div aria-hidden="true" style={{ position: 'absolute', inset: 0, zIndex: 1, overflow: 'hidden', pointerEvents: 'none', borderRadius: 'inherit' }}>
+              <iframe
+                title="Stats background video"
+                src="https://player.vimeo.com/video/1120798857?autoplay=1&muted=1&background=1&loop=1&controls=0&autopause=0&dnt=1&playsinline=1"
+                style={{ position: 'absolute', top: '50%', left: '50%', width: '100%', height: '100%', transform: 'translate(-50%, -50%) scale(1.6)', transformOrigin: 'center', border: 0, display: 'block' }}
+                allow="autoplay; fullscreen; picture-in-picture"
+                loading="lazy"
+              />
+            </div>
+            <div className="contact-stats-inner">
+              <div className="stats-title">LET'S CHAT</div>
+              <div className="stats-divider" aria-hidden="true" />
+
+              <div className="metric-row">
+                <div className="metric-value">20+</div>
+                <div className="metric-label">Years Creating</div>
+              </div>
+              <div className="metric-hr" aria-hidden="true" />
+
+              <div className="metric-row">
+                <div className="metric-value">Millions</div>
+                <div className="metric-label">Have Watched</div>
+              </div>
+              <div className="metric-hr" aria-hidden="true" />
+
+              <div className="metric-row">
+                <div className="metric-value">Stories</div>
+                <div className="metric-label">That Connect</div>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'center', marginTop: '26px' }}>
+                <a
+                  href="mailto:colour8k@mac.com?subject=Quick%20hello%2C%20just%20checked%20out%20your%20website&body=Hi%20Jeffrey"
+                  className="stats-cta"
+                  aria-label="Email Jeff Kerr"
+                >
+                  CONTACT
+                  <span className="arrow" aria-hidden="true" />
+                </a>
               </div>
             </div>
           </div>

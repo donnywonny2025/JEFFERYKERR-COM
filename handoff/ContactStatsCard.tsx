@@ -81,7 +81,7 @@ export default function ContactStatsCard({
           text-transform: uppercase;
           color: rgba(255,255,255,0.72);
           text-align: center;
-          margin: 6px 0 12px; /* tighter above divider; main spacing handled below */
+          margin: 0 0 60px; /* generous space after title */
         }
         .stats-divider {
           width: 1px;
@@ -93,9 +93,9 @@ export default function ContactStatsCard({
           display: flex;
           flex-direction: column; /* stack number and label */
           align-items: center; /* center each stack */
-          gap: 10px;
+          gap: 16px; /* more space between number and label */
           justify-content: center;
-          margin: 36px 0; /* generous vertical rhythm */
+          margin: 80px 0; /* much more generous vertical spacing */
         }
         .metric-value {
           font-family: 'Space Mono', monospace;
@@ -116,7 +116,7 @@ export default function ContactStatsCard({
           width: 100%;
           height: 1px;
           background: rgba(255,255,255,0.22); /* subtle divider */
-          margin: 26px 0; /* more spacing between stacks */
+          margin: 60px auto; /* much more space above and below lines */
         }
         .stats-cta {
           display: inline-flex;
