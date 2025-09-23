@@ -3,92 +3,14 @@
 import React from 'react';
 
 export default function ContactForm() {
-  const [submitted, setSubmitted] = React.useState(false);
-  // Provide the Netlify attribute as a string to avoid React warning
   const netlifyProps: any = { netlify: 'true' };
-  const iframeRef = React.useRef<HTMLIFrameElement | null>(null);
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    const form = e.currentTarget;
-    try {
-      // On production domains, allow native submission (no preventDefault)
-      if (typeof window !== 'undefined') {
-        const host = window.location.hostname;
-        const isProd = /jefferykerr\.com$/.test(host) || /netlify\.app$/.test(host);
-        if (isProd) {
-          return; // let browser submit natively to Netlify (to hidden iframe)
-        }
-      }
-      // Dev/local: prevent default and use fetch for inline UX
-      e.preventDefault();
-
-      const formData = new FormData(form);
-      // Ensure Netlify form name is present
-      formData.set('form-name', 'contact');
-      const body = new URLSearchParams(
-        Array.from(formData.entries()) as [string, string][]
-      ).toString();
-
-      const endpoint = (typeof window !== 'undefined' ? window.location.origin : '') + '/';
-      const res = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body
-      });
-      if (res.ok) {
-        setSubmitted(true);
-      } else {
-        console.warn('[ContactForm] Netlify submit non-OK status:', res.status);
-        // Fallback to native submit on non-OK responses
-        try { form.submit(); return; } catch {}
-        alert('Sorry, we could not send your message right now. Please try again in a moment.');
-      }
-    } catch (err) {
-      console.error('[ContactForm] submit error', err);
-      // Fallback to native submit if fetch fails
-      try { form.submit(); } catch {}
-    }
-  };
-
-  if (submitted) {
-    return (
-      <div
-        className="animate-fade-in-up"
-        style={{
-          display: 'grid',
-          placeItems: 'center',
-          textAlign: 'center',
-          padding: '36px 24px',
-          marginTop: '20px',
-          borderRadius: '12px',
-          border: '1px solid rgba(255,255,255,0.18)',
-          background: 'rgba(255,255,255,0.06)',
-          backdropFilter: 'blur(8px)'
-        }}
-      >
-        <div style={{
-          fontFamily: "'Space Mono', monospace",
-          fontSize: '18px',
-          color: 'rgba(255,255,255,0.95)'
-        }}>
-          Thank you! I'll be in touch soon.
-        </div>
-      </div>
-    );
-  }
 
   return (
     <form
       name="contact"
       method="POST"
-      {...netlifyProps}
-      action="/contact"
-      acceptCharset="utf-8"
-      data-netlify="true"
-      netlify-honeypot="bot-field"
-      // Send native POST to hidden iframe on production so user stays on page
-      target="netlify-target"
-      onSubmit={handleSubmit}
+      {...(netlifyProps as any)}
+      action="/contact/success"
       className="animate-fade-in-up contact-form"
       style={{
         display: 'grid',
@@ -98,26 +20,6 @@ export default function ContactForm() {
     >
       {/* Netlify form requirements */}
       <input type="hidden" name="form-name" value="contact" />
-      <input type="hidden" name="redirect" value="/thank-you" />
-      {/* Hidden iframe used on production to avoid full-page navigation */}
-      <iframe
-        ref={iframeRef}
-        name="netlify-target"
-        style={{ display: 'none', width: 0, height: 0, border: 0 }}
-        onLoad={() => {
-          // On production, after Netlify responds, mark as submitted
-          if (typeof window !== 'undefined') {
-            const host = window.location.hostname;
-            const isProd = /jefferykerr\.com$/.test(host) || /netlify\.app$/.test(host);
-            if (isProd) setSubmitted(true);
-          }
-        }}
-      />
-      <p style={{ display: 'none' }}>
-        <label>
-          Don’t fill this out if you’re human: <input name="bot-field" />
-        </label>
-      </p>
       {/* First/Last name row */}
       <div className="name-row row-2" style={{
         display: 'grid',
