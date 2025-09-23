@@ -1,0 +1,18 @@
+# Netlify configuration for Next.js 15 App Router
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+# Essential Next.js plugin handles SSR/ISR, routes, and headers automatically
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Ensure Next images/static files are served correctly
+[build.environment]
+  NODE_VERSION = "18.20.3"
+  NEXT_TELEMETRY_DISABLED = "1"
+
+# Cache node_modules/.next between builds for faster CI
+[functions]
+  node_bundler = "esbuild"
+  external_node_modules = []

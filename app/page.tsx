@@ -39,7 +39,79 @@ const CharacterHoverText = ({ children, className = "" }: { children: string; cl
   );
 };
 
-export default function Home() {
+/* ----- Homepage-only: Scroll-triggered showreel playback ----- */
+type ScrollTriggeredProps = {
+  src: string;
+  poster: string;
+  delayMs?: number;
+  playThreshold?: number;
+  pauseThreshold?: number;
+};
+
+function ScrollTriggeredShowreel({ src, poster, delayMs = 700, playThreshold = 0.7, pauseThreshold = 0.35 }: ScrollTriggeredProps) {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [started, setStarted] = useState(false);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const el = containerRef.current;
+    let timeoutId: number | null = null;
+    const playWithDelay = () => {
+      if (timeoutId) window.clearTimeout(timeoutId);
+      timeoutId = window.setTimeout(async () => {
+        try {
+          if (videoRef.current) {
+            await videoRef.current.play();
+            if (!started) setStarted(true); // poster used only on very first start
+          }
+        } catch {}
+      }, delayMs);
+    };
+    const pauseNow = () => {
+      if (timeoutId) { window.clearTimeout(timeoutId); timeoutId = null; }
+      try { videoRef.current?.pause(); } catch {}
+    };
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const ratio = entry.intersectionRatio;
+        if (entry.isIntersecting && ratio >= playThreshold) {
+          playWithDelay();
+        } else if (!entry.isIntersecting || ratio <= pauseThreshold) {
+          pauseNow();
+        }
+      });
+    }, { threshold: [0, pauseThreshold, playThreshold, 1] });
+    io.observe(el);
+    return () => { if (timeoutId) window.clearTimeout(timeoutId); io.disconnect(); };
+  }, [started]);
+
+  return (
+    <div ref={containerRef} style={{ position: 'relative', width: '100%', height: '100%' }}>
+      <video 
+        ref={videoRef} 
+        src={src}
+        poster={poster}
+        playsInline 
+        muted 
+        loop 
+        preload="metadata"
+        style={{ 
+          position: 'absolute', 
+          inset: 0, 
+          width: '100%', 
+          height: '100%', 
+          objectFit: 'cover', 
+          border: 0, 
+          display: 'block', 
+          borderRadius: 'inherit' 
+        }} 
+      />
+    </div>
+  );
+}
+
+export default function HomePage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [animationStage, setAnimationStage] = useState(0);
@@ -47,6 +119,7 @@ export default function Home() {
   // Defer heavy embeds (like YouTube) until after first paint to avoid
   // an initial reflow that can look like a flicker in dev
   const [showFeaturedEmbed, setShowFeaturedEmbed] = useState(false);
+  const nbHeroVideoRef = useRef<HTMLVideoElement | null>(null);
   
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
@@ -73,6 +146,26 @@ export default function Home() {
     let id = window.setTimeout(() => setShowFeaturedEmbed(true), 350);
     return () => window.clearTimeout(id);
   }, []);
+
+  // Seamless loop guard for New Balance hero: avoid gap at loop point
+  useEffect(() => {
+    if (!showFeaturedEmbed) return;
+    const v = nbHeroVideoRef.current;
+    if (!v) return;
+    const onTimeUpdate = () => {
+      if (!v.duration || Number.isNaN(v.duration)) return;
+      const remaining = v.duration - v.currentTime;
+      if (remaining <= 0.12) { // reset just before end to prevent glitch
+        try {
+          v.currentTime = 0;
+          // Ensure continuous playback without flashing poster
+          if (v.paused) v.play().catch(() => {});
+        } catch {}
+      }
+    };
+    v.addEventListener('timeupdate', onTimeUpdate);
+    return () => v.removeEventListener('timeupdate', onTimeUpdate);
+  }, [showFeaturedEmbed]);
 
   // Expanded videos array with 5 videos and internal routes
   const videos = [
@@ -540,6 +633,8 @@ export default function Home() {
           transform: translateY(-1px);
         }
 
+        /* (Reverted) No navbar-specific responsive overrides to preserve original desktop layout */
+
         /* Stats card styles (moved here from inner section to avoid nested styled-jsx) */
         .contact-info-card { max-width: 95%; margin: 0 auto; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 32px 40px; backdrop-filter: blur(20px); }
         .contact-stats-card { position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; max-width: 95%; padding: 42px 36px; }
@@ -554,6 +649,14 @@ export default function Home() {
         .stats-cta:hover { transform: translateY(-1px); box-shadow: 0 10px 28px rgba(0,0,0,0.28); }
         .stats-cta .arrow { width: 22px; height: 1px; background: #111; position: relative; }
         .stats-cta .arrow::after { content: ''; position: absolute; right: -2px; top: -3px; width: 7px; height: 7px; border-top: 1px solid #111; border-right: 1px solid #111; transform: rotate(45deg); }
+
+        /* Homepage-only tweaks to ensure top content is visible */
+        .home-stats-card .contact-stats-card {
+          padding-top: 140px;           /* ensure top title stays visible */
+          padding-bottom: 84px;         /* prevent bottom CTA from clipping */
+          min-height: 640px;            /* guarantee vertical room regardless of bg scale */
+        }
+        .home-stats-card .metric-row:first-of-type { margin-top: 12px; }
       `}</style>
 
       {/* MODERN CENTERED RESPONSIVE CONTAINER */}
@@ -686,36 +789,33 @@ export default function Home() {
             aria-label="Open Featured Video details"
             onClick={() => router.push('/projects/new-balance')}
           >
-            {/* Autoplaying Vimeo hero for New Balance Campaign */}
+            {/* Autoplaying local hero loop for New Balance Campaign */}
             {showFeaturedEmbed ? (
-              <iframe
-                title="Featured video"
-                src={`https://player.vimeo.com/video/1120683744?autoplay=1&muted=1&background=1&loop=1&controls=0&autopause=0&dnt=1`}
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  width: '100%',
-                  height: '100%',
-                  border: '0',
-                  display: 'block'
-                }}
-                loading="lazy"
-                allow="autoplay; fullscreen; picture-in-picture"
-                allowFullScreen
-              />
-            ) : (
-              <img
-                src="https://vumbnail.com/1120683744.jpg"
-                alt="New Balance Campaign preview"
+              <video
+                ref={nbHeroVideoRef}
+                src="/Videos/NBQuickLoop.mp4"
+                poster="/Videos/NBPOSTER.jpg"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="auto"
                 style={{
                   position: 'absolute',
                   inset: 0,
                   width: '100%',
                   height: '100%',
                   objectFit: 'cover',
-                  display: 'block'
+                  border: 0,
+                  display: 'block',
+                  borderRadius: 'inherit'
                 }}
-                decoding="async"
+              />
+            ) : (
+              <img
+                src="/Videos/NBPOSTER.jpg"
+                alt="New Balance Campaign poster"
+                style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'inherit', display: 'block' }}
                 loading="eager"
               />
             )}
@@ -796,7 +896,7 @@ export default function Home() {
         </section>
 
         {/* Full Video Portfolio List - Scrollable */}
-        <section style={{
+        <section className="home-stats" style={{
           ...columnStyle,
           marginBottom: '100px'
         }}>
@@ -846,36 +946,49 @@ export default function Home() {
                 }
               }}
             >
-              {(video.id === 'reel-2024' || video.id === 'new-balance-campaign' || video.id === 'commercial-project' || video.id === 'insta360' || video.id === 'featured-video') ? (
-                <iframe
-                  title="Autoplay video"
-                  src={`${video.href}?autoplay=1&muted=1&background=1&loop=1&controls=0&autopause=0&dnt=1`}
-                  style={{
-                    position: 'absolute',
-                    inset: 0,
-                    width: '100%',
-                    height: '100%',
-                    border: 0,
-                    display: 'block',
-                    // Re-applied scaling specifically for New Balance Campaign to hide source letterboxing
-                    transform: video.id === 'new-balance-campaign' ? 'scale(1.28)' : undefined,
-                    transformOrigin: 'center center'
-                  }}
-                  allow="autoplay; fullscreen; picture-in-picture"
-                  allowFullScreen
-                />
+              {video.id === 'reel-2024' ? (
+                <ScrollTriggeredShowreel src="/Videos/REELQuickLoop.mp4" poster="/Videos/Reel_Poster.jpg" />
+              ) : video.id === 'featured-video' ? (
+                <ScrollTriggeredShowreel src="/Videos/DannyQuickLoop.mp4" poster="/Videos/DannyPoster.jpg" />
               ) : (
-                <img
-                  src={video.thumbnail}
-                  alt={video.title}
-                  style={{
-                    width: '100%',
-                    height: 'auto',
-                    aspectRatio: '16/9',
-                    objectFit: 'cover',
-                    display: 'block'
-                  }}
-                />
+                (video.id === 'new-balance-campaign') ? (
+                  <iframe
+                    title="Autoplay video"
+                    src={`${video.href}?autoplay=1&muted=1&background=1&loop=1&controls=0&autopause=0&dnt=1`}
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      width: '100%',
+                      height: '100%',
+                      border: 0,
+                      display: 'block',
+                      transform: video.id === 'new-balance-campaign' ? 'scale(1.28)' : undefined,
+                      transformOrigin: 'center center'
+                    }}
+                    allow="autoplay; fullscreen; picture-in-picture"
+                    allowFullScreen
+                  />
+                ) : video.id === 'insta360' ? (
+                  <ScrollTriggeredShowreel src="/Videos/FTCLEANQuickLoop.mp4" poster="/Videos/FTCLEANPoster.jpg" />
+                ) : video.id === 'commercial-project' ? (
+                  <ScrollTriggeredShowreel src="/Videos/CRNQuickLoop.mp4" poster="/Videos/CRNPOSTER.jpg" />
+                ) : video.id === 'ai-documentary' ? (
+                  <ScrollTriggeredShowreel src="/Videos/NASAQuickLoop.mp4" poster="/Videos/NASAPoster.jpg" />
+                ) : (
+                  <img
+                    src={video.thumbnail}
+                    alt={video.title}
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      width: '100%',
+                      height: 'auto',
+                      aspectRatio: '16/9',
+                      objectFit: 'cover',
+                      display: 'block'
+                    }}
+                  />
+                )
               )}
               {/* Special rotating Showreel overlay for showreel item */}
               {video.id === 'reel-2024' && (
@@ -962,19 +1075,20 @@ export default function Home() {
         </section>
 
         {/* Contact Stats Card (placed directly under Apollo 11 list) */}
-        <section style={{
+        <section className="home-stats-card" style={{
           ...columnStyle,
           marginBottom: '100px'
         }}>
-          <div className="contact-info-card contact-stats-card animate-fade-in-up" style={{ animationDelay: '0.1s', animationFillMode: 'forwards', position: 'relative' }}>
+          <div className="contact-info-card contact-stats-card animate-fade-in-up" style={{ animationDelay: '0.1s', animationFillMode: 'forwards', position: 'relative', width: '100%', maxWidth: '100%' }}>
             {/* Background Vimeo video (full opacity) */}
             <div aria-hidden="true" style={{ position: 'absolute', inset: 0, zIndex: 1, overflow: 'hidden', pointerEvents: 'none', borderRadius: 'inherit' }}>
-              <iframe
-                title="Stats background video"
-                src="https://player.vimeo.com/video/1120798857?autoplay=1&muted=1&background=1&loop=1&controls=0&autopause=0&dnt=1&playsinline=1"
-                style={{ position: 'absolute', top: '50%', left: '50%', width: '100%', height: '100%', transform: 'translate(-50%, -50%) scale(1.6)', transformOrigin: 'center', border: 0, display: 'block' }}
-                allow="autoplay; fullscreen; picture-in-picture"
-                loading="lazy"
+              <video
+                src="/Videos/StatQuickLoop.mp4"
+                autoPlay
+                muted
+                loop
+                playsInline
+                style={{ position: 'absolute', top: '50%', left: '50%', width: '100%', height: '100%', transform: 'translate(-50%, -50%) scale(2.0)', transformOrigin: 'center', border: 0, display: 'block', objectFit: 'cover' }}
               />
             </div>
             <div className="contact-stats-inner">
@@ -999,14 +1113,14 @@ export default function Home() {
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'center', marginTop: '26px' }}>
-                <a
-                  href="mailto:colour8k@mac.com?subject=Quick%20hello%2C%20just%20checked%20out%20your%20website&body=Hi%20Jeffrey"
+                <Link
+                  href="/contact"
                   className="stats-cta"
-                  aria-label="Email Jeff Kerr"
+                  aria-label="Go to contact page"
                 >
                   CONTACT
                   <span className="arrow" aria-hidden="true" />
-                </a>
+                </Link>
               </div>
             </div>
           </div>

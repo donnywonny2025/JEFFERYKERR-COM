@@ -5,12 +5,10 @@ import React from 'react';
 export default function ContactForm() {
   return (
     <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        if (typeof window !== 'undefined') {
-          console.log('[ContactForm] submit clicked');
-        }
-      }}
+      name="contact"
+      method="POST"
+      data-netlify="true"
+      netlify-honeypot="bot-field"
       className="animate-fade-in-up contact-form"
       style={{
         display: 'grid',
@@ -18,6 +16,13 @@ export default function ContactForm() {
         marginTop: '20px'
       }}
     >
+      {/* Netlify form requirements */}
+      <input type="hidden" name="form-name" value="contact" />
+      <p style={{ display: 'none' }}>
+        <label>
+          Don’t fill this out if you’re human: <input name="bot-field" />
+        </label>
+      </p>
       {/* First/Last name row */}
       <div className="name-row row-2" style={{
         display: 'grid',

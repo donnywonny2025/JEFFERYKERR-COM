@@ -82,10 +82,82 @@ export default function ContactPage() {
       <style jsx global>{`
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
         .animate-fade-in-up { opacity: 0; animation: fadeInUp 0.8s cubic-bezier(0.25,0.46,0.45,0.94) forwards; }
-        
+
+        /* Minimal subtitle/tagline above CONTACT (no box) */
+        .contact-subtitle {
+          max-width: 1050px;
+          margin: 0 auto 22px; /* breathing room before overline */
+          text-align: center;
+          color: rgba(255,255,255,0.88);
+          font-family: 'Space Mono', monospace;
+          font-weight: 400;
+          font-size: clamp(14px, 1.6vw, 18px); /* hero-adjacent but secondary */
+          line-height: 1.6;
+          letter-spacing: 0.02em;
+        }
+        .contact-sub-underline {
+          width: 140px;
+          height: 1px;
+          margin: 14px auto 10px;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.32), transparent);
+          filter: drop-shadow(0 0 0.5px rgba(255,255,255,0.2));
+        }
+
+        /* Compact hero card (half-height clone of stats card) */
+        .contact-hero-card {
+          position: relative;
+          overflow: hidden;
+          border-radius: 16px;
+          border: 1px solid rgba(255,255,255,0.10);
+          background: rgba(0,0,0,0.6);
+          width: 100%;
+          max-width: 95%;
+          margin: 24px auto 56px; /* tighter top gap to match homepage */
+          /* half-ish height compared to large stats card */
+          height: clamp(220px, 28vw, 320px);
+        }
+        .contact-hero-overlay {
+          position: relative;
+          z-index: 2;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          width: min(96%, 950px);
+          margin: 0 auto;
+          height: 100%;
+          padding: 22px 28px; /* a bit more breathing room for larger text */
+        }
+        .contact-hero-text {
+          font-family: 'Space Mono', monospace;
+          color: rgba(255,255,255,0.92);
+          font-weight: 400;
+          font-size: clamp(16px, 2vw, 22px); /* larger, balanced */
+          line-height: 1.7;
+          letter-spacing: 0.03em;
+          text-shadow: 0 1px 2px rgba(0,0,0,0.35);
+          max-width: min(90%, 820px); /* limit line length for better rhythm */
+          margin-inline: auto;
+        }
+        .contact-hero-underline {
+          width: 120px;
+          height: 1px;
+          margin: 12px auto 0;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.28), transparent);
+        }
+        /* subtle vignette to lift text contrast */
+        .contact-hero-card::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          z-index: 1;
+          background: radial-gradient(80% 60% at 50% 50%, rgba(0,0,0,0.12), transparent 70%);
+          pointer-events: none;
+        }
+
         .contact-info-card {
           max-width: 95%;
-          margin: 80px auto 0;
+          margin: var(--contact-gap-bottom, 128px) auto 0; /* separate bottom gap */
           background: rgba(0, 0, 0, 0.6);
           border: 1px solid rgba(255, 255, 255, 0.1);
           border-radius: 16px;
@@ -264,23 +336,48 @@ export default function ContactPage() {
           margin: 24px 0;
         }
         
+        /* Spacing: top gap above form, larger bottom gap before stats card */
+        .contact-layout { --contact-gap-top: 96px; --contact-gap-bottom: 56px; }
+        .contact-layout #contact-form { margin-top: var(--contact-gap-top); }
+
         @media (max-width: 768px) {
-          .contact-info-card {
-            margin: 32px 16px 0;
-            padding: 28px 24px;
-          }
+          .contact-hero-card { margin: 20px auto 36px; }
+          .contact-layout { --contact-gap-top: 64px; --contact-gap-bottom: 36px; }
+          .contact-info-card { padding: 28px 24px; }
         }
       `}</style>
 
       {/* Main content */}
       <main style={{ position: 'relative', zIndex: 20, minHeight: '80vh', padding: '135px 24px 100px' }}>
-        <div style={{ width: '100%', maxWidth: '1050px', padding: '0 60px', margin: '0 auto' }}>
+        <div className="contact-layout" style={{ width: '100%', maxWidth: '1050px', padding: '0 60px', margin: '0 auto' }}>
+          {/* Compact video-backed hero card (half-height) */}
+          <section className="contact-hero-card animate-fade-in-up" style={{ animationDelay: '0.2s', animationFillMode: 'both' }}>
+            {/* Local loop background (replaces Vimeo) */}
+            <div aria-hidden="true" style={{ position: 'absolute', inset: 0, zIndex: 1, overflow: 'hidden', pointerEvents: 'none', borderRadius: 'inherit' }}>
+              <video
+                src="/Videos/ABOUTLoop.mp4"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="auto"
+                style={{ position: 'absolute', top: '50%', left: '50%', width: '100%', height: '100%', transform: 'translate(-50%, -50%) scale(1.6)', transformOrigin: 'center', border: 0, display: 'block', objectFit: 'cover' }}
+              />
+            </div>
+            <div className="contact-hero-overlay">
+              <div className="contact-hero-text">
+                I'm a creative director, editor, and producer with 15+ years of experience creating visual content. I work across entertainment, corporate, and political projects, and I love diving into everything — editing, coding, building apps, motion graphics.
+                <div className="contact-hero-underline" aria-hidden="true" />
+              </div>
+            </div>
+          </section>
+
           <div className="animate-fade-in-up" style={{ animationDelay: '0.1s', animationFillMode: 'forwards', textAlign: 'center' }}>
             <div style={{ fontFamily: "'Space Mono', monospace", fontSize: '11px', letterSpacing: '0.12em', color: 'rgba(255,255,255,0.6)', textTransform: 'uppercase', marginBottom: '20px' }}>Contact</div>
             {/* Centered vertical divider under overline */}
             <div style={{ width: '1px', height: '28px', margin: '0 auto 28px', background: 'rgba(255,255,255,0.24)' }} />
           </div>
-          <h1 className="animate-fade-in-up" style={{ fontFamily: "'Space Mono', monospace", fontSize: '32px', fontWeight: 400, color: 'rgba(255,255,255,0.95)', marginBottom: '36px', animationDelay: '0.2s', animationFillMode: 'forwards', textAlign: 'center' }}>What's up?</h1>
+          <h1 className="animate-fade-in-up" style={{ fontFamily: "'Space Mono', monospace", fontSize: '32px', fontWeight: 400, color: 'rgba(255,255,255,0.95)', marginBottom: '36px', animationDelay: '0.2s', animationFillMode: 'forwards', textAlign: 'center' }}>Let’s Work Together</h1>
 
           {/* Constrain the form for better readability */}
           <div id="contact-form" style={{ width: '100%', maxWidth: '480px', margin: '0 auto' }}>
@@ -292,7 +389,7 @@ export default function ContactPage() {
             <div className="contact-section">
               <h3 className="section-title">Address</h3>
               <div className="section-content">
-                <p className="company-name">Jeff Kerr Creative</p>
+                <p className="company-name">Jeffery Kerr</p>
                 <p className="address-line">Grand Rapids, Michigan / World</p>
               </div>
               <div className="section-divider"></div>
@@ -312,7 +409,7 @@ export default function ContactPage() {
               <h3 className="section-title">Socials</h3>
               <div className="section-content">
                 <div className="social-links">
-                  <a href="#" className="social-link">
+                  <a href="https://www.linkedin.com/in/jefferykerrcreative" className="social-link" target="_blank" rel="noopener noreferrer">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
                       <rect x="2" y="9" width="4" height="12"/>
@@ -334,14 +431,16 @@ export default function ContactPage() {
           </div>
           {/* Stats card (below existing contact card) */}
           <div className="contact-info-card contact-stats-card animate-fade-in-up" style={{ animationDelay: '0.15s', animationFillMode: 'forwards' }}>
-            {/* Background Vimeo video (full opacity) */}
+            {/* Background local loop (replaces Vimeo) */}
             <div aria-hidden="true" style={{ position: 'absolute', inset: 0, zIndex: 1, overflow: 'hidden', pointerEvents: 'none', borderRadius: 'inherit' }}>
-              <iframe
-                title="Stats background video"
-                src="https://player.vimeo.com/video/1120798857?autoplay=1&muted=1&background=1&loop=1&controls=0&autopause=0&dnt=1&playsinline=1"
-                style={{ position: 'absolute', top: '50%', left: '50%', width: '100%', height: '100%', transform: 'translate(-50%, -50%) scale(1.6)', transformOrigin: 'center', border: 0, display: 'block' }}
-                allow="autoplay; fullscreen; picture-in-picture"
-                loading="lazy"
+              <video
+                src="/Videos/ContactStatsLoop.mp4"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="auto"
+                style={{ position: 'absolute', top: '50%', left: '50%', width: '100%', height: '100%', transform: 'translate(-50%, -50%) scale(1.6)', transformOrigin: 'center', border: 0, display: 'block', objectFit: 'cover' }}
               />
             </div>
             <div className="contact-stats-inner">
@@ -364,17 +463,7 @@ export default function ContactPage() {
                 <div className="metric-value">Stories</div>
                 <div className="metric-label">That Connect</div>
               </div>
-
-              <div style={{ display: 'flex', justifyContent: 'center', marginTop: '26px' }}>
-                <a
-                  href="mailto:colour8k@mac.com?subject=Quick%20hello%2C%20just%20checked%20out%20your%20website&body=Hi%20Jeffrey"
-                  className="stats-cta"
-                  aria-label="Email Jeff Kerr"
-                >
-                  CONTACT
-                  <span className="arrow" aria-hidden="true" />
-                </a>
-              </div>
+              {/* CTA removed on contact page */}
             </div>
           </div>
         </div>
@@ -404,7 +493,7 @@ export default function ContactPage() {
               <Link href="/contact">CONTACT</Link>
             </nav>
             <div className="footer-social">
-              <a href="#" aria-label="LinkedIn">
+              <a href="https://www.linkedin.com/in/jefferykerrcreative" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
                   <rect x="2" y="9" width="4" height="12"/>
