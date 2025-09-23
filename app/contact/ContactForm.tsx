@@ -4,13 +4,23 @@ import React from 'react';
 
 export default function ContactForm() {
   const [submitted, setSubmitted] = React.useState(false);
-  // Provide the boolean 'netlify' attribute without upsetting TS types
-  const netlifyProps: any = { netlify: true };
+  // Provide the Netlify attribute as a string to avoid React warning
+  const netlifyProps: any = { netlify: 'true' };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
     try {
+      // If running on production domain, use native form submission
+      if (typeof window !== 'undefined') {
+        const host = window.location.hostname;
+        const isProd = /jefferykerr\.com$/.test(host) || /netlify\.app$/.test(host);
+        if (isProd) {
+          form.submit();
+          return;
+        }
+      }
+
       const formData = new FormData(form);
       // Ensure Netlify form name is present
       formData.set('form-name', 'contact');
@@ -28,6 +38,8 @@ export default function ContactForm() {
         setSubmitted(true);
       } else {
         console.warn('[ContactForm] Netlify submit non-OK status:', res.status);
+        // Fallback to native submit on non-OK responses
+        try { form.submit(); return; } catch {}
         alert('Sorry, we could not send your message right now. Please try again in a moment.');
       }
     } catch (err) {
@@ -70,7 +82,7 @@ export default function ContactForm() {
       method="POST"
       {...netlifyProps}
       action="/"
-      accept-charset="utf-8"
+      acceptCharset="utf-8"
       netlify-honeypot="bot-field"
       onSubmit={handleSubmit}
       className="animate-fade-in-up contact-form"
@@ -96,11 +108,13 @@ export default function ContactForm() {
         <div>
           <label htmlFor="firstName" style={labelStyle}>First name</label>
           <input id="firstName" name="firstName" type="text" placeholder=""
+            autoComplete="given-name"
             style={inputStyle} />
         </div>
         <div>
           <label htmlFor="lastName" style={labelStyle}>Last name</label>
           <input id="lastName" name="lastName" type="text" placeholder=""
+            autoComplete="family-name"
             style={inputStyle} />
         </div>
       </div>
@@ -109,6 +123,7 @@ export default function ContactForm() {
       <div>
         <label htmlFor="email" style={labelStyle}>Email</label>
         <input id="email" name="email" type="email" placeholder=""
+          autoComplete="email"
           style={inputStyle} />
       </div>
 
@@ -116,6 +131,7 @@ export default function ContactForm() {
       <div>
         <label htmlFor="message" style={labelStyle}>Message</label>
         <textarea id="message" name="message" rows={5} placeholder="Start typing here …"
+          autoComplete="off"
           style={{ ...inputStyle, resize: 'vertical' }} />
       </div>
 
