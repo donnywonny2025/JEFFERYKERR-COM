@@ -98,6 +98,7 @@ export default function ContactForm() {
     >
       {/* Netlify form requirements */}
       <input type="hidden" name="form-name" value="contact" />
+      <input type="hidden" name="redirect" value="/thank-you" />
       {/* Hidden iframe used on production to avoid full-page navigation */}
       <iframe
         ref={iframeRef}
