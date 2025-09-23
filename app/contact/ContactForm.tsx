@@ -18,12 +18,18 @@ export default function ContactForm() {
         Array.from(formData.entries()) as [string, string][]
       ).toString();
 
-      await fetch('/', {
+      const endpoint = (typeof window !== 'undefined' ? window.location.origin : '') + '/';
+      const res = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body
       });
-      setSubmitted(true);
+      if (res.ok) {
+        setSubmitted(true);
+      } else {
+        console.warn('[ContactForm] Netlify submit non-OK status:', res.status);
+        alert('Sorry, we could not send your message right now. Please try again in a moment.');
+      }
     } catch (err) {
       console.error('[ContactForm] submit error', err);
       // Fallback to native submit if fetch fails
@@ -63,6 +69,8 @@ export default function ContactForm() {
       name="contact"
       method="POST"
       {...netlifyProps}
+      action="/"
+      accept-charset="utf-8"
       netlify-honeypot="bot-field"
       onSubmit={handleSubmit}
       className="animate-fade-in-up contact-form"
