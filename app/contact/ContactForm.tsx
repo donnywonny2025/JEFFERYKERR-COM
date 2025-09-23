@@ -81,8 +81,9 @@ export default function ContactForm() {
       name="contact"
       method="POST"
       {...netlifyProps}
-      action="/"
+      action="/thank-you"
       acceptCharset="utf-8"
+      data-netlify="true"
       netlify-honeypot="bot-field"
       onSubmit={handleSubmit}
       className="animate-fade-in-up contact-form"
