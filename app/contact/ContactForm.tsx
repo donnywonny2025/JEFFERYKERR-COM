@@ -3,11 +3,15 @@
 import React from 'react';
 
 export default function ContactForm() {
+  // Provide Netlify attribute in a TS-safe way
+  const netlifyProps: any = { netlify: 'true' };
   return (
     <form
       name="contact"
       method="POST"
-      action="https://formspree.io/f/mrbygakk"
+      {...netlifyProps}
+      data-netlify="true"
+      action="/contact/success"
       className="animate-fade-in-up contact-form"
       style={{
         display: 'grid',
@@ -15,9 +19,8 @@ export default function ContactForm() {
         marginTop: '20px'
       }}
     >
-      {/* Formspree redirect to on-site success page */}
-      <input type="hidden" name="_next" value="https://jeffreykerr.com/contact/success" />
-      {/* Formspree: no hidden form-name required */}
+      {/* Netlify form name (required) */}
+      <input type="hidden" name="form-name" value="contact" />
       {/* First/Last name row */}
       <div className="name-row row-2" style={{
         display: 'grid',
