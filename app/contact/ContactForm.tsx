@@ -15,6 +15,8 @@ export default function ContactForm() {
         marginTop: '20px'
       }}
     >
+      {/* Formspree redirect to on-site success page */}
+      <input type="hidden" name="_next" value="https://jeffreykerr.com/contact/success" />
       {/* Formspree: no hidden form-name required */}
       {/* First/Last name row */}
       <div className="name-row row-2" style={{
