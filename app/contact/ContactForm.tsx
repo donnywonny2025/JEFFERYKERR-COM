@@ -3,12 +3,68 @@
 import React from 'react';
 
 export default function ContactForm() {
+  const [submitted, setSubmitted] = React.useState(false);
+  // Provide the boolean 'netlify' attribute without upsetting TS types
+  const netlifyProps: any = { netlify: true };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    try {
+      const formData = new FormData(form);
+      // Ensure Netlify form name is present
+      formData.set('form-name', 'contact');
+      const body = new URLSearchParams(
+        Array.from(formData.entries()) as [string, string][]
+      ).toString();
+
+      await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body
+      });
+      setSubmitted(true);
+    } catch (err) {
+      console.error('[ContactForm] submit error', err);
+      // Fallback to native submit if fetch fails
+      try { form.submit(); } catch {}
+    }
+  };
+
+  if (submitted) {
+    return (
+      <div
+        className="animate-fade-in-up"
+        style={{
+          display: 'grid',
+          placeItems: 'center',
+          textAlign: 'center',
+          padding: '36px 24px',
+          marginTop: '20px',
+          borderRadius: '12px',
+          border: '1px solid rgba(255,255,255,0.18)',
+          background: 'rgba(255,255,255,0.06)',
+          backdropFilter: 'blur(8px)'
+        }}
+      >
+        <div style={{
+          fontFamily: "'Space Mono', monospace",
+          fontSize: '18px',
+          color: 'rgba(255,255,255,0.95)'
+        }}>
+          Thank you! I'll be in touch soon.
+        </div>
+      </div>
+    );
+  }
+
   return (
     <form
       name="contact"
       method="POST"
-      data-netlify="true"
+      {...netlifyProps}
       netlify-honeypot="bot-field"
+      onSubmit={handleSubmit}
       className="animate-fade-in-up contact-form"
       style={{
         display: 'grid',
