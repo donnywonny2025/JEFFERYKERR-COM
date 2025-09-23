@@ -82,7 +82,7 @@ export default function ContactForm() {
       name="contact"
       method="POST"
       {...netlifyProps}
-      action="/"
+      action="/contact"
       acceptCharset="utf-8"
       data-netlify="true"
       netlify-honeypot="bot-field"
