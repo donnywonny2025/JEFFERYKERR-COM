@@ -6,20 +6,21 @@ export default function ContactForm() {
   const [submitted, setSubmitted] = React.useState(false);
   // Provide the Netlify attribute as a string to avoid React warning
   const netlifyProps: any = { netlify: 'true' };
+  const iframeRef = React.useRef<HTMLIFrameElement | null>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
     const form = e.currentTarget;
     try {
-      // If running on production domain, use native form submission
+      // On production domains, allow native submission (no preventDefault)
       if (typeof window !== 'undefined') {
         const host = window.location.hostname;
         const isProd = /jefferykerr\.com$/.test(host) || /netlify\.app$/.test(host);
         if (isProd) {
-          form.submit();
-          return;
+          return; // let browser submit natively to Netlify (to hidden iframe)
         }
       }
+      // Dev/local: prevent default and use fetch for inline UX
+      e.preventDefault();
 
       const formData = new FormData(form);
       // Ensure Netlify form name is present
@@ -81,10 +82,12 @@ export default function ContactForm() {
       name="contact"
       method="POST"
       {...netlifyProps}
-      action="/thank-you"
+      action="/"
       acceptCharset="utf-8"
       data-netlify="true"
       netlify-honeypot="bot-field"
+      // Send native POST to hidden iframe on production so user stays on page
+      target="netlify-target"
       onSubmit={handleSubmit}
       className="animate-fade-in-up contact-form"
       style={{
@@ -95,6 +98,20 @@ export default function ContactForm() {
     >
       {/* Netlify form requirements */}
       <input type="hidden" name="form-name" value="contact" />
+      {/* Hidden iframe used on production to avoid full-page navigation */}
+      <iframe
+        ref={iframeRef}
+        name="netlify-target"
+        style={{ display: 'none', width: 0, height: 0, border: 0 }}
+        onLoad={() => {
+          // On production, after Netlify responds, mark as submitted
+          if (typeof window !== 'undefined') {
+            const host = window.location.hostname;
+            const isProd = /jefferykerr\.com$/.test(host) || /netlify\.app$/.test(host);
+            if (isProd) setSubmitted(true);
+          }
+        }}
+      />
       <p style={{ display: 'none' }}>
         <label>
           Don’t fill this out if you’re human: <input name="bot-field" />
