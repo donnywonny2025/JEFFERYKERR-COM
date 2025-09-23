@@ -5,19 +5,43 @@ import React from 'react';
 export default function ContactForm() {
   // Provide Netlify attribute in a TS-safe way
   const netlifyProps: any = { netlify: 'true' };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    try {
+      const formData = new FormData(form);
+      // Ensure Netlify form name present for runtime submission
+      if (!formData.get('form-name')) formData.set('form-name', 'contact');
+      const body = new URLSearchParams(
+        Array.from(formData.entries()) as [string, string][]
+      ).toString();
+
+      await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body
+      });
+      window.location.href = '/contact/success';
+    } catch (error) {
+      alert('Error submitting form');
+      try { form.submit(); } catch {}
+    }
+  };
   return (
     <form
       name="contact"
       method="POST"
       {...netlifyProps}
       data-netlify="true"
-      action="/contact/success"
+      action="/"
       className="animate-fade-in-up contact-form"
       style={{
         display: 'grid',
         gap: '24px',
         marginTop: '20px'
       }}
+      onSubmit={handleSubmit}
     >
       {/* Netlify form name (required) */}
       <input type="hidden" name="form-name" value="contact" />
