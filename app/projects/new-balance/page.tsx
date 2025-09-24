@@ -11,6 +11,7 @@ import WeatherWidget from '../../../src/components/WeatherWidget';
 import LiquidEtherSimple from '../../../src/components/LiquidEtherSimple';
 import { Meteors } from '../../../src/components/ui/meteors';
 import '../../../src/App.css';
+import { Instagram, Linkedin } from 'lucide-react';
 
 const Liquid = LiquidEtherSimple as unknown as React.ComponentType<any>;
 
@@ -26,6 +27,15 @@ export default function NewBalanceCampaignPage() {
     height: '1px',
     background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%)'
   } as React.CSSProperties;
+
+  const columnStyle: React.CSSProperties = {
+    width: '100%',
+    maxWidth: '750px',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    paddingLeft: '20px',
+    paddingRight: '20px',
+  };
 
   return (
     <div className="App" style={{ position: 'relative', minHeight: '100vh', color: '#ffffff' }}>
@@ -60,14 +70,18 @@ export default function NewBalanceCampaignPage() {
       </div>
 
       <div style={{ position: 'relative', zIndex: 20, minHeight: '100vh' }}>
-        <header className="header" style={{ background: 'transparent' }}>
+        <div className="top-nav-background" aria-hidden="true"></div>
+        <header className="header" style={{ padding: '24px 0 0' }}>
           <div
             className="header-content"
             style={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              width: '100%'
+              width: '100%',
+              maxWidth: '1050px',
+              margin: '0 auto',
+              padding: '0 60px'
             }}
           >
             <Link href="/" className="logo">
@@ -80,7 +94,7 @@ export default function NewBalanceCampaignPage() {
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '20px'
+                gap: '14px'
               }}
             >
               <SafeWrapper>
@@ -118,11 +132,11 @@ export default function NewBalanceCampaignPage() {
             style={{
               width: '100%',
               maxWidth: '1200px',
-              padding: '0 60px',
+              padding: '0 24px',
               margin: '0 auto'
             }}
           >
-            <section style={{ paddingTop: '140px', marginBottom: '40px' }}>
+            <section style={{ ...columnStyle, paddingTop: '140px', marginBottom: '40px' }}>
               <Link
                 href="/"
                 style={{
@@ -140,7 +154,7 @@ export default function NewBalanceCampaignPage() {
               </Link>
             </section>
 
-            <section style={{ marginBottom: '60px' }}>
+            <section style={{ ...columnStyle, marginBottom: '60px' }}>
               <div
                 style={{
                   maxWidth: '800px',
@@ -161,7 +175,7 @@ export default function NewBalanceCampaignPage() {
               </div>
             </section>
 
-            <section style={{ marginBottom: '60px' }}>
+            <section style={{ ...columnStyle, marginBottom: '60px' }}>
               <h1
                 style={{
                   fontFamily: "'Space Mono', monospace",
@@ -188,7 +202,7 @@ export default function NewBalanceCampaignPage() {
               </p>
             </section>
 
-            <section style={{ marginBottom: '80px' }}>
+            <section style={{ ...columnStyle, marginBottom: '80px' }}>
               <div
                 style={{
                   display: 'flex',
@@ -230,9 +244,11 @@ export default function NewBalanceCampaignPage() {
           </div>
         </div>
 
-        <div style={{ position: 'relative', background: '#000', overflow: 'hidden' }}>
-          <Meteors number={20} />
-          <footer className="footer" style={{ position: 'relative' }}>
+        <div style={{ position: 'relative', background: '#000', overflow: 'hidden', zIndex: 40 }}>
+          <div style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none' }} aria-hidden="true">
+            <Meteors number={20} />
+          </div>
+          <footer className="footer" style={{ position: 'relative', zIndex: 41 }}>
             <div className="footer-content">
               <div className="footer-logo">
                 <TextShimmer duration={3} spread={1.5}>
@@ -247,18 +263,14 @@ export default function NewBalanceCampaignPage() {
                 <Link href="/">HOME</Link>
                 <Link href="/backgrounds">🎨 BACKGROUNDS</Link>
                 <a href="#">WORK</a>
-                <a href="#">CONTACT</a>
+                <Link href="/contact">CONTACT</Link>
               </nav>
               <div className="footer-social">
-                <a href="#" aria-label="Instagram">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                  </svg>
+                <a href="#" aria-label="Instagram" title="Instagram" style={{ display: 'inline-flex', alignItems: 'center' }}>
+                  <Instagram size={20} strokeWidth={2} color="currentColor" />
                 </a>
-                <a href="#" aria-label="YouTube">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                  </svg>
+                <a href="#" aria-label="LinkedIn" title="LinkedIn" style={{ display: 'inline-flex', alignItems: 'center', marginLeft: 12 }}>
+                  <Linkedin size={20} strokeWidth={2} color="currentColor" />
                 </a>
               </div>
               <div className="footer-copyright">

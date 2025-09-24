@@ -117,7 +117,7 @@ export const LIQUID_ETHER_CONFIG = {
 
 // Menu configuration
 export const MENU_CONFIG = {
-  ITEMS: ['Home', 'Work', 'About', 'Contact'],
+  ITEMS: ['Home', 'Work', 'Contact'],
   EMAIL: 'colour8k@mac.com',
   VIDEO_URL: 'https://player.vimeo.com/video/1116767679',
   VIDEO_TITLE: 'Featured Showreel'
@@ -127,6 +127,5 @@ export const MENU_CONFIG = {
 export const NAV_LINKS = [
   { href: '#', label: 'Home' },
   { href: '#', label: 'Work' },
-  { href: '#', label: 'About' },
   { href: '#', label: 'Contact', className: 'nav-contact' }
 ];
