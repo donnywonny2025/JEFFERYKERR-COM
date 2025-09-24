@@ -3,38 +3,50 @@
 import React from 'react';
 
 export default function ContactForm() {
-  // Provide Netlify attribute in a TS-safe way
-  const netlifyProps: any = { netlify: 'true' };
-
+  // EmailJS REST submission (no extra SDK needed)
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
     try {
       const formData = new FormData(form);
-      // Ensure Netlify form name present for runtime submission
-      if (!formData.get('form-name')) formData.set('form-name', 'contact');
-      const body = new URLSearchParams(
-        Array.from(formData.entries()) as [string, string][]
-      ).toString();
+      const firstName = String(formData.get('firstName') || '');
+      const lastName = String(formData.get('lastName') || '');
+      const email = String(formData.get('email') || '');
+      const message = String(formData.get('message') || '');
 
-      await fetch('/', {
+      const payload = {
+        service_id: 'service_4lb6jx8',
+        template_id: 'template_vscooeh',
+        user_id: 'dp8XMtJ-9g8LWfPJM', // public key
+        template_params: {
+          firstName,
+          lastName,
+          email,
+          message
+        }
+      };
+
+      const res = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
       });
+
+      if (!res.ok) {
+        const txt = await res.text().catch(() => '');
+        throw new Error(`EmailJS error ${res.status}: ${txt}`);
+      }
+
       window.location.href = '/contact/success';
     } catch (error) {
-      alert('Error submitting form');
-      try { form.submit(); } catch {}
+      console.error('[ContactForm] EmailJS submit failed:', error);
+      alert('Sorry, we could not send your message right now. Please try again later.');
     }
   };
   return (
     <form
       name="contact"
       method="POST"
-      {...netlifyProps}
-      data-netlify="true"
-      action="/"
       className="animate-fade-in-up contact-form"
       style={{
         display: 'grid',
@@ -43,8 +55,7 @@ export default function ContactForm() {
       }}
       onSubmit={handleSubmit}
     >
-      {/* Netlify form name (required) */}
-      <input type="hidden" name="form-name" value="contact" />
+      {/* EmailJS does not require hidden fields; keep UI identical */}
       {/* First/Last name row */}
       <div className="name-row row-2" style={{
         display: 'grid',
