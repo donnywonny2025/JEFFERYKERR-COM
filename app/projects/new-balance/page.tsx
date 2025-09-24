@@ -91,6 +91,7 @@ export default function NewBalanceCampaignPage() {
             </Link>
 
             <div
+              className="header-right"
               style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -112,6 +113,8 @@ export default function NewBalanceCampaignPage() {
                     router.push('/contact');
                   } else if (action === 'home') {
                     router.push('/');
+                  } else if (action === 'work') {
+                    router.push('/#more-work');
                   }
                 }}
               />

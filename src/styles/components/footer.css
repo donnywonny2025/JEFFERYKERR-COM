@@ -33,7 +33,7 @@
   width: 60px;
   height: 1px;
   background: rgba(255, 255, 255, 0.3);
-  margin: 0;
+  margin: 0 auto; /* center under logo */
 }
 
 .footer-email {
@@ -58,6 +58,23 @@
   margin: 10px 0;
 }
 
+/* Mobile: tighten overall footer padding and align nav cleanly to edges */
+@media (max-width: 768px) {
+  .footer { padding: 28px 16px 32px !important; }
+  .footer-content { width: 100% !important; align-items: stretch !important; }
+  .footer-divider { display: block !important; margin: 8px auto !important; }
+  .footer-nav {
+    width: 100% !important;                /* full row width */
+    box-sizing: border-box !important;
+    padding: 0 20px !important;            /* left/right breathing room */
+    display: flex !important;              /* force flex */
+    gap: 0 !important;                     /* prevent extra spacing */
+    justify-content: space-between !important; /* spread to edges */
+    align-items: center !important;
+  }
+  .footer-nav a { display: inline-block !important; white-space: nowrap !important; flex: 0 0 auto !important; }
+}
+
 .footer-nav a {
   font-family: 'Space Mono', monospace;
   font-size: 12px;
@@ -67,6 +84,7 @@
   text-decoration: none;
   text-transform: uppercase;
   transition: color 0.3s ease;
+  white-space: nowrap; /* keep emoji + text on one line */
 }
 
 .footer-nav a:hover {

@@ -113,6 +113,8 @@ export default function Showreel2025Page() {
                     router.push('/contact');
                   } else if (action === 'home') {
                     router.push('/');
+                  } else if (action === 'work') {
+                    router.push('/#more-work');
                   }
                 }}
               />

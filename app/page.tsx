@@ -388,6 +388,7 @@ export default function HomePage() {
           </Link>
 
           <div
+            className="header-right"
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -409,6 +410,17 @@ export default function HomePage() {
                   router.push('/contact');
                 } else if (action === 'home') {
                   router.push('/');
+                } else if (action === 'work') {
+                  try {
+                    if (typeof window !== 'undefined' && window.location.pathname === '/') {
+                      const el = document.getElementById('more-work');
+                      if (el) {
+                        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        return;
+                      }
+                    }
+                  } catch {}
+                  router.push('/#more-work');
                 }
                 // Add other navigation cases as needed
               }}
@@ -633,6 +645,20 @@ export default function HomePage() {
           transform: translateY(-1px);
         }
 
+        /* Keep contact line on a single row on small screens */
+        @media (max-width: 480px) {
+          .contact-info { white-space: nowrap; overflow: hidden; }
+          .contact-info .contact-loc,
+          .contact-info .contact-email-text {
+            display: inline-block;
+            max-width: calc(50% - 18px); /* split space around the divider */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            vertical-align: middle;
+          }
+          .contact-info a { color: #cccccc; text-decoration: none; }
+        }
+
         /* (Reverted) No navbar-specific responsive overrides to preserve original desktop layout */
 
         /* Stats card styles (moved here from inner section to avoid nested styled-jsx) */
@@ -756,11 +782,11 @@ export default function HomePage() {
               color="rgba(255,255,255,0.6)"
               style={{ marginRight: '8px' }}
             />
-            <span>
+            <span className="contact-loc">
               <CharacterHoverText>Grand Rapids, Michigan / World</CharacterHoverText>
             </span>
             <span style={{ opacity: 0.6 }}>|</span>
-            <span>
+            <span className="contact-email-text">
               <a href="mailto:colour8k@mac.com" style={{ color: '#cccccc', textDecoration: 'none' }}>
                 <CharacterHoverText>colour8k@mac.com</CharacterHoverText>
               </a>
@@ -896,7 +922,7 @@ export default function HomePage() {
         </section>
 
         {/* Full Video Portfolio List - Scrollable */}
-        <section className="home-stats" style={{
+        <section id="more-work" className="home-stats" style={{
           ...columnStyle,
           marginBottom: '100px'
         }}>
@@ -1126,46 +1152,47 @@ export default function HomePage() {
           </div>
         </section>
 
-        </div> {/* Close the inner container */}
-      </div> {/* Close the flex container */}
+</div> {/* Close the inner container */}
+</div> {/* Close the flex container */}
 
-      {/* Footer with meteors overlay (to match backgrounds page) */}
-      <div style={{ position: 'relative', background: '#000', overflow: 'hidden', zIndex: 40 }}>
-        <footer className="footer" style={{ position: 'relative', zIndex: 41 }}>
-          {/* Meteors overlay above black background but below footer content */}
-          <div style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none' }} aria-hidden="true">
-            <Meteors number={20} />
-          </div>
-          <div className="footer-content">
-            <div className="footer-logo">
-              <TextShimmer duration={3} spread={1.5}>
-                <span className="logo-k">k</span>err
-              </TextShimmer>
-            </div>
-            <div className="footer-divider"></div>
-            <div className="footer-email">
-              <a href="mailto:colour8k@mac.com">colour8k@mac.com</a>
-            </div>
-            <nav className="footer-nav">
-              <Link href="/">HOME</Link>
-              <Link href="/backgrounds">🎨 BACKGROUNDS</Link>
-              <a href="#">WORK</a>
-              <Link href="/contact">CONTACT</Link>
-            </nav>
-            <div className="footer-social">
-              <a href="#" aria-label="Instagram" title="Instagram" style={{ display: 'inline-flex', alignItems: 'center' }}>
-                <Instagram size={20} strokeWidth={2} color="currentColor" />
-              </a>
-              <a href="#" aria-label="LinkedIn" title="LinkedIn" style={{ display: 'inline-flex', alignItems: 'center', marginLeft: 12 }}>
-                <Linkedin size={20} strokeWidth={2} color="currentColor" />
-              </a>
-            </div>
-            <div className="footer-copyright">
-              2025 Jeff Kerr. Crafting visual stories that move the world forward.
-            </div>
-          </div>
-        </footer>
-      </div>
+{/* Footer with meteors overlay (to match backgrounds page) */}
+<div style={{ position: 'relative', background: '#000', overflow: 'hidden', zIndex: 40 }}>
+<footer className="footer" style={{ position: 'relative', zIndex: 41 }}>
+{/* Meteors overlay above black background but below footer content */}
+<div style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none' }} aria-hidden="true">
+<Meteors number={20} />
+</div>
+<div className="footer-content">
+<div className="footer-logo">
+<TextShimmer duration={3} spread={1.5}>
+<span className="logo-k">k</span>err
+</TextShimmer>
+</div>
+<div className="footer-divider"></div>
+<div className="footer-email">
+<a href="mailto:colour8k@mac.com">colour8k@mac.com</a>
+</div>
+<nav className="footer-nav">
+<Link href="/">HOME</Link>
+<Link href="/backgrounds">🎨 BACKGROUNDS</Link>
+<a href="#">WORK</a>
+<Link href="/contact">CONTACT</Link>
+</nav>
+<div className="footer-social">
+<a href="#" aria-label="Instagram" title="Instagram" style={{ display: 'inline-flex', alignItems: 'center' }}>
+<Instagram size={20} strokeWidth={2} color="currentColor" />
+</a>
+<a href="#" aria-label="LinkedIn" title="LinkedIn" style={{ display: 'inline-flex', alignItems: 'center', marginLeft: 12 }}>
+<Linkedin size={20} strokeWidth={2} color="currentColor" />
+</a>
+</div>
+<div className="footer-copyright">
+2025 Jeff Kerr. Crafting visual stories that move the world forward.
+</div>
+</div>
+ </footer>
+ </div>
+
       
     </div>
   );

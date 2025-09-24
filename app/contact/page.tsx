@@ -55,7 +55,7 @@ export default function ContactPage() {
             </TextShimmer>
           </Link>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+          <div className="header-right" style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
             <SafeWrapper>
               <WeatherWidget />
             </SafeWrapper>
@@ -71,6 +71,8 @@ export default function ContactPage() {
                   router.push('/contact');
                 } else if (action === 'home') {
                   router.push('/');
+                } else if (action === 'work') {
+                  router.push('/#more-work');
                 }
               }} 
             />
