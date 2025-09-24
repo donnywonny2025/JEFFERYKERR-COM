@@ -1,8 +1,8 @@
 export default function TestFormPage() {
   return (
     <main style={{ minHeight: '60vh', display: 'grid', placeItems: 'center', padding: '80px 24px' }}>
-      {/* Pure HTML-style Netlify form (no JS handlers) */}
-      <form name="test" method="POST" action="/test-success" netlify style={{ display: 'grid', gap: 12, width: 'min(520px, 90vw)' }}>
+      {/* Demo form (Netlify disabled) */}
+      <form name="test" method="POST" action="/test-success" style={{ display: 'grid', gap: 12, width: 'min(520px, 90vw)' }}>
         <input name="name" type="text" placeholder="Name" required style={inputStyle} />
         <input name="email" type="email" placeholder="Email" required style={inputStyle} />
         <button type="submit" style={buttonStyle}>Submit</button>
