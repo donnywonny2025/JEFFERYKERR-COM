@@ -12,6 +12,7 @@ import LiquidEtherSimple from '../../../src/components/LiquidEtherSimple';
 import { Meteors } from '../../../src/components/ui/meteors';
 import '../../../src/App.css';
 import { Instagram, Linkedin } from 'lucide-react';
+import { headerContentStyle, outerContainerStyle, columnStyle, FIRST_SECTION_TOP_PADDING } from '../../../src/styles/layout';
 
 const Liquid = LiquidEtherSimple as unknown as React.ComponentType<any>;
 
@@ -28,14 +29,7 @@ export default function AiDocumentaryPage() {
     background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%)'
   } as React.CSSProperties;
 
-  const columnStyle: React.CSSProperties = {
-    width: '100%',
-    maxWidth: '750px',
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    paddingLeft: '20px',
-    paddingRight: '20px',
-  };
+  
 
   return (
     <div className="App" style={{ position: 'relative', minHeight: '100vh', color: '#ffffff' }}>
@@ -74,15 +68,7 @@ export default function AiDocumentaryPage() {
         <header className="header" style={{ padding: '24px 0 0' }}>
           <div
             className="header-content"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              width: '100%',
-              maxWidth: '1050px',
-              margin: '0 auto',
-              padding: '0 60px'
-            }}
+            style={headerContentStyle}
           >
             <Link href="/" className="logo">
               <TextShimmer duration={3} spread={1.5}>
@@ -91,6 +77,7 @@ export default function AiDocumentaryPage() {
             </Link>
 
             <div
+              className="header-right"
               style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -112,6 +99,8 @@ export default function AiDocumentaryPage() {
                     router.push('/contact');
                   } else if (action === 'home') {
                     router.push('/');
+                  } else if (action === 'work') {
+                    router.push('/#more-work');
                   }
                 }}
               />
@@ -129,14 +118,9 @@ export default function AiDocumentaryPage() {
           }}
         >
           <div
-            style={{
-              width: '100%',
-              maxWidth: '1200px',
-              padding: '0 24px',
-              margin: '0 auto'
-            }}
+            style={outerContainerStyle}
           >
-            <section style={{ ...columnStyle, paddingTop: '140px', marginBottom: '40px' }}>
+            <section style={{ ...columnStyle, paddingTop: `${FIRST_SECTION_TOP_PADDING}px`, marginBottom: '40px' }}>
               <Link
                 href="/"
                 style={{

@@ -388,6 +388,7 @@ export default function HomePage() {
           </Link>
 
           <div
+            className="header-right"
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -409,6 +410,17 @@ export default function HomePage() {
                   router.push('/contact');
                 } else if (action === 'home') {
                   router.push('/');
+                } else if (action === 'work') {
+                  try {
+                    if (typeof window !== 'undefined' && window.location.pathname === '/') {
+                      const el = document.getElementById('more-work');
+                      if (el) {
+                        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        return;
+                      }
+                    }
+                  } catch {}
+                  router.push('/#more-work');
                 }
                 // Add other navigation cases as needed
               }}
@@ -633,6 +645,70 @@ export default function HomePage() {
           transform: translateY(-1px);
         }
 
+        /* ----- Mobile-only video title treatment (Option B) ----- */
+        @media (max-width: 600px) {
+          /* Pull the below-video title closer by shrinking the section gap */
+          .home-featured-video { margin-bottom: 6px !important; }
+          /* For list items, tighten the gap below each video container */
+          .video-container { margin-bottom: 6px !important; }
+
+          /* Hide the large overlay title on the video */
+          .overlay-title { display: none !important; }
+          /* Hide the on-video meta as well */
+          .overlay-meta { display: none !important; }
+
+          /* Show the separate title below the video */
+          .mobile-title { display: block !important; }
+
+          /* Keep metadata readable, single-line */
+          .video-overlay-info .overlay-meta {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            letter-spacing: -0.01em;
+          }
+
+          /* Slightly stronger gradient for readability */
+          .video-overlay-info {
+            background: linear-gradient(transparent, rgba(0,0,0,0.88)) !important;
+          }
+
+          /* Move play pill to top-right to avoid covering metadata at tight widths */
+          .hero-play-button {
+            top: 50% !important;
+            left: 50% !important;
+            right: auto !important;
+            bottom: auto !important;
+            transform: translate(-50%, -50%) !important;
+            padding: 10px 14px !important;
+          }
+
+          /* Hide list item overlays and show simplified blocks for mobile */
+          .list-overlay-title, .list-overlay-meta, .list-overlay-desc { display: none !important; }
+          .mobile-list-title { display: block !important; }
+
+          /* Fallback: center any circular play button on list items */
+          .video-container .play-button-circular {
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+          }
+        }
+
+        /* Keep contact line on a single row on small screens */
+        @media (max-width: 600px) {
+          .contact-info { white-space: nowrap; overflow: hidden; }
+          .contact-info .contact-loc,
+          .contact-info .contact-email-text {
+            display: inline-block;
+            max-width: calc(50% - 18px); /* split space around the divider */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            vertical-align: middle;
+          }
+          .contact-info a { color: #cccccc; text-decoration: none; }
+        }
+
         /* (Reverted) No navbar-specific responsive overrides to preserve original desktop layout */
 
         /* Stats card styles (moved here from inner section to avoid nested styled-jsx) */
@@ -756,11 +832,11 @@ export default function HomePage() {
               color="rgba(255,255,255,0.6)"
               style={{ marginRight: '8px' }}
             />
-            <span>
+            <span className="contact-loc">
               <CharacterHoverText>Grand Rapids, Michigan / World</CharacterHoverText>
             </span>
             <span style={{ opacity: 0.6 }}>|</span>
-            <span>
+            <span className="contact-email-text">
               <a href="mailto:colour8k@mac.com" style={{ color: '#cccccc', textDecoration: 'none' }}>
                 <CharacterHoverText>colour8k@mac.com</CharacterHoverText>
               </a>
@@ -769,7 +845,7 @@ export default function HomePage() {
         </section>
 
         {/* Featured Video Hero (reference for left edge) */}
-        <section style={{
+        <section className="home-featured-video" style={{
           ...columnStyle,
           marginBottom: '60px'
         }}>
@@ -836,20 +912,47 @@ export default function HomePage() {
             </div>
 
             {/* Video overlay info */}
-            <div style={{
+            <div className="video-overlay-info" style={{
               position: 'absolute', bottom: 0, left: 0, right: 0,
               background: 'linear-gradient(transparent, rgba(0,0,0,0.8))',
               padding: '60px 30px 30px', color: 'white'
             }}>
-              <div style={{ fontFamily: "'Space Mono', monospace", fontSize: '14px', opacity: 0.8, marginBottom: '5px' }}>
+              <div className="overlay-meta" style={{ fontFamily: "'Space Mono', monospace", fontSize: '14px', opacity: 0.8, marginBottom: '5px' }}>
                 New Balance • 2025
               </div>
-              <h2 style={{ fontFamily: "'Space Mono', monospace", fontSize: '24px', fontWeight: '400', margin: 0, color: 'white' }}>
+              <h2 className="overlay-title" style={{ fontFamily: "'Space Mono', monospace", fontSize: '24px', fontWeight: '400', margin: 0, color: 'white' }}>
                 New Balance Campaign
               </h2>
             </div>
           </div>
         </section>
+
+        {/* Mobile-only: render full title + meta below the video for clean readability */}
+        <div className="mobile-title animate-fade-in-up" style={{
+          ...columnStyle,
+          marginTop: '0px',
+          marginBottom: '52px',
+          display: 'none'
+        }}>
+          <h2 style={{
+            fontFamily: "'Space Mono', monospace",
+            fontSize: 'clamp(18px, 5vw, 22px)',
+            fontWeight: 400,
+            lineHeight: 1.25,
+            margin: 0,
+            color: 'rgba(255,255,255,0.95)'
+          }}>
+            {videos[0].title}
+          </h2>
+          <div className="mobile-meta" style={{
+            fontFamily: "'Space Mono', monospace",
+            fontSize: '12px',
+            color: 'rgba(255,255,255,0.8)',
+            marginTop: '4px'
+          }}>
+            New Balance • 2025
+          </div>
+        </div>
 
         {/* Placeholder for Centered Sponsor Logos */}
         <section
@@ -896,7 +999,7 @@ export default function HomePage() {
         </section>
 
         {/* Full Video Portfolio List - Scrollable */}
-        <section className="home-stats" style={{
+        <section id="more-work" className="home-stats" style={{
           ...columnStyle,
           marginBottom: '100px'
         }}>
@@ -920,8 +1023,8 @@ export default function HomePage() {
           </h2>
           {/* Full video list - each video gets scroll animation */}
           {videos.slice(1).map((video, index) => (
+            <React.Fragment key={video.id}>
             <div
-              key={video.id}
               ref={(el) => { videoRefs.current[index + 1] = el; }}
               className={`video-container ${videoStates[index + 1] ? 'visible' : ''}`}
               style={{
@@ -1010,8 +1113,8 @@ export default function HomePage() {
                   </div>
                 </div>
               )}
-              {/* Video overlay info */}
-              <div style={{
+              {/* Video overlay info (list items) */}
+              <div className="list-overlay-info" style={{
                 position: 'absolute',
                 bottom: 0,
                 left: 0,
@@ -1020,7 +1123,7 @@ export default function HomePage() {
                 padding: '60px 40px 40px',
                 color: 'white'
               }}>
-                <div style={{
+                <div className="list-overlay-meta" style={{
                   fontFamily: "'Space Mono', monospace",
                   fontSize: '14px',
                   opacity: 0.7,
@@ -1028,7 +1131,7 @@ export default function HomePage() {
                 }}>
                   {video.client} • {video.date}
                 </div>
-                <h3 style={{
+                <h3 className="list-overlay-title" style={{
                   fontFamily: "'Space Mono', monospace",
                   fontSize: '28px',
                   fontWeight: '400',
@@ -1039,7 +1142,7 @@ export default function HomePage() {
                   {video.title}
                 </h3>
                 {video.description && (
-                  <p style={{
+                  <p className="list-overlay-desc" style={{
                     fontFamily: "'Space Mono', monospace",
                     fontSize: '14px',
                     opacity: 0.8,
@@ -1071,6 +1174,41 @@ export default function HomePage() {
                 </div>
               )}
             </div>
+
+            {/* Mobile-only simplified below-video text block for all list items */}
+            <div className="mobile-list-title animate-fade-in-up" style={{
+              width: '100%',
+              paddingLeft: 0,
+              paddingRight: 0,
+              marginTop: '0px',
+              marginBottom: '52px',
+              display: 'none'
+            }}>
+              <h3 style={{
+                fontFamily: "'Space Mono', monospace",
+                fontSize: 'clamp(18px, 5vw, 22px)',
+                fontWeight: 400,
+                lineHeight: 1.25,
+                margin: 0,
+                color: 'rgba(255,255,255,0.95)'
+              }}>
+                {video.id === 'reel-2024' ? 'Featured Showreel' :
+                 video.id === 'featured-video' ? 'Danny Was Here TV' : video.title}
+              </h3>
+              <div className="mobile-list-meta" style={{
+                fontFamily: "'Space Mono', monospace",
+                fontSize: '12px',
+                color: 'rgba(255,255,255,0.8)',
+                marginTop: '4px',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'
+              }}>
+                {video.id === 'reel-2024' ? 'Featured Showreel • 2025' :
+                 video.id === 'featured-video' ? '2025' : `${video.client || ''}${video.client && video.date ? ' • ' : ''}${video.date || ''}`}
+              </div>
+            </div>
+            </React.Fragment>
           ))}
         </section>
 
@@ -1126,46 +1264,47 @@ export default function HomePage() {
           </div>
         </section>
 
-        </div> {/* Close the inner container */}
-      </div> {/* Close the flex container */}
+</div> {/* Close the inner container */}
+</div> {/* Close the flex container */}
 
-      {/* Footer with meteors overlay (to match backgrounds page) */}
-      <div style={{ position: 'relative', background: '#000', overflow: 'hidden', zIndex: 40 }}>
-        <footer className="footer" style={{ position: 'relative', zIndex: 41 }}>
-          {/* Meteors overlay above black background but below footer content */}
-          <div style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none' }} aria-hidden="true">
-            <Meteors number={20} />
-          </div>
-          <div className="footer-content">
-            <div className="footer-logo">
-              <TextShimmer duration={3} spread={1.5}>
-                <span className="logo-k">k</span>err
-              </TextShimmer>
-            </div>
-            <div className="footer-divider"></div>
-            <div className="footer-email">
-              <a href="mailto:colour8k@mac.com">colour8k@mac.com</a>
-            </div>
-            <nav className="footer-nav">
-              <Link href="/">HOME</Link>
-              <Link href="/backgrounds">🎨 BACKGROUNDS</Link>
-              <a href="#">WORK</a>
-              <Link href="/contact">CONTACT</Link>
-            </nav>
-            <div className="footer-social">
-              <a href="#" aria-label="Instagram" title="Instagram" style={{ display: 'inline-flex', alignItems: 'center' }}>
-                <Instagram size={20} strokeWidth={2} color="currentColor" />
-              </a>
-              <a href="#" aria-label="LinkedIn" title="LinkedIn" style={{ display: 'inline-flex', alignItems: 'center', marginLeft: 12 }}>
-                <Linkedin size={20} strokeWidth={2} color="currentColor" />
-              </a>
-            </div>
-            <div className="footer-copyright">
-              2025 Jeff Kerr. Crafting visual stories that move the world forward.
-            </div>
-          </div>
-        </footer>
-      </div>
+{/* Footer with meteors overlay (to match backgrounds page) */}
+<div style={{ position: 'relative', background: '#000', overflow: 'hidden', zIndex: 40 }}>
+<footer className="footer" style={{ position: 'relative', zIndex: 41 }}>
+{/* Meteors overlay above black background but below footer content */}
+<div style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none' }} aria-hidden="true">
+<Meteors number={20} />
+</div>
+<div className="footer-content">
+<div className="footer-logo">
+<TextShimmer duration={3} spread={1.5}>
+<span className="logo-k">k</span>err
+</TextShimmer>
+</div>
+<div className="footer-divider"></div>
+<div className="footer-email">
+<a href="mailto:colour8k@mac.com">colour8k@mac.com</a>
+</div>
+<nav className="footer-nav">
+<Link href="/">HOME</Link>
+<Link href="/backgrounds">🎨 BACKGROUNDS</Link>
+<a href="#">WORK</a>
+<Link href="/contact">CONTACT</Link>
+</nav>
+<div className="footer-social">
+<a href="#" aria-label="Instagram" title="Instagram" style={{ display: 'inline-flex', alignItems: 'center' }}>
+<Instagram size={20} strokeWidth={2} color="currentColor" />
+</a>
+<a href="#" aria-label="LinkedIn" title="LinkedIn" style={{ display: 'inline-flex', alignItems: 'center', marginLeft: 12 }}>
+<Linkedin size={20} strokeWidth={2} color="currentColor" />
+</a>
+</div>
+<div className="footer-copyright">
+2025 Jeff Kerr. Crafting visual stories that move the world forward.
+</div>
+</div>
+ </footer>
+ </div>
+
       
     </div>
   );

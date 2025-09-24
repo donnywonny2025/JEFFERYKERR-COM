@@ -55,7 +55,7 @@ export default function ContactPage() {
             </TextShimmer>
           </Link>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+          <div className="header-right" style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
             <SafeWrapper>
               <WeatherWidget />
             </SafeWrapper>
@@ -71,6 +71,8 @@ export default function ContactPage() {
                   router.push('/contact');
                 } else if (action === 'home') {
                   router.push('/');
+                } else if (action === 'work') {
+                  router.push('/#more-work');
                 }
               }} 
             />
@@ -344,6 +346,33 @@ export default function ContactPage() {
           .contact-hero-card { margin: 20px auto 36px; }
           .contact-layout { --contact-gap-top: 64px; --contact-gap-bottom: 36px; }
           .contact-info-card { padding: 28px 24px; }
+        }
+
+        /* --- Mobile-only widening (Contact) --- */
+        @media (max-width: 600px) {
+          /* Use more of the screen width */
+          .contact-layout { padding: 0 20px !important; max-width: 100% !important; }
+          /* Widen the form while keeping good gutters */
+          #contact-form { max-width: 560px !important; width: 100% !important; }
+          /* Make hero card a bit taller so overlay text breathes */
+          .contact-hero-card { height: clamp(260px, 36vw, 360px) !important; }
+          /* Relax hero text sizing and width for readability */
+          .contact-hero-text { font-size: clamp(16px, 2.6vw, 20px) !important; max-width: 95% !important; }
+          /* Reduce background video scale so content isn't overly cropped */
+          .contact-hero-card > div > video { transform: translate(-50%, -50%) scale(1.2) !important; }
+          /* Standardize vertical rhythm for cards */
+          /* Add space after the submit button before the contact card */
+          .contact-info-card { 
+            width: 100% !important; 
+            max-width: 560px !important; 
+            margin: 28px auto 48px !important; 
+          }
+          .contact-stats-card { 
+            width: 100% !important; 
+            max-width: 560px !important; 
+            margin: 48px auto 0 !important; 
+          }
+          .contact-stats-inner { width: 100% !important; }
         }
       `}</style>
 

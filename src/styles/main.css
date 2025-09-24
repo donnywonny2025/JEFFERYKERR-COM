@@ -323,6 +323,56 @@ body::before {
   align-items: center;
 }
 
+/* Responsive: compact header on small/medium screens */
+@media (max-width: 900px) {
+  .header {
+    padding: 0 !important;
+    height: 64px !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+  .top-nav-background {
+    height: 64px;
+  }
+  /* Reduce internal padding used inline by pages; keep safe fallback here */
+  .header-content {
+    padding: 0 16px !important;
+    position: relative !important;
+    height: 64px !important;
+    min-height: 64px !important;
+    max-width: 100% !important;
+    display: grid !important;
+    grid-template-columns: 1fr auto !important; /* left space + right icon */
+    align-items: center !important;
+    gap: 0 !important;
+    min-width: 0 !important; /* allow contents to shrink within container */
+  }
+  /* Right cluster (explicit) */
+  .header-right {
+    gap: 8px !important;
+    display: flex !important;
+    align-items: center !important;
+    margin-left: auto !important; /* push cluster to the far right */
+    flex-shrink: 0 !important; /* do not shrink/hang to next line */
+    position: static !important;
+  }
+  .header-right > :not(.hamburger-container) {
+    display: none !important;
+  }
+  /* Normalize hamburger button box and spacing */
+  .hamburger { margin: 0 !important; }
+  /* Keep logo vertically centered */
+  .logo {
+    display: flex !important;
+    align-items: center !important;
+    height: 64px !important;
+    justify-self: start !important;     /* align brand to left on mobile */
+  }
+  .header-right { justify-self: end !important; }
+  .hamburger-container { position: static !important; }
+  .header-content .hamburger { position: static !important; transform: none !important; }
+}
+
 .logo {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
   font-size: 20px;
