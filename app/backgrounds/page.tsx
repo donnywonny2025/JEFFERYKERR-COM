@@ -620,7 +620,7 @@ export default function BackgroundsShowcase() {
             </a>
           </div>
           <div className="footer-copyright">
-            2025 Jeff Kerr. Crafting visual stories that move the world forward.
+            &copy; 2025 Jeff Kerr. Dig the site? I vibe-coded it. Click <Link href="/how-i-built-this" style={{ textDecoration: 'underline', transition: 'color 0.2s ease' }} onMouseEnter={(e) => e.currentTarget.style.color = 'white'} onMouseLeave={(e) => e.currentTarget.style.color = ''}>here</Link> to see how.
           </div>
         </div>
 

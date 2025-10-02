@@ -269,12 +269,14 @@ export default function FeaturedPage() {
                 </a>
               </div>
               <div className="footer-copyright">
-                2025 Jeff Kerr. Crafting visual stories that move the world forward.
+                <a href="https://jeffreykerr.com" className="footer-link">
+                  2025 Jeff Kerr. Crafting visual stories that move the world forward. <span className="footer-link-hover">here</span>
+                </a>
               </div>
             </div>
           </footer>
         </div>
-      </div>
+{{ ... }}
     </div>
   );
 }
