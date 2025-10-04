@@ -839,6 +839,26 @@ export default function HomePage() {
           min-height: 640px;            /* guarantee vertical room regardless of bg scale */
         }
         .home-stats-card .metric-row:first-of-type { margin-top: 12px; }
+
+        /* Mobile-only typography tweaks for stats card title */
+        @media (max-width: 768px) {
+          .home-stats-card .stats-title {
+            font-size: clamp(22px, 6vw, 30px) !important;
+            letter-spacing: 0.06em !important;
+            line-height: 1.18 !important;
+            margin: 0 0 18px !important;
+            text-align: center !important;
+          }
+          .home-stats-card .stats-divider {
+            margin: 10px auto 24px !important;
+          }
+          /* Make metric labels more readable on mobile */
+          .home-stats-card .metric-label {
+            font-size: 13px !important;      /* up from 11px */
+            line-height: 1.3 !important;     /* slightly more breathing room */
+            letter-spacing: 0.02em !important;
+          }
+        }
       `}</style>
 
       {/* MODERN CENTERED RESPONSIVE CONTAINER */}

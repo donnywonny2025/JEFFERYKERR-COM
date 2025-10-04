@@ -141,6 +141,9 @@ export default function ContactPage() {
           max-width: min(90%, 820px); /* limit line length for better rhythm */
           margin-inline: auto;
         }
+        /* Bio text variants: desktop shown by default */
+        .hero-bio-desktop { display: block; }
+        .hero-bio-mobile { display: none; }
         .contact-hero-underline {
           width: 120px;
           height: 1px;
@@ -387,7 +390,7 @@ export default function ContactPage() {
         }
 
         /* --- Mobile-only widening (Contact) --- */
-        @media (max-width: 600px) {
+        @media (max-width: 768px) {
           /* Use more of the screen width */
           .contact-layout { padding: 0 20px !important; max-width: 100% !important; }
           /* Widen the form while keeping good gutters */
@@ -395,7 +398,33 @@ export default function ContactPage() {
           /* Make hero card a bit taller so overlay text breathes */
           .contact-hero-card { height: clamp(260px, 36vw, 360px) !important; }
           /* Relax hero text sizing and width for readability */
-          .contact-hero-text { font-size: clamp(16px, 2.6vw, 20px) !important; max-width: 95% !important; }
+          .contact-hero-text {
+            /* keep size clamp but improve readability */
+            font-size: clamp(16px, 2.6vw, 20px) !important;
+            /* readable measure instead of wide percent */
+            max-width: 40ch !important;
+            /* center for balanced rag on narrow viewports */
+            text-align: center !important;
+            /* tighten letter spacing for body copy */
+            letter-spacing: 0.01em !important;
+            /* adjust line height for mobile cadence */
+            line-height: 1.6 !important;
+            /* prevent auto-centering from desktop rule */
+            margin: 0 !important;
+            /* avoid top crowding inside the rounded box */
+            padding: 10px 8px !important;
+            /* ensure no clipping from any ancestors */
+            overflow: visible !important;
+          }
+          /* Ensure container aligns text block to the top-left */
+          .contact-hero-overlay {
+            text-align: center !important;
+            align-items: center !important;   /* vertically center text block */
+            justify-content: center !important; /* horizontally center block */
+          }
+          /* Swap text variants on mobile */
+          .hero-bio-desktop { display: none !important; }
+          .hero-bio-mobile { display: block !important; }
           /* Reduce background video scale so content isn't overly cropped */
           .contact-hero-card > div > video { transform: translate(-50%, -50%) scale(1.2) !important; }
           /* Standardize vertical rhythm for cards */
@@ -433,7 +462,12 @@ export default function ContactPage() {
             </div>
             <div className="contact-hero-overlay">
               <div className="contact-hero-text">
-                I'm a creative director, editor, and producer with 15+ years of experience creating visual content. I work across entertainment, corporate, and political projects, and I love diving into everything — editing, coding, building apps, motion graphics.
+                <div className="hero-bio-desktop">
+                  I'm a creative director, editor, and producer with 15+ years of experience creating visual content. I work across entertainment, corporate, and political projects, and I love diving into everything — editing, coding, building apps, motion graphics.
+                </div>
+                <div className="hero-bio-mobile">
+                  Director, editor, and creative producer with 15+ years of experience. I work across entertainment, corporate, and political projects — from editing to coding.
+                </div>
                 <div className="contact-hero-underline" aria-hidden="true" />
               </div>
             </div>
