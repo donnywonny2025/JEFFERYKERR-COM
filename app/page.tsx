@@ -240,7 +240,7 @@ export default function HomePage() {
     {
       id: 'justice-for-lai-dai-han',
       title: 'Justice for Lai Dai Han',
-      client: 'The Kerr Media Group',
+      client: 'Justice for Lai Dai Han (campaign)',
       date: '2021',
       thumbnail: 'https://vumbnail.com/641889858.jpg',
       href: 'https://player.vimeo.com/video/641889858',
@@ -1160,6 +1160,8 @@ export default function HomePage() {
                 <ScrollTriggeredShowreel src="/Videos/REELQuickLoop.mp4" poster="/Videos/Reel_Poster.jpg" />
               ) : video.id === 'featured-video' ? (
                 <ScrollTriggeredShowreel src="/Videos/DannyQuickLoop.mp4" poster="/Videos/DannyPoster.jpg" />
+              ) : video.id === 'justice-for-lai-dai-han' ? (
+                <ScrollTriggeredShowreel src="/Videos/JusticeLoop.mp4" poster="/Videos/JusticePoster.png" />
               ) : (
                 (video.id === 'new-balance-campaign') ? (
                   <iframe
