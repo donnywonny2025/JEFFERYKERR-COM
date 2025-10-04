@@ -230,7 +230,7 @@ export default function JusticeForLaiDaiHanPage() {
                 </h3>
 
                 <div style={separatorStyle}></div>
-                <div>Client: The Kerr Media Group</div>
+                <div>Client: Justice for Lai Dai Han (campaign)</div>
                 <div style={separatorStyle}></div>
                 <div>Role: Producer / Editor</div>
                 <div style={separatorStyle}></div>
