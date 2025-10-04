@@ -6,3 +6,19 @@ body {
   position: relative;
   min-height: 100vh;
 }
+
+/* Responsive styles for How I Built This page */
+@media (max-width: 768px) {
+  .workflow-step-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .ai-team-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .challenges-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .numbers-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}

@@ -267,24 +267,25 @@ export default function DannyWasHereTVPage() {
               </div>
               <div className="footer-divider"></div>
               <div className="footer-email">
+                <a href="tel:4076203618" style={{ display: 'block', marginBottom: 6 }}>407-620-3618</a>
                 <a href="mailto:colour8k@mac.com">colour8k@mac.com</a>
               </div>
               <nav className="footer-nav">
                 <Link href="/">HOME</Link>
-                <Link href="/backgrounds">🎨 BACKGROUNDS</Link>
                 <a href="#">WORK</a>
                 <Link href="/contact">CONTACT</Link>
               </nav>
               <div className="footer-social">
-                <a href="#" aria-label="Instagram" title="Instagram" style={{ display: 'inline-flex', alignItems: 'center' }}>
-                  <Instagram size={20} strokeWidth={2} color="currentColor" />
-                </a>
-                <a href="#" aria-label="LinkedIn" title="LinkedIn" style={{ display: 'inline-flex', alignItems: 'center', marginLeft: 12 }}>
-                  <Linkedin size={20} strokeWidth={2} color="currentColor" />
+                <a href="https://www.linkedin.com/in/jefferykerrcreative" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+                    <rect x="2" y="9" width="4" height="12"/>
+                    <circle cx="4" cy="4" r="2"/>
+                  </svg>
                 </a>
               </div>
               <div className="footer-copyright">
-                2025 Jeff Kerr. Crafting visual stories that move the world forward.
+                &copy; 2025 Jeff Kerr. Dig the site? I vibe-coded it. Click <Link href="/how-i-built-this" style={{ textDecoration: 'underline', transition: 'color 0.2s ease' }} onMouseEnter={(e) => (e.currentTarget as HTMLAnchorElement).style.color = 'white'} onMouseLeave={(e) => (e.currentTarget as HTMLAnchorElement).style.color = ''}>here</Link> to see how.
               </div>
             </div>
           </footer>

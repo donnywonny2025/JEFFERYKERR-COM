@@ -186,10 +186,11 @@ export default function ContactPage() {
         }
         .stats-title {
           font-family: 'Space Mono', monospace;
-          font-size: 10px; /* Smaller title */
+          font-size: 14px; /* Slightly larger for prominence */
           letter-spacing: 0.14em;
           text-transform: uppercase;
-          color: rgba(255,255,255,0.72);
+          color: rgba(255,255,255,0.85);
+          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
           text-align: center;
           margin: 0 0 35px; /* Reduce title spacing */
         }
@@ -251,6 +252,43 @@ export default function ContactPage() {
         .stats-cta:hover { transform: translateY(-1px); box-shadow: 0 10px 28px rgba(0,0,0,0.28); }
         .stats-cta .arrow { width: 22px; height: 1px; background: #111; position: relative; }
         .stats-cta .arrow::after { content: ''; position: absolute; right: -2px; top: -3px; width: 7px; height: 7px; border-top: 1px solid #111; border-right: 1px solid #111; transform: rotate(45deg); }
+
+        /* Reuse homepage Play Featured hover button style for Contact CTA */
+        .play-featured-btn {
+          position: relative;
+          display: inline-block;
+          padding: 12px 16px; /* slightly larger for prominence */
+          border-radius: 999px;
+          border: 1px solid rgba(255,255,255,0.18);
+          background: rgba(0,0,0,0.45);
+          backdrop-filter: blur(6px);
+          color: #fff;
+          font-family: 'Space Mono', monospace;
+          font-size: 13px; /* improved legibility */
+          letter-spacing: 0.08em;
+          cursor: pointer;
+          transition: background 0.25s ease, transform 0.2s ease, opacity 0.25s ease;
+          opacity: 0.95;
+          overflow: hidden;
+          text-decoration: none;
+        }
+        .play-featured-btn::after {
+          content: '';
+          position: absolute;
+          inset: -60% -120%;
+          background: linear-gradient(120deg,
+            rgba(255,255,255,0) 20%,
+            rgba(255,255,255,0.35) 45%,
+            rgba(255,255,255,0.65) 50%,
+            rgba(255,255,255,0.35) 55%,
+            rgba(255,255,255,0) 80%
+          );
+          transform: translateX(-120%) rotate(10deg);
+          transition: transform 0.6s ease;
+          pointer-events: none;
+        }
+        .play-featured-btn:hover { background: rgba(255,255,255,0.08); }
+        .play-featured-btn:hover::after { transform: translateX(130%) rotate(10deg); }
 
         /* Soft vignette + subtle gradient backdrop for the stats card */
         .stats-backdrop {
@@ -427,9 +465,9 @@ export default function ContactPage() {
             <div className="contact-section">
               <h3 className="section-title">Get in touch ••</h3>
               <div className="section-content">
-                <a href="mailto:colour8k@mac.com" className="contact-email">
-                  colour8k@mac.com
-                </a>
+                <a href="mailto:colour8k@mac.com" className="contact-email">colour8k@mac.com</a>
+                <div style={{ height: '8px' }} aria-hidden="true" />
+                <a href="tel:4076203618" className="contact-email" aria-label="Phone number 407-620-3618">407-620-3618</a>
               </div>
               <div className="section-divider"></div>
             </div>
@@ -438,21 +476,12 @@ export default function ContactPage() {
               <h3 className="section-title">Socials</h3>
               <div className="section-content">
                 <div className="social-links">
-                  <a href="https://www.linkedin.com/in/jefferykerrcreative" className="social-link" target="_blank" rel="noopener noreferrer">
+                  <a href="https://www.linkedin.com/in/jefferykerrcreative" className="social-link" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" title="LinkedIn">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
                       <rect x="2" y="9" width="4" height="12"/>
                       <circle cx="4" cy="4" r="2"/>
                     </svg>
-                    LinkedIn
-                  </a>
-                  <a href="#" className="social-link">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-                      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-                      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
-                    </svg>
-                    Instagram
                   </a>
                 </div>
               </div>
@@ -477,22 +506,27 @@ export default function ContactPage() {
               <div className="stats-divider" aria-hidden="true" />
 
               <div className="metric-row">
-                <div className="metric-value">20+</div>
+                <div className="metric-value">15+</div>
                 <div className="metric-label">Years Creating</div>
               </div>
               <div className="metric-hr" aria-hidden="true" />
 
               <div className="metric-row">
-                <div className="metric-value">Millions</div>
-                <div className="metric-label">Have Watched</div>
+                <div className="metric-value">Making Cool Stuff</div>
+                <div className="metric-label">For Clients Who Care About Quality</div>
               </div>
               <div className="metric-hr" aria-hidden="true" />
 
               <div className="metric-row">
-                <div className="metric-value">Stories</div>
-                <div className="metric-label">That Connect</div>
+                <div className="metric-value">Let's Build Something</div>
+                <div className="metric-label">Hit Me Up and We'll Talk</div>
               </div>
-              {/* CTA removed on contact page */}
+
+              <div style={{ display: 'flex', justifyContent: 'center', marginTop: '22px' }}>
+                <a href="mailto:colour8k@mac.com" className="play-featured-btn" aria-label="Contact via email">
+                  GET IN TOUCH
+                </a>
+              </div>
             </div>
           </div>
         </div>
@@ -513,11 +547,11 @@ export default function ContactPage() {
             </div>
             <div className="footer-divider"></div>
             <div className="footer-email">
+              <a href="tel:4076203618" style={{ display: 'block', marginBottom: 6 }}>407-620-3618</a>
               <a href="mailto:colour8k@mac.com">colour8k@mac.com</a>
             </div>
             <nav className="footer-nav">
               <Link href="/">HOME</Link>
-              <Link href="/backgrounds">🎨 BACKGROUNDS</Link>
               <a href="#">WORK</a>
               <Link href="/contact">CONTACT</Link>
             </nav>
@@ -529,16 +563,9 @@ export default function ContactPage() {
                   <circle cx="4" cy="4" r="2"/>
                 </svg>
               </a>
-              <a href="#" aria-label="Instagram">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
-                </svg>
-              </a>
             </div>
             <div className="footer-copyright">
-              2025 Jeff Kerr. Crafting visual stories that move the world forward.
+              &copy; 2025 Jeff Kerr. Dig the site? I vibe-coded it. Click <Link href="/how-i-built-this" style={{ textDecoration: 'underline', transition: 'color 0.2s ease' }} onMouseEnter={(e) => e.currentTarget.style.color = 'white'} onMouseLeave={(e) => e.currentTarget.style.color = ''}>here</Link> to see how.
             </div>
           </div>
         </footer>

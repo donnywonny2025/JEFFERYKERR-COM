@@ -8,7 +8,7 @@ import { TextShimmer } from '../src/components/motion-primitives/text-shimmer';
 import { SafeWrapper } from '../src/components/SafeWrapper';
 import { DigitalClock } from '../src/components/motion-primitives/digital-clock';
 import LiquidEtherSimple from '../src/components/LiquidEtherSimple';
-import { MapPin, Instagram, Linkedin } from 'lucide-react';
+import { MapPin, Linkedin } from 'lucide-react';
 import FooterStars from '../src/components/FooterStars';
 import { Meteors } from '../src/components/ui/meteors';
 import WeatherWidget from '../src/components/WeatherWidget';
@@ -119,25 +119,39 @@ export default function HomePage() {
   // Defer heavy embeds (like YouTube) until after first paint to avoid
   // an initial reflow that can look like a flicker in dev
   const [showFeaturedEmbed, setShowFeaturedEmbed] = useState(false);
+  const [showMeteors, setShowMeteors] = useState(false);
   const nbHeroVideoRef = useRef<HTMLVideoElement | null>(null);
   
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
 
-  // Staggered animation sequence for centered layout
+  // Staggered animation sequence for centered layout - optimized for LCP
   useEffect(() => {
+    // Use requestIdleCallback to defer non-critical animations
+    const scheduleAnimation = (callback: () => void, delay: number) => {
+      setTimeout(() => {
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(callback);
+        } else {
+          callback();
+        }
+      }, delay);
+    };
+
     const timers = [
-      setTimeout(() => setAnimationStage(1), 900),   // Hero line 1
-      setTimeout(() => setAnimationStage(2), 1100),  // Hero line 2
-      setTimeout(() => setAnimationStage(3), 1300),  // Hero line 3
-      setTimeout(() => setAnimationStage(4), 1500),  // Contact info
-      setTimeout(() => setAnimationStage(5), 1700),  // Featured video
-      setTimeout(() => setAnimationStage(6), 1900),  // Sponsor placeholder
-      setTimeout(() => setAnimationStage(7), 2100),  // Additional videos grid
+      setTimeout(() => setAnimationStage(1), 400),   // Hero line 1 - faster for LCP
+      setTimeout(() => setAnimationStage(2), 600),   // Hero line 2 - faster for LCP
+      setTimeout(() => setAnimationStage(3), 800),   // Hero line 3 - faster for LCP
+      scheduleAnimation(() => setAnimationStage(4), 1000),  // Contact info - deferred
+      scheduleAnimation(() => setAnimationStage(5), 1200),  // Featured video - deferred
+      scheduleAnimation(() => setAnimationStage(6), 1400),  // Sponsor placeholder - deferred
+      scheduleAnimation(() => setAnimationStage(7), 1600),  // "More Work" heading - deferred
+      // Defer heavy animations until after page load
+      setTimeout(() => setShowMeteors(true), 3000),
     ];
 
-    return () => timers.forEach(clearTimeout);
+    return () => timers.forEach(timer => timer && clearTimeout(timer));
   }, []);
 
   // Enable Featured iframe shortly after first paint to keep initial render
@@ -181,18 +195,7 @@ export default function HomePage() {
       route: '/projects/new-balance',
       description: 'Essence of movement and performance through innovative technology.'
     },
-    // Keep the Showreel as the first visible list item below the hero
-    {
-      id: 'reel-2024',
-      title: 'Featured Showreel',
-      client: 'Jeff Kerr',
-      date: '2025',
-      thumbnail: 'https://vumbnail.com/1120706636.jpg',
-      href: 'https://player.vimeo.com/video/1120706636',
-      route: '/projects/showreel-2025',
-      description: 'A sweeping cut of work over the years across commercial, corporate, government, and documentary.'
-    },
-    // Place the previous Featured Video where New Balance used to be in the list
+    // First visible list item below the hero: Danny Was Here TV
     {
       id: 'featured-video',
       title: 'Danny Was Here TV',
@@ -203,15 +206,16 @@ export default function HomePage() {
       route: '/projects/DannyWasHereTV',
       description: 'Danny Was Here TV video showcase.'
     },
+    // Next item: Featured Showreel
     {
-      id: 'insta360',
-      title: 'FTC — LeanSpa',
-      client: 'Federal Trade Commission (FTC)',
-      date: '2023',
-      thumbnail: 'https://vumbnail.com/641503564.jpg',
-      href: 'https://player.vimeo.com/video/641503564',
-      route: '/projects/insta360',
-      description: 'National campaign series addressing deceptive diet ads; this 1:31 spot was one of several with TV, radio, web, and social cutdowns.'
+      id: 'reel-2024',
+      title: 'Featured Showreel',
+      client: 'Jeff Kerr',
+      date: '2025',
+      thumbnail: 'https://vumbnail.com/1120706636.jpg',
+      href: 'https://player.vimeo.com/video/1120706636',
+      route: '/projects/showreel-2025',
+      description: 'A sweeping cut of work over the years across commercial, corporate, government, and documentary.'
     },
     {
       id: 'commercial-project',
@@ -222,6 +226,16 @@ export default function HomePage() {
       href: 'https://player.vimeo.com/video/641502508',
       route: '/projects/commercial',
       description: 'An animation-led explainer produced for a national release across web and social.'
+    },
+    {
+      id: 'insta360',
+      title: 'FTC — LeanSpa',
+      client: 'Federal Trade Commission (FTC)',
+      date: '2023',
+      thumbnail: 'https://vumbnail.com/641503564.jpg',
+      href: 'https://player.vimeo.com/video/641503564',
+      route: '/projects/insta360',
+      description: 'National campaign series addressing deceptive diet ads; this 1:31 spot was one of several with TV, radio, web, and social cutdowns.'
     },
     {
       id: 'ai-documentary',
@@ -593,6 +607,45 @@ export default function HomePage() {
           transform: translateX(130%) rotate(10deg);
         }
 
+        /* Frosted pill button for CONTACT (same visuals as play button, no absolute positioning) */
+        .frosted-pill-btn {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          padding: 12px 18px;
+          border-radius: 999px;
+          border: 1px solid rgba(255,255,255,0.18);
+          background: rgba(0,0,0,0.45);
+          backdrop-filter: blur(6px);
+          color: #fff;
+          font-family: 'Space Mono', monospace;
+          font-size: 12px;
+          letter-spacing: 0.08em;
+          cursor: pointer;
+          transition: background 0.25s ease, transform 0.2s ease, opacity 0.25s ease;
+          opacity: 0.95;
+          overflow: hidden;
+          text-decoration: none;
+        }
+        .frosted-pill-btn::after {
+          content: '';
+          position: absolute;
+          inset: -60% -120%;
+          background: linear-gradient(120deg,
+            rgba(255,255,255,0) 20%,
+            rgba(255,255,255,0.35) 45%,
+            rgba(255,255,255,0.65) 50%,
+            rgba(255,255,255,0.35) 55%,
+            rgba(255,255,255,0) 80%
+          );
+          transform: translateX(-120%) rotate(10deg);
+          transition: transform 0.6s ease;
+          pointer-events: none;
+        }
+        .frosted-pill-btn:hover { background: rgba(255,255,255,0.08); }
+        .frosted-pill-btn:hover::after { transform: translateX(130%) rotate(10deg); }
+
         /* Page load animations */
         .hero-animate {
           opacity: 0;
@@ -645,8 +698,45 @@ export default function HomePage() {
           transform: translateY(-1px);
         }
 
-        /* ----- Mobile-only video title treatment (Option B) ----- */
-        @media (max-width: 600px) {
+        /* Add intrinsic size to list thumbnails */
+        .video-thumbnail {
+          width: intrinsic;
+          height: intrinsic;
+        }
+
+        /* Optimized repeated styles */
+        .video-card-container {
+          width: 100%;
+          marginBottom: 80px;
+          cursor: pointer;
+          borderRadius: 12px;
+          overflow: hidden;
+          backgroundColor: #111;
+          position: relative;
+          aspectRatio: 16/9;
+        }
+
+        .video-overlay-gradient {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background: linear-gradient(transparent, rgba(0,0,0,0.8));
+          padding: 60px 40px 40px;
+          color: white;
+        }
+
+        /* Add prefers-reduced-motion guard for animation classes */
+        @media (prefers-reduced-motion: reduce) {
+          .hero-animate, .contact-animate, .video-animate, .metadata-animate {
+            animation: none !important;
+            opacity: 1 !important;
+            transform: none !important;
+          }
+        }
+
+          /* ----- Mobile-only video title treatment (Option B) ----- */
+          @media (max-width: 600px) {
           /* Pull the below-video title closer by shrinking the section gap */
           .home-featured-video { margin-bottom: 6px !important; }
           /* For list items, tighten the gap below each video container */
@@ -709,13 +799,19 @@ export default function HomePage() {
           .contact-info a { color: #cccccc; text-decoration: none; }
         }
 
+        /* Respect users who prefer reduced motion (no change for others) */
+        @media (prefers-reduced-motion: reduce) {
+          .animate-fade-in-up { animation: none !important; opacity: 1 !important; transform: none !important; }
+          .rotating-text { animation: none !important; }
+        }
+
         /* (Reverted) No navbar-specific responsive overrides to preserve original desktop layout */
 
         /* Stats card styles (moved here from inner section to avoid nested styled-jsx) */
         .contact-info-card { max-width: 95%; margin: 0 auto; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 32px 40px; backdrop-filter: blur(20px); }
         .contact-stats-card { position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; max-width: 95%; padding: 42px 36px; }
         .contact-stats-inner { position: relative; z-index: 2; width: min(96%, 950px); margin: 0 auto; text-align: center; }
-        .stats-title { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.72); text-align: center; margin: 0 0 35px; }
+        .stats-title { font-family: 'Space Mono', monospace; font-size: 36px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.72); text-align: center; margin: 0 0 35px; }
         .stats-divider { width: 1px; height: 32px; margin: 0 auto 48px; background: rgba(255,255,255,0.32); }
         .metric-row { display: flex; flex-direction: column; align-items: center; gap: 4px; justify-content: center; margin: 50px 0; }
         .metric-value { font-family: 'Space Mono', monospace; font-size: clamp(24px, 3.5vw, 32px); font-weight: 500; letter-spacing: 0.01em; font-variant-numeric: tabular-nums lining-nums; color: rgba(255,255,255,0.98); line-height: 1.1; }
@@ -891,6 +987,8 @@ export default function HomePage() {
               <img
                 src="/Videos/NBPOSTER.jpg"
                 alt="New Balance Campaign poster"
+                width={1920}
+                height={1080}
                 style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'inherit', display: 'block' }}
                 loading="eager"
               />
@@ -952,8 +1050,7 @@ export default function HomePage() {
           }}>
             New Balance • 2025
           </div>
-        </div>
-
+    </div>
         {/* Placeholder for Centered Sponsor Logos */}
         <section
           className={`animate-fade-in-up`}
@@ -1068,6 +1165,7 @@ export default function HomePage() {
                       transform: video.id === 'new-balance-campaign' ? 'scale(1.28)' : undefined,
                       transformOrigin: 'center center'
                     }}
+                    loading="lazy"
                     allow="autoplay; fullscreen; picture-in-picture"
                     allowFullScreen
                   />
@@ -1081,6 +1179,8 @@ export default function HomePage() {
                   <img
                     src={video.thumbnail}
                     alt={video.title}
+                    width={1920}
+                    height={1080}
                     style={{
                       position: 'absolute',
                       inset: 0,
@@ -1090,6 +1190,8 @@ export default function HomePage() {
                       objectFit: 'cover',
                       display: 'block'
                     }}
+                    loading="lazy"
+                    decoding="async"
                   />
                 )
               )}
@@ -1230,34 +1332,33 @@ export default function HomePage() {
               />
             </div>
             <div className="contact-stats-inner">
-              <div className="stats-title">LET'S CHAT</div>
+              <div className="stats-title">HI, I'M JEFF</div>
               <div className="stats-divider" aria-hidden="true" />
 
               <div className="metric-row">
-                <div className="metric-value">20+</div>
+                <div className="metric-value">15+</div>
                 <div className="metric-label">Years Creating</div>
               </div>
               <div className="metric-hr" aria-hidden="true" />
 
               <div className="metric-row">
-                <div className="metric-value">Millions</div>
-                <div className="metric-label">Have Watched</div>
+                <div className="metric-value">Entertainment</div>
+                <div className="metric-label">To Defense</div>
               </div>
               <div className="metric-hr" aria-hidden="true" />
 
               <div className="metric-row">
-                <div className="metric-value">Stories</div>
-                <div className="metric-label">That Connect</div>
+                <div className="metric-value">Let's Create</div>
+                <div className="metric-label">Something With Impact</div>
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'center', marginTop: '26px' }}>
                 <Link
                   href="/contact"
-                  className="stats-cta"
+                  className="frosted-pill-btn"
                   aria-label="Go to contact page"
                 >
                   CONTACT
-                  <span className="arrow" aria-hidden="true" />
                 </Link>
               </div>
             </div>
@@ -1269,43 +1370,38 @@ export default function HomePage() {
 
 {/* Footer with meteors overlay (to match backgrounds page) */}
 <div style={{ position: 'relative', background: '#000', overflow: 'hidden', zIndex: 40 }}>
-<footer className="footer" style={{ position: 'relative', zIndex: 41 }}>
-{/* Meteors overlay above black background but below footer content */}
-<div style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none' }} aria-hidden="true">
-<Meteors number={20} />
-</div>
-<div className="footer-content">
-<div className="footer-logo">
-<TextShimmer duration={3} spread={1.5}>
-<span className="logo-k">k</span>err
-</TextShimmer>
-</div>
-<div className="footer-divider"></div>
-<div className="footer-email">
-<a href="mailto:colour8k@mac.com">colour8k@mac.com</a>
-</div>
-<nav className="footer-nav">
-<Link href="/">HOME</Link>
-<Link href="/backgrounds">🎨 BACKGROUNDS</Link>
-<a href="#">WORK</a>
-<Link href="/contact">CONTACT</Link>
-</nav>
-<div className="footer-social">
-<a href="#" aria-label="Instagram" title="Instagram" style={{ display: 'inline-flex', alignItems: 'center' }}>
-<Instagram size={20} strokeWidth={2} color="currentColor" />
-</a>
-<a href="#" aria-label="LinkedIn" title="LinkedIn" style={{ display: 'inline-flex', alignItems: 'center', marginLeft: 12 }}>
-<Linkedin size={20} strokeWidth={2} color="currentColor" />
-</a>
-</div>
-<div className="footer-copyright">
-2025 Jeff Kerr. Crafting visual stories that move the world forward.
-</div>
-</div>
- </footer>
- </div>
-
-      
+  <footer className="footer" style={{ position: 'relative', zIndex: 41 }}>
+    {/* Meteors overlay above black background but below footer content */}
+    <div style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none' }} aria-hidden="true">
+      {showMeteors && <Meteors number={20} />}
     </div>
-  );
+    <div className="footer-content">
+      <div className="footer-logo">
+        <TextShimmer duration={3} spread={1.5}>
+          <span className="logo-k">k</span>err
+        </TextShimmer>
+      </div>
+      <div className="footer-divider"></div>
+      <div className="footer-email">
+        <a href="tel:4076203618" style={{ display: 'block', marginBottom: 6 }}>407-620-3618</a>
+        <a href="mailto:colour8k@mac.com">colour8k@mac.com</a>
+      </div>
+      <nav className="footer-nav">
+        <Link href="/">HOME</Link>
+        <a href="#">WORK</a>
+        <Link href="/contact">CONTACT</Link>
+      </nav>
+      <div className="footer-social">
+        <a href="#" aria-label="LinkedIn" title="LinkedIn" style={{ display: 'inline-flex', alignItems: 'center' }}>
+          <Linkedin size={20} strokeWidth={2} color="currentColor" />
+        </a>
+      </div>
+      <div className="footer-copyright">
+        &copy; 2025 Jeff Kerr. Dig the site? I vibe-coded it. Click <Link href="/how-i-built-this" style={{ textDecoration: 'underline', transition: 'color 0.2s ease' }} onMouseEnter={(e) => e.currentTarget.style.color = 'white'} onMouseLeave={(e) => e.currentTarget.style.color = ''}>here</Link> to see how.
+      </div>
+    </div>
+  </footer>
+</div>
+</div>
+);
 }
