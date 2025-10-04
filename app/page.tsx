@@ -8,7 +8,7 @@ import { TextShimmer } from '../src/components/motion-primitives/text-shimmer';
 import { SafeWrapper } from '../src/components/SafeWrapper';
 import { DigitalClock } from '../src/components/motion-primitives/digital-clock';
 import LiquidEtherSimple from '../src/components/LiquidEtherSimple';
-import { MapPin, Instagram, Linkedin } from 'lucide-react';
+import { MapPin, Linkedin } from 'lucide-react';
 import FooterStars from '../src/components/FooterStars';
 import { Meteors } from '../src/components/ui/meteors';
 import WeatherWidget from '../src/components/WeatherWidget';
@@ -195,18 +195,7 @@ export default function HomePage() {
       route: '/projects/new-balance',
       description: 'Essence of movement and performance through innovative technology.'
     },
-    // Keep the Showreel as the first visible list item below the hero
-    {
-      id: 'reel-2024',
-      title: 'Featured Showreel',
-      client: 'Jeff Kerr',
-      date: '2025',
-      thumbnail: 'https://vumbnail.com/1120706636.jpg',
-      href: 'https://player.vimeo.com/video/1120706636',
-      route: '/projects/showreel-2025',
-      description: 'A sweeping cut of work over the years across commercial, corporate, government, and documentary.'
-    },
-    // Place the previous Featured Video where New Balance used to be in the list
+    // First visible list item below the hero: Danny Was Here TV
     {
       id: 'featured-video',
       title: 'Danny Was Here TV',
@@ -217,15 +206,16 @@ export default function HomePage() {
       route: '/projects/DannyWasHereTV',
       description: 'Danny Was Here TV video showcase.'
     },
+    // Next item: Featured Showreel
     {
-      id: 'insta360',
-      title: 'FTC — LeanSpa',
-      client: 'Federal Trade Commission (FTC)',
-      date: '2023',
-      thumbnail: 'https://vumbnail.com/641503564.jpg',
-      href: 'https://player.vimeo.com/video/641503564',
-      route: '/projects/insta360',
-      description: 'National campaign series addressing deceptive diet ads; this 1:31 spot was one of several with TV, radio, web, and social cutdowns.'
+      id: 'reel-2024',
+      title: 'Featured Showreel',
+      client: 'Jeff Kerr',
+      date: '2025',
+      thumbnail: 'https://vumbnail.com/1120706636.jpg',
+      href: 'https://player.vimeo.com/video/1120706636',
+      route: '/projects/showreel-2025',
+      description: 'A sweeping cut of work over the years across commercial, corporate, government, and documentary.'
     },
     {
       id: 'commercial-project',
@@ -236,6 +226,16 @@ export default function HomePage() {
       href: 'https://player.vimeo.com/video/641502508',
       route: '/projects/commercial',
       description: 'An animation-led explainer produced for a national release across web and social.'
+    },
+    {
+      id: 'insta360',
+      title: 'FTC — LeanSpa',
+      client: 'Federal Trade Commission (FTC)',
+      date: '2023',
+      thumbnail: 'https://vumbnail.com/641503564.jpg',
+      href: 'https://player.vimeo.com/video/641503564',
+      route: '/projects/insta360',
+      description: 'National campaign series addressing deceptive diet ads; this 1:31 spot was one of several with TV, radio, web, and social cutdowns.'
     },
     {
       id: 'ai-documentary',
@@ -607,6 +607,45 @@ export default function HomePage() {
           transform: translateX(130%) rotate(10deg);
         }
 
+        /* Frosted pill button for CONTACT (same visuals as play button, no absolute positioning) */
+        .frosted-pill-btn {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          padding: 12px 18px;
+          border-radius: 999px;
+          border: 1px solid rgba(255,255,255,0.18);
+          background: rgba(0,0,0,0.45);
+          backdrop-filter: blur(6px);
+          color: #fff;
+          font-family: 'Space Mono', monospace;
+          font-size: 12px;
+          letter-spacing: 0.08em;
+          cursor: pointer;
+          transition: background 0.25s ease, transform 0.2s ease, opacity 0.25s ease;
+          opacity: 0.95;
+          overflow: hidden;
+          text-decoration: none;
+        }
+        .frosted-pill-btn::after {
+          content: '';
+          position: absolute;
+          inset: -60% -120%;
+          background: linear-gradient(120deg,
+            rgba(255,255,255,0) 20%,
+            rgba(255,255,255,0.35) 45%,
+            rgba(255,255,255,0.65) 50%,
+            rgba(255,255,255,0.35) 55%,
+            rgba(255,255,255,0) 80%
+          );
+          transform: translateX(-120%) rotate(10deg);
+          transition: transform 0.6s ease;
+          pointer-events: none;
+        }
+        .frosted-pill-btn:hover { background: rgba(255,255,255,0.08); }
+        .frosted-pill-btn:hover::after { transform: translateX(130%) rotate(10deg); }
+
         /* Page load animations */
         .hero-animate {
           opacity: 0;
@@ -703,7 +742,6 @@ export default function HomePage() {
           /* For list items, tighten the gap below each video container */
           .video-container { margin-bottom: 6px !important; }
 
-{{ ... }}
           /* Hide the large overlay title on the video */
           .overlay-title { display: none !important; }
           /* Hide the on-video meta as well */
@@ -1012,8 +1050,7 @@ export default function HomePage() {
           }}>
             New Balance • 2025
           </div>
-        </div>
-
+    </div>
         {/* Placeholder for Centered Sponsor Logos */}
         <section
           className={`animate-fade-in-up`}
@@ -1318,11 +1355,10 @@ export default function HomePage() {
               <div style={{ display: 'flex', justifyContent: 'center', marginTop: '26px' }}>
                 <Link
                   href="/contact"
-                  className="stats-cta"
+                  className="frosted-pill-btn"
                   aria-label="Go to contact page"
                 >
                   CONTACT
-                  <span className="arrow" aria-hidden="true" />
                 </Link>
               </div>
             </div>
@@ -1334,43 +1370,38 @@ export default function HomePage() {
 
 {/* Footer with meteors overlay (to match backgrounds page) */}
 <div style={{ position: 'relative', background: '#000', overflow: 'hidden', zIndex: 40 }}>
-<footer className="footer" style={{ position: 'relative', zIndex: 41 }}>
-{/* Meteors overlay above black background but below footer content */}
-<div style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none' }} aria-hidden="true">
-{showMeteors && <Meteors number={20} />}
-</div>
-<div className="footer-content">
-<div className="footer-logo">
-<TextShimmer duration={3} spread={1.5}>
-<span className="logo-k">k</span>err
-</TextShimmer>
-</div>
-<div className="footer-divider"></div>
-<div className="footer-email">
-<a href="mailto:colour8k@mac.com">colour8k@mac.com</a>
-</div>
-<nav className="footer-nav">
-<Link href="/">HOME</Link>
-<Link href="/backgrounds">🎨 BACKGROUNDS</Link>
-<a href="#">WORK</a>
-<Link href="/contact">CONTACT</Link>
-</nav>
-<div className="footer-social">
-<a href="#" aria-label="Instagram" title="Instagram" style={{ display: 'inline-flex', alignItems: 'center' }}>
-<Instagram size={20} strokeWidth={2} color="currentColor" />
-</a>
-<a href="#" aria-label="LinkedIn" title="LinkedIn" style={{ display: 'inline-flex', alignItems: 'center', marginLeft: 12 }}>
-<Linkedin size={20} strokeWidth={2} color="currentColor" />
-</a>
-</div>
-<div className="footer-copyright">
-  &copy; 2025 Jeff Kerr. Dig the site? I vibe-coded it. Click <Link href="/how-i-built-this" style={{ textDecoration: 'underline', transition: 'color 0.2s ease' }} onMouseEnter={(e) => e.currentTarget.style.color = 'white'} onMouseLeave={(e) => e.currentTarget.style.color = ''}>here</Link> to see how.
-</div>
-</div>
- </footer>
- </div>
-
-      
+  <footer className="footer" style={{ position: 'relative', zIndex: 41 }}>
+    {/* Meteors overlay above black background but below footer content */}
+    <div style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none' }} aria-hidden="true">
+      {showMeteors && <Meteors number={20} />}
     </div>
-  );
+    <div className="footer-content">
+      <div className="footer-logo">
+        <TextShimmer duration={3} spread={1.5}>
+          <span className="logo-k">k</span>err
+        </TextShimmer>
+      </div>
+      <div className="footer-divider"></div>
+      <div className="footer-email">
+        <a href="tel:4076203618" style={{ display: 'block', marginBottom: 6 }}>407-620-3618</a>
+        <a href="mailto:colour8k@mac.com">colour8k@mac.com</a>
+      </div>
+      <nav className="footer-nav">
+        <Link href="/">HOME</Link>
+        <a href="#">WORK</a>
+        <Link href="/contact">CONTACT</Link>
+      </nav>
+      <div className="footer-social">
+        <a href="#" aria-label="LinkedIn" title="LinkedIn" style={{ display: 'inline-flex', alignItems: 'center' }}>
+          <Linkedin size={20} strokeWidth={2} color="currentColor" />
+        </a>
+      </div>
+      <div className="footer-copyright">
+        &copy; 2025 Jeff Kerr. Dig the site? I vibe-coded it. Click <Link href="/how-i-built-this" style={{ textDecoration: 'underline', transition: 'color 0.2s ease' }} onMouseEnter={(e) => e.currentTarget.style.color = 'white'} onMouseLeave={(e) => e.currentTarget.style.color = ''}>here</Link> to see how.
+      </div>
+    </div>
+  </footer>
+</div>
+</div>
+);
 }

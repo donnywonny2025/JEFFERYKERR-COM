@@ -248,35 +248,30 @@ export default function FeaturedPage() {
               </div>
               <div className="footer-divider"></div>
               <div className="footer-email">
+                <a href="tel:4076203618" style={{ display: 'block', marginBottom: 6 }}>407-620-3618</a>
                 <a href="mailto:colour8k@mac.com">colour8k@mac.com</a>
               </div>
               <nav className="footer-nav">
                 <Link href="/">HOME</Link>
-                <Link href="/backgrounds">🎨 BACKGROUNDS</Link>
                 <a href="#">WORK</a>
-                <a href="#">CONTACT</a>
+                <Link href="/contact">CONTACT</Link>
               </nav>
               <div className="footer-social">
-                <a href="#" aria-label="Instagram">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                  </svg>
-                </a>
-                <a href="#" aria-label="YouTube">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                <a href="https://www.linkedin.com/in/jefferykerrcreative" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+                    <rect x="2" y="9" width="4" height="12"/>
+                    <circle cx="4" cy="4" r="2"/>
                   </svg>
                 </a>
               </div>
-              <div className="footer-copyright">
-                <a href="https://jeffreykerr.com" className="footer-link">
-                  2025 Jeff Kerr. Crafting visual stories that move the world forward. <span className="footer-link-hover">here</span>
-                </a>
+              <div className="footercopyright">
+                &copy; 2025 Jeff Kerr. Dig the site? I vibe-coded it. Click <Link href="/how-i-built-this" style={{ textDecoration: 'underline', transition: 'color 0.2s ease' }} onMouseEnter={(e) => (e.currentTarget as HTMLAnchorElement).style.color = 'white'} onMouseLeave={(e) => (e.currentTarget as HTMLAnchorElement).style.color = ''}>here</Link> to see how.
               </div>
             </div>
           </footer>
         </div>
-{{ ... }}
+      </div>
     </div>
   );
 }

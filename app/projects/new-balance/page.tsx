@@ -260,19 +260,16 @@ export default function NewBalanceCampaignPage() {
               </div>
               <div className="footer-divider"></div>
               <div className="footer-email">
+                <a href="tel:4076203618" style={{ display: 'block', marginBottom: 6 }}>407-620-3618</a>
                 <a href="mailto:colour8k@mac.com">colour8k@mac.com</a>
               </div>
               <nav className="footer-nav">
                 <Link href="/">HOME</Link>
-                <Link href="/backgrounds">🎨 BACKGROUNDS</Link>
                 <a href="#">WORK</a>
                 <Link href="/contact">CONTACT</Link>
               </nav>
               <div className="footer-social">
-                <a href="#" aria-label="Instagram" title="Instagram" style={{ display: 'inline-flex', alignItems: 'center' }}>
-                  <Instagram size={20} strokeWidth={2} color="currentColor" />
-                </a>
-                <a href="#" aria-label="LinkedIn" title="LinkedIn" style={{ display: 'inline-flex', alignItems: 'center', marginLeft: 12 }}>
+                <a href="#" aria-label="LinkedIn" title="LinkedIn" style={{ display: 'inline-flex', alignItems: 'center' }}>
                   <Linkedin size={20} strokeWidth={2} color="currentColor" />
                 </a>
               </div>
