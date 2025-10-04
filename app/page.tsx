@@ -238,6 +238,16 @@ export default function HomePage() {
       description: 'National campaign series addressing deceptive diet ads; this 1:31 spot was one of several with TV, radio, web, and social cutdowns.'
     },
     {
+      id: 'justice-for-lai-dai-han',
+      title: 'Justice for Lai Dai Han',
+      client: 'The Kerr Media Group',
+      date: '2021',
+      thumbnail: 'https://vumbnail.com/641889858.jpg',
+      href: 'https://player.vimeo.com/video/641889858',
+      route: '/projects/justice-for-lai-dai-han',
+      description: 'Documentary work highlighting the stories of the Lai Dai Han and advocating for acknowledgment, justice, and reconciliation.'
+    },
+    {
       id: 'ai-documentary',
       title: 'Apollo 11 — 50th Anniversary',
       client: 'NASA',
