@@ -119,7 +119,6 @@ export default function HomePage() {
   // Defer heavy embeds (like YouTube) until after first paint to avoid
   // an initial reflow that can look like a flicker in dev
   const [showMeteors, setShowMeteors] = useState(false);
-  const nbHeroVideoRef = useRef<HTMLVideoElement | null>(null);
   
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
@@ -155,23 +154,7 @@ export default function HomePage() {
 
   // (Removed showFeaturedEmbed gating) — hero video autoplays immediately
 
-  // Seamless loop guard for New Balance hero: avoid gap at loop point
-  useEffect(() => {
-    const v = nbHeroVideoRef.current;
-    if (!v) return;
-    const onTimeUpdate = () => {
-      if (!v.duration || Number.isNaN(v.duration)) return;
-      const remaining = v.duration - v.currentTime;
-      if (remaining <= 0.12) { // reset just before end to prevent glitch
-        try {
-          v.currentTime = 0;
-          if (v.paused) v.play().catch(() => {});
-        } catch {}
-      }
-    };
-    v.addEventListener('timeupdate', onTimeUpdate);
-    return () => v.removeEventListener('timeupdate', onTimeUpdate);
-  }, []);
+  // (Hero now uses ScrollTriggeredShowreel; no direct video loop guard needed)
 
   // Expanded videos array with 5 videos and internal routes
   const videos = [
@@ -1002,28 +985,15 @@ export default function HomePage() {
             }}
             role="button"
             aria-label="Open Featured Video details"
-            onClick={() => router.push('/projects/new-balance')}
+            onClick={() => router.push('/projects/DannyWasHereTV')}
           >
-            {/* Autoplaying local hero loop for New Balance Campaign (no poster, no gating) */}
-            <video
-              ref={nbHeroVideoRef}
-              src="/Videos/NBQuickLoop.mp4"
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="auto"
-              onLoadedMetadata={() => { try { nbHeroVideoRef.current?.play(); } catch {} }}
-              style={{
-                position: 'absolute',
-                inset: 0,
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                border: 0,
-                display: 'block',
-                borderRadius: 'inherit'
-              }}
+            {/* Autoplaying hero using same wrapper as list (Danny clone) */}
+            <ScrollTriggeredShowreel
+              src="/Videos/DannyQuickLoop.mp4"
+              poster="/Videos/DannyPoster.jpg"
+              delayMs={0}
+              playThreshold={0.05}
+              pauseThreshold={0.02}
             />
 
             {/* Frosted glass Play button (legacy style) */}
@@ -1031,9 +1001,9 @@ export default function HomePage() {
               className="hero-play-button"
               role="button"
               tabIndex={0}
-              aria-label={`Play featured video: ${videos[0].title}`}
-              onClick={(e) => { e.stopPropagation(); router.push('/projects/new-balance'); }}
-              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); router.push('/projects/new-balance'); } }}
+              aria-label={`Play featured video: Danny Was Here TV`}
+              onClick={(e) => { e.stopPropagation(); router.push('/projects/DannyWasHereTV'); }}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); router.push('/projects/DannyWasHereTV'); } }}
             >
               <div className="hero-play-content">
                 <div className="hero-play-icon" aria-hidden="true"></div>
@@ -1048,10 +1018,10 @@ export default function HomePage() {
               padding: '60px 30px 30px', color: 'white'
             }}>
               <div className="overlay-meta" style={{ fontFamily: "'Space Mono', monospace", fontSize: '14px', opacity: 0.8, marginBottom: '5px' }}>
-                New Balance • 2025
+                Jeff Kerr • 2025
               </div>
               <h2 className="overlay-title" style={{ fontFamily: "'Space Mono', monospace", fontSize: '24px', fontWeight: '400', margin: 0, color: 'white' }}>
-                New Balance Campaign
+                Danny Was Here TV
               </h2>
             </div>
           </div>
