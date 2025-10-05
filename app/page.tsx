@@ -564,6 +564,27 @@ export default function HomePage() {
           box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
           cursor: pointer;
         }
+
+        /* 16:9 fallback for browsers without aspect-ratio support */
+        @supports not (aspect-ratio: 1) {
+          .video-thumbnail {
+            position: relative !important;
+          }
+          .video-thumbnail::before {
+            content: '';
+            display: block;
+            padding-top: 56.25%; /* 16:9 ratio */
+          }
+          /* Ensure media inside fills the spacer wrapper */
+          .video-thumbnail > video,
+          .video-thumbnail > img,
+          .video-thumbnail > div {
+            position: absolute !important;
+            inset: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+          }
+        }
         
         .metadata-section {
           transition: all 0.4s ease;
