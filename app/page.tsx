@@ -1023,12 +1023,12 @@ export default function HomePage() {
             }}
             role="button"
             aria-label="Open Featured Video details"
-            onClick={() => router.push('/projects/DannyWasHereTV')}
+            onClick={() => router.push('/projects/new-balance')}
           >
             {/* Autoplaying hero using same wrapper as list (Danny clone) */}
             <ScrollTriggeredShowreel
-              src="/Videos/DannyQuickLoop.mp4"
-              poster="/Videos/DannyPoster.jpg"
+              src="/Videos/NBQuickLoop.mp4"
+              poster="/Videos/NBPOSTER.jpg"
               delayMs={0}
               playThreshold={0}
               pauseThreshold={0.02}
@@ -1040,9 +1040,9 @@ export default function HomePage() {
               className="hero-play-button"
               role="button"
               tabIndex={0}
-              aria-label={`Play featured video: Danny Was Here TV`}
-              onClick={(e) => { e.stopPropagation(); router.push('/projects/DannyWasHereTV'); }}
-              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); router.push('/projects/DannyWasHereTV'); } }}
+              aria-label={`Play featured video: New Balance Campaign`}
+              onClick={(e) => { e.stopPropagation(); router.push('/projects/new-balance'); }}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); router.push('/projects/new-balance'); } }}
             >
               <div className="hero-play-content">
                 <div className="hero-play-icon" aria-hidden="true"></div>
@@ -1057,10 +1057,10 @@ export default function HomePage() {
               padding: '60px 30px 30px', color: 'white'
             }}>
               <div className="overlay-meta" style={{ fontFamily: "'Space Mono', monospace", fontSize: '14px', opacity: 0.8, marginBottom: '5px' }}>
-                Jeff Kerr • 2025
+                New Balance • 2025
               </div>
               <h2 className="overlay-title" style={{ fontFamily: "'Space Mono', monospace", fontSize: '24px', fontWeight: '400', margin: 0, color: 'white' }}>
-                Danny Was Here TV
+                New Balance Campaign
               </h2>
             </div>
           </div>
@@ -1081,7 +1081,7 @@ export default function HomePage() {
             margin: 0,
             color: 'rgba(255,255,255,0.95)'
           }}>
-            Danny Was Here TV
+            New Balance Campaign
           </h2>
           <div className="mobile-meta" style={{
             fontFamily: "'Space Mono', monospace",
@@ -1089,7 +1089,7 @@ export default function HomePage() {
             color: 'rgba(255,255,255,0.8)',
             marginTop: '4px'
           }}>
-            Jeff Kerr • 2025
+            New Balance • 2025
           </div>
     </div>
         {/* Placeholder for Centered Sponsor Logos */}
