@@ -87,22 +87,38 @@ function ScrollTriggeredShowreel({ src, poster, delayMs = 700, playThreshold = 0
     return () => { if (timeoutId) window.clearTimeout(timeoutId); io.disconnect(); };
   }, [started]);
 
-  // Optional immediate start on mount (bypasses IO timing on iOS for hero)
+  // Optional immediate start on mount (bypasses IO timing) and robust retries
   useEffect(() => {
-    if (!autoStart) return;
-    let id: number | null = null;
-    id = window.setTimeout(async () => {
+    const v = videoRef.current;
+    if (!v) return;
+    // Satisfy autoplay policies explicitly
+    v.muted = true;
+    // @ts-ignore: playsInline property on HTMLVideoElement
+    v.playsInline = true;
+
+    const tryPlay = async () => {
       try {
-        if (videoRef.current) {
-          await videoRef.current.play();
-        }
+        await v.play();
+        if (!started) setStarted(true);
       } catch {}
-    }, Math.max(0, delayMs || 0));
-    return () => { if (id) window.clearTimeout(id); };
-  }, [autoStart, delayMs]);
+    };
+
+    let id: number | null = null;
+    if (autoStart) {
+      id = window.setTimeout(tryPlay, Math.max(0, delayMs || 0));
+    }
+
+    v.addEventListener('loadedmetadata', tryPlay);
+    v.addEventListener('canplay', tryPlay);
+    return () => {
+      if (id) window.clearTimeout(id);
+      v.removeEventListener('loadedmetadata', tryPlay);
+      v.removeEventListener('canplay', tryPlay);
+    };
+  }, [autoStart, delayMs, started]);
 
   return (
-    <div ref={containerRef} style={{ position: 'relative', width: '100%', height: '100%' }}>
+    <div ref={containerRef} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
       <video 
         ref={videoRef} 
         src={src}
@@ -1014,7 +1030,7 @@ export default function HomePage() {
               src="/Videos/DannyQuickLoop.mp4"
               poster="/Videos/DannyPoster.jpg"
               delayMs={0}
-              playThreshold={0.05}
+              playThreshold={0}
               pauseThreshold={0.02}
               autoStart
             />
