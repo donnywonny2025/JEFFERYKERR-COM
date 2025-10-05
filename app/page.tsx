@@ -980,8 +980,8 @@ export default function HomePage() {
               backgroundColor: '#111',
               position: 'relative',
               aspectRatio: '16/9',
-              opacity: animationStage >= 5 ? 1 : 0,
-              transform: animationStage >= 5 ? 'translateY(0) scale(1)' : 'translateY(25px) scale(0.98)'
+              opacity: 1,
+              transform: 'translateY(0) scale(1)'
             }}
             role="button"
             aria-label="Open Featured Video details"
@@ -1042,7 +1042,7 @@ export default function HomePage() {
             margin: 0,
             color: 'rgba(255,255,255,0.95)'
           }}>
-            {videos[0].title}
+            Danny Was Here TV
           </h2>
           <div className="mobile-meta" style={{
             fontFamily: "'Space Mono', monospace",
@@ -1050,7 +1050,7 @@ export default function HomePage() {
             color: 'rgba(255,255,255,0.8)',
             marginTop: '4px'
           }}>
-            New Balance • 2025
+            Jeff Kerr • 2025
           </div>
     </div>
         {/* Placeholder for Centered Sponsor Logos */}
