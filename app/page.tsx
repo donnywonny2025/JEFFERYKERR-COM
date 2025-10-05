@@ -118,7 +118,6 @@ export default function HomePage() {
   const router = useRouter();
   // Defer heavy embeds (like YouTube) until after first paint to avoid
   // an initial reflow that can look like a flicker in dev
-  const [showFeaturedEmbed, setShowFeaturedEmbed] = useState(false);
   const [showMeteors, setShowMeteors] = useState(false);
   const nbHeroVideoRef = useRef<HTMLVideoElement | null>(null);
   
@@ -154,16 +153,10 @@ export default function HomePage() {
     return () => timers.forEach(timer => timer && clearTimeout(timer));
   }, []);
 
-  // Enable Featured iframe shortly after first paint to keep initial render
-  // visually stable (prevents appear-disappear when the iframe initializes)
-  useEffect(() => {
-    let id = window.setTimeout(() => setShowFeaturedEmbed(true), 350);
-    return () => window.clearTimeout(id);
-  }, []);
+  // (Removed showFeaturedEmbed gating) — hero video autoplays immediately
 
   // Seamless loop guard for New Balance hero: avoid gap at loop point
   useEffect(() => {
-    if (!showFeaturedEmbed) return;
     const v = nbHeroVideoRef.current;
     if (!v) return;
     const onTimeUpdate = () => {
@@ -172,14 +165,13 @@ export default function HomePage() {
       if (remaining <= 0.12) { // reset just before end to prevent glitch
         try {
           v.currentTime = 0;
-          // Ensure continuous playback without flashing poster
           if (v.paused) v.play().catch(() => {});
         } catch {}
       }
     };
     v.addEventListener('timeupdate', onTimeUpdate);
     return () => v.removeEventListener('timeupdate', onTimeUpdate);
-  }, [showFeaturedEmbed]);
+  }, []);
 
   // Expanded videos array with 5 videos and internal routes
   const videos = [
@@ -1012,38 +1004,27 @@ export default function HomePage() {
             aria-label="Open Featured Video details"
             onClick={() => router.push('/projects/new-balance')}
           >
-            {/* Autoplaying local hero loop for New Balance Campaign */}
-            {showFeaturedEmbed ? (
-              <video
-                ref={nbHeroVideoRef}
-                src="/Videos/NBQuickLoop.mp4"
-                poster="/Videos/NBPOSTER.jpg"
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload="auto"
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  border: 0,
-                  display: 'block',
-                  borderRadius: 'inherit'
-                }}
-              />
-            ) : (
-              <img
-                src="/Videos/NBPOSTER.jpg"
-                alt="New Balance Campaign poster"
-                width={1920}
-                height={1080}
-                style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'inherit', display: 'block' }}
-                loading="eager"
-              />
-            )}
+            {/* Autoplaying local hero loop for New Balance Campaign (no poster, no gating) */}
+            <video
+              ref={nbHeroVideoRef}
+              src="/Videos/NBQuickLoop.mp4"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
+              onLoadedMetadata={() => { try { nbHeroVideoRef.current?.play(); } catch {} }}
+              style={{
+                position: 'absolute',
+                inset: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                border: 0,
+                display: 'block',
+                borderRadius: 'inherit'
+              }}
+            />
 
             {/* Frosted glass Play button (legacy style) */}
             <div
