@@ -46,9 +46,10 @@ type ScrollTriggeredProps = {
   delayMs?: number;
   playThreshold?: number;
   pauseThreshold?: number;
+  autoStart?: boolean;
 };
 
-function ScrollTriggeredShowreel({ src, poster, delayMs = 700, playThreshold = 0.7, pauseThreshold = 0.35 }: ScrollTriggeredProps) {
+function ScrollTriggeredShowreel({ src, poster, delayMs = 700, playThreshold = 0.7, pauseThreshold = 0.35, autoStart = false }: ScrollTriggeredProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [started, setStarted] = useState(false);
@@ -85,6 +86,20 @@ function ScrollTriggeredShowreel({ src, poster, delayMs = 700, playThreshold = 0
     io.observe(el);
     return () => { if (timeoutId) window.clearTimeout(timeoutId); io.disconnect(); };
   }, [started]);
+
+  // Optional immediate start on mount (bypasses IO timing on iOS for hero)
+  useEffect(() => {
+    if (!autoStart) return;
+    let id: number | null = null;
+    id = window.setTimeout(async () => {
+      try {
+        if (videoRef.current) {
+          await videoRef.current.play();
+        }
+      } catch {}
+    }, Math.max(0, delayMs || 0));
+    return () => { if (id) window.clearTimeout(id); };
+  }, [autoStart, delayMs]);
 
   return (
     <div ref={containerRef} style={{ position: 'relative', width: '100%', height: '100%' }}>
@@ -538,6 +553,13 @@ export default function HomePage() {
           position: relative;
           box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
           cursor: pointer;
+        }
+
+        /* Ensure hero wrapper always has height on iOS at first paint */
+        .home-featured-video .video-thumbnail::before {
+          content: '';
+          display: block;
+          padding-top: 56.25%; /* 16:9 */
         }
 
         /* 16:9 fallback for browsers without aspect-ratio support */
@@ -994,6 +1016,7 @@ export default function HomePage() {
               delayMs={0}
               playThreshold={0.05}
               pauseThreshold={0.02}
+              autoStart
             />
 
             {/* Frosted glass Play button (legacy style) */}
