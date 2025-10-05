@@ -1186,7 +1186,7 @@ export default function HomePage() {
                 (video.id === 'new-balance-campaign') ? (
                   <iframe
                     title="Autoplay video"
-                    src={`${video.href}?autoplay=1&muted=1&background=1&loop=1&controls=0&autopause=0&dnt=1`}
+                    src={`${video.href}?autoplay=1&muted=1&background=1&loop=1&controls=0&autopause=0&dnt=1&playsinline=1`}
                     style={{
                       position: 'absolute',
                       inset: 0,
@@ -1197,7 +1197,6 @@ export default function HomePage() {
                       transform: video.id === 'new-balance-campaign' ? 'scale(1.28)' : undefined,
                       transformOrigin: 'center center'
                     }}
-                    loading="lazy"
                     allow="autoplay; fullscreen; picture-in-picture"
                     allowFullScreen
                   />
