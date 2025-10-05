@@ -1184,22 +1184,32 @@ export default function HomePage() {
                 <ScrollTriggeredShowreel src="/Videos/JusticeLoop.mp4" poster="/Videos/JusticePoster.png" />
               ) : (
                 (video.id === 'new-balance-campaign') ? (
-                  <iframe
-                    title="Autoplay video"
-                    src={`${video.href}?autoplay=1&muted=1&background=1&loop=1&controls=0&autopause=0&dnt=1&playsinline=1`}
-                    style={{
-                      position: 'absolute',
-                      inset: 0,
-                      width: '100%',
-                      height: '100%',
-                      border: 0,
-                      display: 'block',
-                      transform: video.id === 'new-balance-campaign' ? 'scale(1.28)' : undefined,
-                      transformOrigin: 'center center'
-                    }}
-                    allow="autoplay; fullscreen; picture-in-picture"
-                    allowFullScreen
-                  />
+                  <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', borderRadius: 'inherit' }}>
+                    {/* Poster fallback to avoid blank hero on mobile if autoplay is blocked */}
+                    <img
+                      src={video.thumbnail}
+                      alt={video.title}
+                      width={1920}
+                      height={1080}
+                      style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                    />
+                    <iframe
+                      title="Autoplay video"
+                      src={`${video.href}?autoplay=1&muted=1&background=1&loop=1&controls=0&autopause=0&dnt=1&playsinline=1`}
+                      style={{
+                        position: 'absolute',
+                        inset: 0,
+                        width: '100%',
+                        height: '100%',
+                        border: 0,
+                        display: 'block',
+                        transform: video.id === 'new-balance-campaign' ? 'scale(1.28)' : undefined,
+                        transformOrigin: 'center center'
+                      }}
+                      allow="autoplay; fullscreen; picture-in-picture"
+                      allowFullScreen
+                    />
+                  </div>
                 ) : video.id === 'insta360' ? (
                   <ScrollTriggeredShowreel src="/Videos/FTCLEANQuickLoop.mp4" poster="/Videos/FTCLEANPoster.jpg" />
                 ) : video.id === 'commercial-project' ? (
