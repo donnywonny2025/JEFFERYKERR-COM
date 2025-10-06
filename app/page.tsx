@@ -466,8 +466,39 @@ export default function HomePage() {
           background-size: 300% 300%;
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
-          background-clip: text;
-          animation: continuousFlow 20s ease-in-out infinite;
+          animation: gradientShift 10s ease-in-out infinite;
+        }
+
+        /* Give each hero highlight its own vibe */
+        .gradient-text.gt1 {
+          animation: gradientShift1 9s ease-in-out infinite;
+          animation-delay: 0.1s;
+        }
+        .gradient-text.gt2 {
+          animation: gradientShift2 11s ease-in-out infinite reverse;
+          animation-delay: 0.35s;
+        }
+        .gradient-text.gt3 {
+          animation: gradientShift3 8s ease-in-out infinite;
+          animation-delay: 0.6s;
+        }
+
+        @keyframes gradientShift1 {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        @keyframes gradientShift2 {
+          0% { background-position: 100% 50%; }
+          50% { background-position: 0% 50%; }
+          100% { background-position: 100% 50%; }
+        }
+        @keyframes gradientShift3 {
+          0% { background-position: 50% 0%; }
+          50% { background-position: 50% 100%; }
+          100% { background-position: 50% 0%; }
+        }
+  animation: continuousFlow 20s ease-in-out infinite;
         }
 
         /* Prevent horizontal scroll and ensure full viewport sizing */
@@ -569,6 +600,14 @@ export default function HomePage() {
           position: relative;
           box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
           cursor: pointer;
+        }
+
+        /* Enforce exactly three lines for hero copy on desktop/half-screen */
+        @media (min-width: 1024px) {
+          .home-hero-copy .hero-animate {
+            white-space: nowrap;
+            word-break: keep-all;
+          }
         }
 
         /* Ensure hero wrapper always has height on iOS at first paint */
@@ -918,13 +957,13 @@ export default function HomePage() {
           marginBottom: '24px',
           paddingTop: '140px'
         }}>
-          <div style={{
+          <div className="home-hero-copy" style={{
             fontFamily: "'Space Mono', monospace",
             fontSize: 'clamp(1.5rem, 3vw, 2.2rem)',
             fontWeight: '400',
             lineHeight: '1.1',
             color: 'rgba(255, 255, 255, 0.95)',
-            maxWidth: 'min(44rem, 100%)'
+            maxWidth: 'min(50rem, 100%)'
           }}>
             <div
               className={`hero-animate ${animationStage >= 1 ? 'animate-in' : ''}`}
@@ -934,7 +973,7 @@ export default function HomePage() {
                 transform: animationStage >= 1 ? 'translateY(0)' : 'translateY(20px)'
               }}
             >
-              I produce <span className="gradient-text">compelling visual content</span>
+              I produce <span className="gradient-text gt1">compelling visual content</span>
             </div>
             <div
               className={`hero-animate ${animationStage >= 2 ? 'animate-in' : ''}`}
@@ -944,7 +983,7 @@ export default function HomePage() {
                 transform: animationStage >= 2 ? 'translateY(0)' : 'translateY(20px)'
               }}
             >
-              while building <span className="gradient-text">AI-enhanced workflows</span>
+              across <span className="gradient-text gt2">entertainment, corporate,</span>
             </div>
             <div
               className={`hero-animate ${animationStage >= 3 ? 'animate-in' : ''}`}
@@ -953,7 +992,7 @@ export default function HomePage() {
                 transform: animationStage >= 3 ? 'translateY(0)' : 'translateY(20px)'
               }}
             >
-              that change how <span className="gradient-text">creative work gets done</span>.
+              <span className="gradient-text gt3">and political</span> projects.
             </div>
           </div>
         </section>
@@ -1027,7 +1066,7 @@ export default function HomePage() {
           >
             {/* Autoplaying hero using same wrapper as list (Danny clone) */}
             <ScrollTriggeredShowreel
-              src="/Videos/NBQuickLoop.mp4"
+              src="/Videos/NBQuickLoop2.mp4"
               poster="/Videos/NBPOSTER.jpg"
               delayMs={0}
               playThreshold={0}
@@ -1190,7 +1229,7 @@ export default function HomePage() {
               {video.id === 'reel-2024' ? (
                 <ScrollTriggeredShowreel src="/Videos/REELQuickLoop.mp4" poster="/Videos/Reel_Poster.jpg" />
               ) : video.id === 'featured-video' ? (
-                <ScrollTriggeredShowreel src="/Videos/DannyQuickLoop.mp4" poster="/Videos/DannyPoster.jpg" />
+                <ScrollTriggeredShowreel src="/Videos/DannyQuickLoop3.mp4" poster="/Videos/DannyPoster.jpg" />
               ) : video.id === 'justice-for-lai-dai-han' ? (
                 <ScrollTriggeredShowreel src="/Videos/JusticeLoop.mp4" poster="/Videos/JusticePoster.png" />
               ) : (
