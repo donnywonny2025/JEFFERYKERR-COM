@@ -1458,7 +1458,7 @@ export default function HomePage() {
         <Link href="/contact">CONTACT</Link>
       </nav>
       <div className="footer-social">
-        <a href="#" aria-label="LinkedIn" title="LinkedIn" style={{ display: 'inline-flex', alignItems: 'center' }}>
+        <a href="https://www.linkedin.com/in/jefferykerrcreative" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" title="LinkedIn" style={{ display: 'inline-flex', alignItems: 'center' }}>
           <Linkedin size={20} strokeWidth={2} color="currentColor" />
         </a>
       </div>
