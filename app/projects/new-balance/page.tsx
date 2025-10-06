@@ -201,7 +201,7 @@ export default function NewBalanceCampaignPage() {
                   maxWidth: '750px'
                 }}
               >
-                Rome, 2025 — A short showcase for New Balance around the Run Roma (2026 edition) marathon in Rome, Italy. Directed by Brian Cibula, this piece leans on tight editorial, advanced cinematography, and 360° camera technology to deliver a focused, high-energy brand vignette.
+                Rome — A short showcase around <strong>Run Rome The Marathon</strong>, featuring New Balance as the event’s Official Shoe. Fast-cut editorial with advanced cinematography.
               </p>
             </section>
 
@@ -235,8 +235,6 @@ export default function NewBalanceCampaignPage() {
                 <div style={separatorStyle}></div>
                 <div>Role: Creative Director</div>
                 <div style={separatorStyle}></div>
-                <div>Director: Brian Cibula</div>
-                <div style={separatorStyle}></div>
                 <div>Deliverables: TV and web</div>
                 <div style={separatorStyle}></div>
                 <div>Location: Rome, Italy</div>
@@ -269,7 +267,7 @@ export default function NewBalanceCampaignPage() {
                 <Link href="/contact">CONTACT</Link>
               </nav>
               <div className="footer-social">
-                <a href="#" aria-label="LinkedIn" title="LinkedIn" style={{ display: 'inline-flex', alignItems: 'center' }}>
+                <a href="https://www.linkedin.com/in/jefferykerrcreative" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" title="LinkedIn" style={{ display: 'inline-flex', alignItems: 'center' }}>
                   <Linkedin size={20} strokeWidth={2} color="currentColor" />
                 </a>
               </div>
