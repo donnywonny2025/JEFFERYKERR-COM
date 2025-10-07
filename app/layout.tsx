@@ -1,5 +1,6 @@
 import "./globals.css"
 import "../src/App.css"
+import Script from 'next/script'
 
 import type { Metadata } from 'next'
 
@@ -44,6 +45,19 @@ export default function RootLayout({
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" />
       </head>
       <body>
+        {/* Google Analytics 4 */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-SM9JXHS581"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);} 
+            gtag('js', new Date());
+            gtag('config', 'G-SM9JXHS581');
+          `}
+        </Script>
         {/* <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: -1 }}>
           <Prism
             animationType="rotate"
