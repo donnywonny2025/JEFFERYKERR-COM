@@ -29,8 +29,7 @@ const WeatherWidget: React.FC = () => {
     const fetchWeatherByCoords = async (lat: number, lon: number) => {
       const cacheBuster = Date.now();
       const weatherResponse = await fetch(
-        `https://wttr.in/${lat},${lon}?format=%C+%t+%l&_=${cacheBuster}`,
-        { cache: 'no-store', headers: { 'Cache-Control': 'no-cache' } }
+        `https://wttr.in/${lat},${lon}?format=%C+%t+%l&_=${cacheBuster}`
       );
       const weatherText = (await weatherResponse.text()).trim();
       
@@ -55,8 +54,7 @@ const WeatherWidget: React.FC = () => {
     const fetchWeatherByCity = async (city: string) => {
       const cacheBuster = Date.now();
       const weatherResponse = await fetch(
-        `https://wttr.in/${encodeURIComponent(city)}?format=%C+%t&_=${cacheBuster}`,
-        { cache: 'no-store', headers: { 'Cache-Control': 'no-cache' } }
+        `https://wttr.in/${encodeURIComponent(city)}?format=%C+%t&_=${cacheBuster}`
       );
       const weatherText = (await weatherResponse.text()).trim();
       
@@ -102,8 +100,7 @@ const WeatherWidget: React.FC = () => {
             // wttr.in can detect location from IP directly
             const cacheBuster = Date.now();
             const weatherResponse = await fetch(
-              `https://wttr.in/?format=%C+%t+%l&_=${cacheBuster}`,
-              { cache: 'no-store', headers: { 'Cache-Control': 'no-cache' } }
+              `https://wttr.in/?format=%C+%t+%l&_=${cacheBuster}`
             );
             const weatherText = (await weatherResponse.text()).trim();
             
