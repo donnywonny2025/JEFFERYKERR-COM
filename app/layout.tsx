@@ -1,6 +1,5 @@
 import "./globals.css"
 import "../src/App.css"
-import Script from 'next/script'
 
 import type { Metadata } from 'next'
 
@@ -29,19 +28,18 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Google Analytics 4 - in head for better detection */}
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-SM9JXHS581"
-          strategy="afterInteractive"
+        {/* Google Analytics 4 - raw script tags for immediate detection */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-SM9JXHS581"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);} 
+              gtag('js', new Date());
+              gtag('config', 'G-SM9JXHS581');
+            `,
+          }}
         />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);} 
-            gtag('js', new Date());
-            gtag('config', 'G-SM9JXHS581');
-          `}
-        </Script>
         {/* Performance: early connection hints (safe, visual no-op) */}
         <link rel="dns-prefetch" href="//fonts.googleapis.com" />
         <link rel="dns-prefetch" href="//fonts.gstatic.com" />
