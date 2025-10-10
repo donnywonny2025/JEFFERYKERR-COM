@@ -1,6 +1,7 @@
 import "./globals.css"
 import "../src/App.css"
 import GoogleTagManager, { GoogleTagManagerNoScript } from './GoogleAnalytics'
+import Script from 'next/script'
 
 import type { Metadata } from 'next'
 
@@ -48,6 +49,13 @@ export default function RootLayout({
         <GoogleTagManagerNoScript />
         <GoogleTagManager />
         {children}
+        {/* Cloudflare Web Analytics */}
+        <Script
+          id="cloudflare-web-analytics"
+          strategy="afterInteractive"
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon='{"token": "3fceab66a1d841b78d448feaae5a6de0"}'
+        />
       </body>
     </html>
   )
