@@ -1,5 +1,6 @@
 import "./globals.css"
 import "../src/App.css"
+import GoogleAnalytics from './GoogleAnalytics'
 
 import type { Metadata } from 'next'
 
@@ -18,6 +19,9 @@ export const metadata: Metadata = {
       { rel: "android-chrome", url: "/android-chrome-512x512.png", sizes: "512x512" },
     ],
   },
+  other: {
+    'google-site-verification': 'G-SM9JXHS581',
+  } as any,
 }
 
 export default function RootLayout({
@@ -28,18 +32,6 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Google Analytics 4 - raw script tags for immediate detection */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-SM9JXHS581"></script>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);} 
-              gtag('js', new Date());
-              gtag('config', 'G-SM9JXHS581');
-            `,
-          }}
-        />
         {/* Performance: early connection hints (safe, visual no-op) */}
         <link rel="dns-prefetch" href="//fonts.googleapis.com" />
         <link rel="dns-prefetch" href="//fonts.gstatic.com" />
@@ -56,6 +48,7 @@ export default function RootLayout({
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" />
       </head>
       <body>
+        <GoogleAnalytics />
         {children}
       </body>
     </html>
