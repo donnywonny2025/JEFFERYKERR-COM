@@ -78,21 +78,8 @@ const WeatherWidget: React.FC = () => {
     const fetchWeather = async () => {
       try {
         let result: WeatherData | null = null;
-
-        // Strategy 1: Try browser geolocation (most accurate, but requires permission)
-        if ('geolocation' in navigator) {
-          try {
-            const position = await new Promise<GeolocationPosition>((resolve, reject) => {
-              navigator.geolocation.getCurrentPosition(resolve, reject, {
-                timeout: 5000,
-                maximumAge: 300000, // Cache for 5 minutes
-              });
-            });
-            result = await fetchWeatherByCoords(position.coords.latitude, position.coords.longitude);
-          } catch (geoErr) {
-            // User denied or timeout - continue to IP fallback
-          }
-        }
+        // IMPORTANT: No geolocation prompts. We intentionally skip
+        // navigator.geolocation to avoid permission dialogs.
 
         // Strategy 2: IP-based geolocation with wttr.in (no external service needed)
         if (!result) {
