@@ -1,6 +1,6 @@
 import "./globals.css"
 import "../src/App.css"
-import GoogleAnalytics from './GoogleAnalytics'
+import GoogleTagManager, { GoogleTagManagerNoScript } from './GoogleAnalytics'
 
 import type { Metadata } from 'next'
 
@@ -19,9 +19,6 @@ export const metadata: Metadata = {
       { rel: "android-chrome", url: "/android-chrome-512x512.png", sizes: "512x512" },
     ],
   },
-  other: {
-    'google-site-verification': 'G-SM9JXHS581',
-  } as any,
 }
 
 export default function RootLayout({
@@ -48,7 +45,8 @@ export default function RootLayout({
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" />
       </head>
       <body>
-        <GoogleAnalytics />
+        <GoogleTagManagerNoScript />
+        <GoogleTagManager />
         {children}
       </body>
     </html>
