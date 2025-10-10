@@ -29,6 +29,19 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        {/* Google Analytics 4 - in head for better detection */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-SM9JXHS581"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);} 
+            gtag('js', new Date());
+            gtag('config', 'G-SM9JXHS581');
+          `}
+        </Script>
         {/* Performance: early connection hints (safe, visual no-op) */}
         <link rel="dns-prefetch" href="//fonts.googleapis.com" />
         <link rel="dns-prefetch" href="//fonts.gstatic.com" />
@@ -45,34 +58,6 @@ export default function RootLayout({
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" />
       </head>
       <body>
-        {/* Google Analytics 4 */}
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-SM9JXHS581"
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);} 
-            gtag('js', new Date());
-            gtag('config', 'G-SM9JXHS581');
-          `}
-        </Script>
-        {/* <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: -1 }}>
-          <Prism
-            animationType="rotate"
-            timeScale={0.3}
-            height={2}
-            baseWidth={3}
-            scale={360}
-            offset={{ x: 0, y: 0 }}
-            hueShift={0.0}
-            colorFrequency={0.8}
-            noise={0}
-            glow={1.2}
-            suspendWhenOffscreen={true}
-          />
-        </div> */}
         {children}
       </body>
     </html>
