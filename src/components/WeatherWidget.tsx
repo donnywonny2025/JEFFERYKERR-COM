@@ -29,61 +29,38 @@ const WeatherWidget: React.FC = () => {
     const fetchWeather = async () => {
       try {
         let result: WeatherData | null = null;
-        // Multiple IP-based services to broaden detection (all free/no key)
-        const ipServices = [
-          'https://ipapi.co/json/',
-          'https://freegeoip.app/json/',
-          'https://ipwhois.app/json/'
-        ];
-
-        for (const svc of ipServices) {
-          try {
-            const locationResponse = await fetch(svc, { cache: 'no-store' });
-            const loc = await locationResponse.json();
-            const city: string | undefined = loc?.city || loc?.region || loc?.country_name || loc?.country || loc?.state_prov || loc?.state;
-            if (!city) continue;
-
-            // wttr.in simple text format: "Sunny +75°F"
-            const weatherResponse = await fetch(`https://wttr.in/${encodeURIComponent(city)}?format=%C+%t`, { cache: 'no-store' });
-            const weatherText = (await weatherResponse.text()).trim();
-            if (!weatherText || weatherText.toLowerCase().includes('unknown')) continue;
-
+        
+        // Skip IP detection entirely - just use Grand Rapids directly
+        // This ensures accurate local weather without rate-limiting issues
+        try {
+          // Add cache buster to force fresh data
+          const cacheBuster = Date.now();
+          const weatherResponse = await fetch(`https://wttr.in/Grand%20Rapids,MI?format=%C+%t&_=${cacheBuster}`, { 
+            cache: 'no-store',
+            headers: { 'Cache-Control': 'no-cache' }
+          });
+          const weatherText = (await weatherResponse.text()).trim();
+          
+          if (weatherText && !weatherText.toLowerCase().includes('unknown')) {
             const parts = weatherText.split(' ');
             const tempStr = parts[parts.length - 1];
             const temp = parseInt(tempStr.replace(/[°F+]/g, ''), 10);
             const condition = parts.slice(0, -1).join(' ');
-
-            result = {
-              temperature: Number.isFinite(temp) ? temp : 75,
-              condition: condition || 'Clear',
-              icon: getWeatherIcon(condition),
-              location: city,
-            };
-            break; // success
-          } catch (_) {
-            // try next service
-            continue;
-          }
-        }
-
-        // Final fallback to Grand Rapids if all services failed
-        if (!result) {
-          try {
-            const weatherResponse = await fetch('https://wttr.in/Grand%20Rapids?format=%C+%t', { cache: 'no-store' });
-            const weatherText = (await weatherResponse.text()).trim();
-            const parts = weatherText.split(' ');
-            const tempStr = parts[parts.length - 1];
-            const temp = parseInt(tempStr.replace(/[°F+]/g, ''), 10);
-            const condition = parts.slice(0, -1).join(' ');
+            
             result = {
               temperature: Number.isFinite(temp) ? temp : 75,
               condition: condition || 'Clear',
               icon: getWeatherIcon(condition),
               location: 'Grand Rapids',
             };
-          } catch (_) {
-            result = { temperature: 75, condition: 'Clear', icon: '☀️', location: 'Grand Rapids' };
           }
+        } catch (err) {
+          console.warn('Weather fetch failed:', err);
+        }
+
+        // Fallback only if fetch completely failed
+        if (!result) {
+          result = { temperature: 75, condition: 'Clear', icon: '☀️', location: 'Grand Rapids' };
         }
 
         if (isMounted) setWeather(result);
