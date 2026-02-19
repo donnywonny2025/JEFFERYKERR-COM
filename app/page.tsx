@@ -1227,7 +1227,7 @@ export default function HomePage() {
               }}
             >
               {video.id === 'reel-2024' ? (
-                <ScrollTriggeredShowreel src="/Videos/REELQuickLoop.mp4" poster="/Videos/Reel_Poster.jpg" />
+                <ScrollTriggeredShowreel src="/Videos/REELMAIN%20LOOP.mp4" poster="/Videos/Reel_Poster.jpg" />
               ) : video.id === 'featured-video' ? (
                 <ScrollTriggeredShowreel src="/Videos/DannyQuickLoop3.mp4" poster="/Videos/DannyPoster.jpg" />
               ) : video.id === 'justice-for-lai-dai-han' ? (
@@ -1389,7 +1389,7 @@ export default function HomePage() {
             {/* Background Vimeo video (full opacity) */}
             <div aria-hidden="true" style={{ position: 'absolute', inset: 0, zIndex: 1, overflow: 'hidden', pointerEvents: 'none', borderRadius: 'inherit' }}>
               <video
-                src="/Videos/StatQuickLoop.mp4"
+                src="/Videos/REELMAIN%20LOOP.mp4"
                 autoPlay
                 muted
                 loop
