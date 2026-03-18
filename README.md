@@ -64,6 +64,60 @@ npm run start    # Start production server
 npm run lint     # Run ESLint
 ```
 
+## 🚀 Deployment & Operations
+
+This project is set up for GitHub → Netlify continuous deployment with a custom domain.
+
+### 1) Repository & GitHub
+- Verify repo status:
+  - `git status` — working tree state
+  - `git branch` — current branch (usually `main`)
+  - `git remote -v` — confirm `origin` points to the GitHub repo
+- Typical workflow:
+  - Create a feature branch → commit → push → open PR → merge to `main`
+  - Netlify auto-builds and deploys on every push to the configured branch
+
+### 2) Netlify (Build & Hosting)
+- Configuration lives in `netlify.toml`:
+  - Build command: `npm run build`
+  - Publish directory: `.next`
+  - Plugin: `@netlify/plugin-nextjs` (handles SSR/ISR, images, routing)
+  - Node version: `18.20.3`
+- One-time setup in Netlify UI:
+  1. New site → Import from Git → select this GitHub repo
+  2. Confirm build = `npm run build`, publish = `.next`
+  3. Add any environment variables (see below)
+  4. Deploy
+
+### 3) Environment Variables
+- If the code uses `process.env.*`, define them in Netlify:
+  - Site settings → Environment variables → add keys and values
+  - Redeploy after changes
+- Local development: create `.env.local` (not committed) with the same keys
+
+### 4) Custom Domain
+- In Netlify → Domain management:
+  - Add your domain (e.g., `jeffrecur.com`)
+  - Follow Netlify’s DNS instructions (use Netlify DNS or set A/CNAME records)
+  - Wait for propagation and SSL issuance (automatic via Let’s Encrypt)
+
+### 5) Verification Checklist
+- Local
+  - `npm install` then `npm run dev` → visit http://localhost:3001
+  - `npm run build` succeeds with no errors
+- Git
+  - `git remote -v` shows the correct GitHub repo
+- Netlify
+  - Site connected to GitHub and building `main` (or chosen) branch
+  - `netlify.toml` present at repo root
+  - Environment variables set (if required)
+  - Domain attached and SSL is active
+
+### 6) Rollbacks & Previews
+- Deploy previews: Every PR creates a unique preview URL
+- Instant rollbacks: In Netlify Deploys tab, select a previous successful deploy and **Restore**
+
+
 ## ⚙️ **Project Configuration**
 
 ### **Next.js Configuration**

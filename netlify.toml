@@ -7,6 +7,11 @@
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
+[[redirects]]
+  from = "/left-flank-strategies/*"
+  to = "/left-flank-strategies/index.html"
+  status = 200
+
 # Ensure Next images/static files are served correctly
 [build.environment]
   NODE_VERSION = "18.20.3"
